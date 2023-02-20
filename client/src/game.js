@@ -59,6 +59,7 @@ function preload ()
 
 function create ()
 {
+  this.socket = io();
   this.add.image(400, 300, 'sky');
 
   var particles = this.add.particles('red');
