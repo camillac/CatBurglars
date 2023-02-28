@@ -1,22 +1,29 @@
+const path = require('path');
+const PORT = process.env.PORT || 8080;
 const express = require('express');
 const app = express();
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const socketio = require('socket.io');
+module.exports = app;
 
-app.use('/client', express.static('../client'));
+const createApp = () => {
+  app.use('/client', express.static('../client'));
 
-app.get('/', function(req, res) {
-    res.sendFile('/client/views/index.html', { root: '../' });
-});
+  app.use('*', (req, res) => {
+    res.sendFile('/client/assets/index.html', { root: '../' });
+  });
+};
 
-io.on('connection', function (socket) {
-    console.log('a user connected');
-    socket.on('disconnect', function () 
-    {
-      console.log('user disconnected');
-    });
-});
+const startListening = () => {
+  const server = app.listen(PORT, () =>
+    console.log(`Listening on http://localhost:${PORT}`)
+  );
+  const io = socketio(server);
+  require('./src/sockets')(io);
+};
 
-server.listen(8080, function () {
-  console.log(`Listening on http://localhost:${server.address().port}`);
-});
+async function bootApp() {
+  await createApp();
+  await startListening();
+};
+
+bootApp();
