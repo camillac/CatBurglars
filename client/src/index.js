@@ -1,32 +1,29 @@
-var config = {
-  type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  backgroundColor: '#FCFBF4',
-  physics: {
-      default: 'arcade',
-      arcade: {
-          gravity: { y: 200 }
-      }
-  },
-  scene: {
-      preload: preload,
-      create: create,
+import config from './config/config.js';
+import MainScene from './scenes/MainScene.js';
+
+class Game extends Phaser.Game {
+  constructor() {
+    super(config);
+    
+    this.scene.add("MainScene", MainScene);
+
+    this.scene.start("MainScene");
   }
+}
+
+window.onload = function () {
+  window.game = new Game();
 };
 
-var game = new Phaser.Game(config);
-
-function preload ()
+/*
+preload ()
 {
   // this.load.html("how_to_play", "client/assets/how_to_play.html");
   this.load.setBaseURL('http://labs.phaser.io');
   this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js'); // google font API
 }
 
-var text = null;
-
-function create ()
+create ()
 {
   this.socket = io();
   var add = this.add;
@@ -77,36 +74,4 @@ function create ()
       }
   });
 }
-
-// var config = {
-//     type: Phaser.AUTO,
-//     parent: 'phaser-example',
-//     width: 800,
-//     height: 600,
-//     physics: {
-//       default: 'arcade',
-//       arcade: {
-//         debug: false,
-//         gravity: { y: 0 }
-//       }
-//     },
-//     scene: {
-//       preload: preload,
-//       create: create,
-//       update: update
-//     } 
-//   };
-
-// var game = new Phaser.Game(config);
-  
-// function preload() {
-
-// }
-  
-// function create() {
-//     this.socket = io();
-// }
-  
-// function update() {
-
-// }
+*/
