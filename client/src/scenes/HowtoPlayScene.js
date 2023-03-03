@@ -15,7 +15,6 @@ export default class HowtoPlayScene extends Phaser.Scene {
 
     create() {
         const scene = this;
-        // this.socket = io();
         var box = scene.add.group();
 
         var instructions = scene.add.text(400, 300, "These are instructions!", {

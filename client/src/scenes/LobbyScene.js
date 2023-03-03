@@ -1,5 +1,3 @@
-// import Phaser from "phaser";
-
 export default class LobbyScene extends Phaser.Scene {
     constructor() {
         super("LobbyScene");
@@ -14,36 +12,41 @@ export default class LobbyScene extends Phaser.Scene {
     }
 
     create() {
-        // this.socket = io();
-        var add = this.add;
         const scene = this;
-
-        WebFont.load({
-            google: {
-                families: ['Chela One']
-            },
-            active: function () {
-                // title
-                add.text(125, 110, 'Cat', {
-                    fontFamily: 'Chela One',
-                    fontSize: 100,
-                    color: '#F8F0C6'
-                });
-
-                add.text(250, 110, 'Burglars', {
-                    fontFamily: 'Chela One',
-                    fontSize: 100,
-                    color: '#C1A87D'
-                });
-
-                add.text(565, 110, '.io', {
-                    fontFamily: 'Chela One',
-                    fontSize: 100,
-                    color: '#EFC482'
-                });
-
-            }
+        var box = scene.add.group();
+        var cat = scene.add.text(125, 110, 'Cat', {
+            fontFamily: 'Chela One',
+            fontSize: 100,
+            color: '#F8F0C6',
         });
+
+        var burg = scene.add.text(250, 110, 'Burglars', {
+            fontFamily: 'Chela One',
+            fontSize: 100,
+            color: '#C1A87D'
+        });
+        var end = scene.add.text(565, 110, '.io', {
+            fontFamily: 'Chela One',
+            fontSize: 100,
+            color: '#EFC482'
+        });
+        var closeButton = scene.add.text(400, 450, "Go back to the Start Page", {
+            fontFamily: 'Chela One',
+            fontSize: 50,
+            color: '#FFFBF4',
+            backgroundColor: "#C1A87D"
+        })
+            .setOrigin(0.5)
+            .setPadding(10, 10,10, 10)
+                .setInteractive();
+        box.add(closeButton);
+        box.add(cat); 
+        box.add(burg); 
+        box.add(end);
+        closeButton.on('pointerup', () => {
+            scene.scene.start("MainScene", { ...scene.state, socket: scene.socket });
+        })
+            
     }
 
     update() { }
