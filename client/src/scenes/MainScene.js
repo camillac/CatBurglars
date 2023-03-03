@@ -67,34 +67,35 @@ export default class MainScene extends Phaser.Scene {
                 // can clean up by creating a background sprite and placing text on top of it,
                 // or by making new scene when we get more comfortable with it
                 howToPlayButton.on('pointerup', () => {
-                    var box = add.group();
+                    scene.scene.launch("HowtoPlayScene", { ...scene.state, socket: scene.socket });
+                    // var box = add.group();
 
-                    var instructions = add.text(400, 300, "These are instructions!", {
-                        fontFamily: 'Chela One',
-                        fontSize: 50,
-                        color: '#FFFBF4',
-                        backgroundColor: "#C1A87D"
-                    })
-                        .setOrigin(0.5)
-                        .setPadding(200, 200, 200, 200);
+                    // var instructions = add.text(400, 300, "These are instructions!", {
+                    //     fontFamily: 'Chela One',
+                    //     fontSize: 50,
+                    //     color: '#FFFBF4',
+                    //     backgroundColor: "#C1A87D"
+                    // })
+                    //     .setOrigin(0.5)
+                    //     .setPadding(200, 200, 200, 200);
 
-                    var closeButton = add.text(400, 450, "Close", {
-                        fontFamily: 'Chela One',
-                        fontSize: 50,
-                        color: '#FFFBF4',
-                    })
-                        .setOrigin(0.5)
-                        .setPadding(10, 10, 10, 10)
-                        .setInteractive();
+                    // var closeButton = add.text(400, 450, "Close", {
+                    //     fontFamily: 'Chela One',
+                    //     fontSize: 50,
+                    //     color: '#FFFBF4',
+                    // })
+                    //     .setOrigin(0.5)
+                    //     .setPadding(10, 10, 10, 10)
+                    //     .setInteractive();
 
-                    box.add(instructions);
-                    box.add(closeButton);
+                    // box.add(instructions);
+                    // box.add(closeButton);
 
-                    closeButton.on('pointerup', () => {
-                        instructions.destroy();
-                        closeButton.destroy();
-                        box.destroy();
-                    })
+                    // closeButton.on('pointerup', () => {
+                    //     instructions.destroy();
+                    //     closeButton.destroy();
+                    //     box.destroy();
+                    // })
                 });
                 playButton.on('pointerup', () => {
                     scene.scene.start("LobbyScene", { ...scene.state, socket: scene.socket });
