@@ -1,11 +1,13 @@
 import config from './config/config.js';
 import MainScene from './scenes/MainScene.js';
+import HowtoPlayScene from './scenes/HowtoPlayScene.js';
 
 class Game extends Phaser.Game {
   constructor() {
     super(config);
     
     this.scene.add("MainScene", MainScene);
+    this.scene.add("HowtoPlayScene", HowtoPlayScene);
 
     this.scene.start("MainScene");
   }
