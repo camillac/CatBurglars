@@ -3,7 +3,9 @@ export default class MainScene extends Phaser.Scene {
         super("MainScene");
         this.state = {};
     }
-
+    init(data) {
+        this.socket = data.socket;
+      }
     preload() {
         // this.load.html("how_to_play", "client/assets/how_to_play.html");
         this.load.setBaseURL('http://labs.phaser.io');
@@ -13,6 +15,7 @@ export default class MainScene extends Phaser.Scene {
     create() {
         this.socket = io();
         var add = this.add;
+        const scene = this;
 
         WebFont.load({
             google: {
@@ -93,8 +96,12 @@ export default class MainScene extends Phaser.Scene {
                         box.destroy();
                     })
                 });
+                playButton.on('pointerup', () => {
+                    scene.scene.start("LobbyScene", { ...scene.state, socket: scene.socket });
+                })
             }
         });
+
     }
 
     update() {
