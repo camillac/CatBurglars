@@ -7,7 +7,7 @@ export default class LobbyScene extends Phaser.Scene {
     }
     init(data) {
         this.socket = data.socket;
-      }
+    }
     preload() {
         this.load.setBaseURL('http://labs.phaser.io');
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
@@ -41,10 +41,10 @@ export default class LobbyScene extends Phaser.Scene {
                     fontSize: 100,
                     color: '#EFC482'
                 });
-                
+
             }
         });
     }
 
-    update() {}
+    update() { }
 }
