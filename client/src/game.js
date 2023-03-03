@@ -1,3 +1,4 @@
+import TaskScene from "./scenes/TaskScene";
 var config = {
   type: Phaser.AUTO,
   width: 800,
@@ -10,6 +11,7 @@ var config = {
       }
   },
   scene: {
+      constuctor: constructor,
       preload: preload,
       create: create,
   }
@@ -17,11 +19,17 @@ var config = {
 
 var game = new Phaser.Game(config);
 
+function constructor(){
+  super()
+  this.scene.add("TaskScene", TaskScene);
+}
+
 function preload ()
 {
   // this.load.html("how_to_play", "client/assets/how_to_play.html");
   this.load.setBaseURL('http://labs.phaser.io');
   this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js'); // google font API
+  
 }
 
 var text = null;
@@ -74,6 +82,7 @@ function create ()
 
         playButton.setInteractive();
         howToPlayButton.setInteractive();
+        howToPlayButton.on('pointerdown', () => { console.log('pointerover');  scene.scene.start("TaskScene"); });
       }
   });
 }
