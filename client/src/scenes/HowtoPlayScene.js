@@ -4,10 +4,7 @@ export default class HowtoPlayScene extends Phaser.Scene {
         this.state = {};
         this.hasBeenSet = false;
     }
-
-    init(data) {
-        this.socket = data.socket;
-    }
+    
     preload() {
         this.load.setBaseURL('http://labs.phaser.io');
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
@@ -45,5 +42,7 @@ export default class HowtoPlayScene extends Phaser.Scene {
         })
     }
 
-    update() { }
+    update() {
+
+    }
 }

@@ -3,9 +3,11 @@ export default class LobbyScene extends Phaser.Scene {
         super("LobbyScene");
         this.state = {};
     }
+    
     init(data) {
         this.socket = data.socket;
     }
+    
     preload() {
         this.load.setBaseURL('http://labs.phaser.io');
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
@@ -46,8 +48,9 @@ export default class LobbyScene extends Phaser.Scene {
         closeButton.on('pointerup', () => {
             scene.scene.start("MainScene", { ...scene.state, socket: scene.socket });
         })
-            
     }
 
-    update() { }
+    update() { 
+
+    }
 }

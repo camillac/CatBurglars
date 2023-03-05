@@ -3,9 +3,7 @@ export default class MainScene extends Phaser.Scene {
         super("MainScene");
         this.state = {};
     }
-    init(data) {
-        this.socket = data.socket;
-    }
+    
     preload() {
         this.load.setBaseURL('http://labs.phaser.io');
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');

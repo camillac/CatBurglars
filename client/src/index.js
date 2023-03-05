@@ -3,7 +3,6 @@ import MainScene from './scenes/MainScene.js';
 import HowtoPlayScene from './scenes/HowtoPlayScene.js';
 import LobbyScene from './scenes/LobbyScene.js';
 
-
 class Game extends Phaser.Game {
   constructor() {
     super(config);
