@@ -3,7 +3,7 @@ export default class MainScene extends Phaser.Scene {
         super("MainScene");
         this.state = {};
     }
-    
+
     preload() {
         this.load.setBaseURL('http://labs.phaser.io');
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
@@ -39,7 +39,7 @@ export default class MainScene extends Phaser.Scene {
                 });
 
                 // buttons
-                const playButton = add.text(400, 325, 'Start', {
+                const playButton = add.text(400, 325, 'Create A Room', {
                     fontFamily: 'Chela One',
                     fontSize: 60,
                     color: '#FFFBF4',
@@ -47,6 +47,8 @@ export default class MainScene extends Phaser.Scene {
                 })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
+
+
 
                 const howToPlayButton = add.text(400, 440, 'How To Play', {
                     fontFamily: 'Chela One',
@@ -59,13 +61,20 @@ export default class MainScene extends Phaser.Scene {
 
                 playButton.setInteractive();
                 howToPlayButton.setInteractive();
-                
+
                 // how to pop up
                 howToPlayButton.on('pointerup', () => {
                     scene.scene.launch("HowtoPlayScene", { ...scene.state, socket: scene.socket });
                 });
                 playButton.on('pointerup', () => {
-                    scene.scene.start("LobbyScene", { ...scene.state, socket: scene.socket });
+                    scene.socket.emit("getRoomCode");
+
+                    scene.socket.on("roomCreated", function (roomKey) {
+                      scene.roomKey = roomKey;
+                      console.log(scene.roomKey);
+                    });
+
+                    scene.scene.start("LobbyScene", { ...scene.state, socket: scene.socket, roomKey: scene.roomKey });
                 })
             }
         });
