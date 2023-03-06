@@ -59,10 +59,8 @@ export default class MainScene extends Phaser.Scene {
 
                 playButton.setInteractive();
                 howToPlayButton.setInteractive();
+                
                 // how to pop up
-                // messy way of doing it, basically pasting a textbox on top of the home screen
-                // can clean up by creating a background sprite and placing text on top of it,
-                // or by making new scene when we get more comfortable with it
                 howToPlayButton.on('pointerup', () => {
                     scene.scene.launch("HowtoPlayScene", { ...scene.state, socket: scene.socket });
                 });
