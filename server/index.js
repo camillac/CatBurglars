@@ -6,10 +6,12 @@ const socketio = require('socket.io');
 module.exports = app;
 
 const createApp = () => {
-  app.use('/client', express.static('../client'));
+  console.log(__dirname)
+  console.log(__dirname + '../client')
+  app.use('/client', express.static(__dirname + '/../client'));
 
   app.use('*', (req, res) => {
-    res.sendFile('/client/assets/index.html', { root: '../' });
+    res.sendFile('/client/assets/index.html', { root: __dirname + '/../' });
   });
 };
 
