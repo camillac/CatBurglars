@@ -13,6 +13,7 @@ export default class MainScene extends Phaser.Scene {
         this.socket = io();
         var add = this.add;
         const scene = this;
+        scene.roomKey = '';
 
         WebFont.load({
             google: {
@@ -70,11 +71,20 @@ export default class MainScene extends Phaser.Scene {
                     scene.socket.emit("getRoomCode");
 
                     scene.socket.on("roomCreated", function (roomKey) {
-                      scene.roomKey = roomKey;
-                      console.log(scene.roomKey);
+                      scene.socket.emit("isKeyValid", roomKey);
+
+                      scene.socket.on("keyNotValid", function () {
+                        scene.notValidText.setText("Invalid Room Key");
+                      });
+
+                      scene.socket.on("keyIsValid", function (input) {
+                        scene.socket.emit("joinRoom", input);
+                      });
+                      
+                      scene.scene.start("LobbyScene", { ...scene.state, socket: scene.socket, roomKey: roomKey });
                     });
 
-                    scene.scene.start("LobbyScene", { ...scene.state, socket: scene.socket, roomKey: scene.roomKey });
+
                 })
             }
         });

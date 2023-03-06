@@ -22,7 +22,7 @@ export default class LobbyScene extends Phaser.Scene {
     create() {
       const scene = this;
 
-      console.log("sasd " + this.roomKey);
+      console.log("Room Key " + this.roomKey);
 
       this.otherPlayers = this.physics.add.group();
 
@@ -138,16 +138,6 @@ export default class LobbyScene extends Phaser.Scene {
 
               var mycats = this.add.sprite(300,300,'icon');
               mycats.setScale(0.3).setPosition(125,200);
-
-    // scene.socket.emit("isKeyValid", 'ABC');
-
-
-    scene.socket.on("keyNotValid", function () {
-      scene.notValidText.setText("Invalid Room Key");
-    });
-    scene.socket.on("keyIsValid", function (input) {
-      scene.socket.emit("joinRoom", input);
-    });
 
     }
 
