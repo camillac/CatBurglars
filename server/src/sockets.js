@@ -1,13 +1,25 @@
 module.exports = (io) => {
-  var connectCounter = 0;
-  io.on("connection", (socket) => {
-    console.log(`A socket connection to the server has been made: ${socket.id}`)
-    connectCounter++;
-    console.log(connectCounter);
-    socket.on("disconnect", () => {
-      console.log(`A socket has disconnected`);
-      connectCounter--;
-      console.log(connectCounter);
+    let players = {}
+
+    io.on("connection", (socket) => {
+      console.log(`A socket connection to the server has been made: ${socket.id}`);
+
+      if(Object.keys(players).length < 4) {
+          players[socket.id] = {
+          playerId: socket.id,
+          room:null,
+      }
+
+      // Send the players object to the new player.
+      socket.emit('currentPlayers', players);
+      } else {
+          socket.on("disconnect", () => {
+          delete players[socket.id];
+          // io.emit('playerDisconnected', socket.id);
+          console.log(`Player ${socket.id} disconnected`);
+          });
+      }
+
+      console.log(players);
     });
-  });
-}
+  }; 
