@@ -4,6 +4,10 @@ export default class HowtoPlayScene extends Phaser.Scene {
         this.state = {};
         this.hasBeenSet = false;
     }
+    init(data){
+        console.log(data)
+        console.log(data.socket)
+    }
     
     preload() {
         this.load.setBaseURL('http://labs.phaser.io');

@@ -65,11 +65,17 @@ export default class MainScene extends Phaser.Scene {
                     scene.scene.launch("HowtoPlayScene", { ...scene.state, socket: scene.socket });
                 });
                 playButton.on('pointerup', () => {
-                    scene.scene.start("LobbyScene", { ...scene.state, socket: scene.socket });
+                    // scene.scene.start("LobbyScene", {hello: 0 });
+                    scene.scene.start("LobbyScene", { ...scene.state, socket: scene.socket, hello: 0 });
                 })
+                console.log(scene.socket)
             }
         });
-
+        this.socket.on("currentPlayers", (arg) => {
+                console.log("THIS IS THE CLIENT SIDE:");
+                // console.log(arg?arg:"jhihefo");
+                console.log(arg); // world
+              });
     }
 
     update() {

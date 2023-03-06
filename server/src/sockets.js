@@ -21,5 +21,9 @@ module.exports = (io) => {
       }
 
       console.log(players);
+      io.on("inLobby", (arg) => {
+        console.log(arg);
+      })
     });
+
   }; 
