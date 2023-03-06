@@ -7,6 +7,7 @@ export default class MainScene extends Phaser.Scene {
     preload() {
         this.load.setBaseURL('http://labs.phaser.io');
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+
     }
 
     create() {
@@ -80,7 +81,7 @@ export default class MainScene extends Phaser.Scene {
                       scene.socket.on("keyIsValid", function (input) {
                         scene.socket.emit("joinRoom", input);
                       });
-                      
+
                       scene.scene.start("LobbyScene", { ...scene.state, socket: scene.socket, roomKey: roomKey });
                     });
 
