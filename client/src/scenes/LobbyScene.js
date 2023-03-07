@@ -17,10 +17,13 @@ export default class LobbyScene extends Phaser.Scene {
 
         //load images from the assets folder
         this.load.image('icon', 'client/assets/sprites/cat.png'); //Files might not be in the root
+        this.load.image('background', 'client/assets/backgrounds/blob-scene-haikei (6).png');
     }
 
     create() {
       const scene = this;
+      const background = this.add.image(400, 300, "background")
+      background.setScale(2.0)
 
       console.log("Room Key " + this.roomKey);
 
@@ -76,12 +79,12 @@ export default class LobbyScene extends Phaser.Scene {
 
       //creates box for the lobby and start page
       scene.boxes.fillStyle(0xbeb2a8, 1);
-      scene.boxes.fillRect(280,400,250,90);
-      scene.makeButton = scene.add.text(320, 400, this.roomKey, {
+      scene.boxes.fillRect(275,400,250,90);
+      scene.makeButton = scene.add.text(400, 450, this.roomKey, {
         fontFamily: "Chela One",
         fontcolor: "#FFFBF4'",
         fontSize: "40px",
-      });
+      }).setOrigin(0.5);
 
    //creates 4 circles for the players.
       //Player 1
@@ -105,39 +108,61 @@ export default class LobbyScene extends Phaser.Scene {
            color: '#FFFBF4'
       });
 
-      var cat = scene.add.text(200,5, 'Cat', {
+      // title
+      var cat = scene.add.text(125, 5, 'Cat', {
           fontFamily: 'Chela One',
-          fontSize: 65,
+          fontSize: 100,
           color: '#F8F0C6',
+          fontStyle: 'normal',
+          stroke: '#000000',
+          strokeThickness: 12
       });
-      var burg = scene.add.text(280, 5, 'Burglars', {
-          fontFamily: 'Chela One',
-          fontSize: 65,
-          color: '#C1A87D'
+      var burg = scene.add.text(250, 5, 'Burglars', {
+        fontFamily: 'Chela One',
+        fontSize: 100,
+        color: '#C1A87D',
+        fontStyle: 'normal',
+        stroke: '#000000',
+        strokeThickness: 12
       });
-      var end = scene.add.text(485, 5, '.io', {
+      var end = scene.add.text(565, 5, '.io', {
           fontFamily: 'Chela One',
-          fontSize: 65,
-          color: '#EFC482'
+          fontSize: 100,
+          color: '#EEBA6B',
+          fontStyle: 'normal',
+          stroke: '#000000',
+          strokeThickness: 12
       });
       scene.boxes.fillStyle(0xc1a87d, 1);
-      scene.boxes.fillRect(280,500,250,75);
-      var startGame = scene.add.text(400,530, "Start Game", {
-          fontFamily: 'Chela One',
-          fontSize: 40,
-          color: '#FFFBF4',
-          //backgroundColor: "#C1A87D"
-      })
+      scene.boxes.fillRect(275,500,250,75);
+      var startGame = scene.add.text(400,535, "Start Game", {
+                    fontFamily: 'Chela One',
+                    fontSize: 40,
+                    color: '#FFFBF4',
+                    fontStyle: 'normal',
+                    stroke: '#000000',
+                    strokeThickness: 12
+                })
           .setOrigin(0.5)
           .setPadding(0.0,0.0,0)
-             startGame.setInteractive();
-              startGame.on('pointerup', () => {
-                  scene.scene.start("FirstTask", { ...scene.state, socket: scene.socket });
-              });
+      startGame.setInteractive();
+      startGame.on('pointerup', () => {
+          scene.scene.start("FirstTask", { ...scene.state, socket: scene.socket });
+      });
+      startGame.on('pointerover', () => {
+        startGame.setStyle({
+          color: '#FFEBB9'
+      })
+      })
+      startGame.on('pointerout', () => {
+        startGame.setStyle({
+          color: '#FFFBF4'
+      })
+      })
 
 
-              var mycats = this.add.sprite(300,300,'icon');
-              mycats.setScale(0.3).setPosition(125,200);
+      var mycats = this.add.sprite(300,300,'icon');
+      mycats.setScale(0.3).setPosition(125,200);
 
     }
 

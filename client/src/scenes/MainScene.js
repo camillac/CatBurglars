@@ -23,8 +23,6 @@ export default class MainScene extends Phaser.Scene {
                 families: ['Chela One']
             },
             active: function () {
-                
-
                 // title
                 add.text(125, 110, 'Cat', {
                     fontFamily: 'Chela One',
@@ -35,23 +33,22 @@ export default class MainScene extends Phaser.Scene {
                     strokeThickness: 12
                 });
                 
-
                 add.text(250, 110, 'Burglars', {
                     fontFamily: 'Chela One',
                     fontSize: 100,
                     color: '#C1A87D',
-			fontStyle: 'normal',
-			stroke: '#000000',
-			strokeThickness: 12
+                    fontStyle: 'normal',
+                    stroke: '#000000',
+                    strokeThickness: 12
                 });
 
                 add.text(565, 110, '.io', {
                     fontFamily: 'Chela One',
                     fontSize: 100,
                     color: '#EEBA6B',
-			fontStyle: 'normal',
-			stroke: '#000000',
-			strokeThickness: 12
+                    fontStyle: 'normal',
+                    stroke: '#000000',
+                    strokeThickness: 12
                 });
 
                 // buttons
@@ -59,27 +56,24 @@ export default class MainScene extends Phaser.Scene {
                     fontFamily: 'Chela One',
                     fontSize: 60,
                     color: '#FFFBF4',
-
-			fontStyle: 'normal',
-			stroke: '#000000',
-			strokeThickness: 12
+                    fontStyle: 'normal',
+                    stroke: '#000000',
+                    strokeThickness: 12
                 })
-                    .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);
-
+                .setOrigin(0.5)
+                .setPadding(10, 10, 10, 10);
 
 
                 const howToPlayButton = add.text(400, 440, 'How To Play', {
                     fontFamily: 'Chela One',
                     fontSize: 60,
                     color: '#FFFBF4',
-
-			fontStyle: 'normal',
-			stroke: '#000000',
-			strokeThickness: 12
+                    fontStyle: 'normal',
+                    stroke: '#000000',
+                    strokeThickness: 12
                 })
-                    .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);
+                .setOrigin(0.5)
+                .setPadding(10, 10, 10, 10);
 
                 playButton.setInteractive();
                 howToPlayButton.setInteractive();
@@ -114,9 +108,9 @@ export default class MainScene extends Phaser.Scene {
                     scene.socket.emit("getRoomCode");
 
                     scene.socket.on("roomCreated", function (roomKey) {
-                      scene.socket.emit("isKeyValid", roomKey);
+                        scene.socket.emit("isKeyValid", roomKey);
 
-                      scene.socket.on("keyNotValid", function () {
+                        scene.socket.on("keyNotValid", function () {
                         scene.notValidText.setText("Invalid Room Key");
                       });
 
@@ -126,15 +120,10 @@ export default class MainScene extends Phaser.Scene {
 
                       scene.scene.start("LobbyScene", { ...scene.state, socket: scene.socket, roomKey: roomKey });
                     });
-
-
                 })
             }
         });
-
     }
 
-    update() {
-
-    }
+    update() {}
 };
