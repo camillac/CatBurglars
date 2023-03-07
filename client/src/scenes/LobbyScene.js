@@ -12,7 +12,6 @@ export default class LobbyScene extends Phaser.Scene {
     }
 
     preload() {
-        // this.load.setBaseURL('http://labs.phaser.io');
         this.load.script(
             "webfont",
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
@@ -20,10 +19,7 @@ export default class LobbyScene extends Phaser.Scene {
 
         //load images from the assets folder
         this.load.image("icon", "client/assets/sprites/cat.png"); //Files might not be in the root
-        this.load.image(
-            "background",
-            "client/assets/backgrounds/blob-scene-haikei (6).png"
-        );
+        this.load.image("background","client/assets/backgrounds/blob-scene-haikei (6).png");
     }
 
     create() {
@@ -34,7 +30,6 @@ export default class LobbyScene extends Phaser.Scene {
         console.log("Room Key " + this.roomKey);
 
         this.otherPlayers = this.physics.add.group();
-
         // scene.socket.emit("joinRoom", scene.roomKey);
 
         // JOINED ROOM - SET STATE
@@ -80,18 +75,22 @@ export default class LobbyScene extends Phaser.Scene {
 
         scene.boxes = scene.add.graphics();
         scene.circle = scene.add.graphics();
-        //add circle
 
-        //creates box for the lobby and start page
+        //lobby code box and room key
         scene.boxes.fillStyle(0xbeb2a8, 1);
-        scene.boxes.fillRect(275, 400, 250, 90);
-        scene.makeButton = scene.add
-            .text(400, 450, this.roomKey, {
+        scene.boxes.fillRect(275, 400, 250, 100);
+        scene.add.text(400, 425, "Lobby Code:", {
+                fontFamily: "Chela One",
+                fontcolor: "#FFFBF4'",
+                fontSize: "40px",
+        })
+        .setOrigin(0.5);
+        scene.makeButton = scene.add.text(400, 475, this.roomKey, {
                 fontFamily: "Chela One",
                 fontcolor: "#FFFBF4'",
                 fontSize: "40px",
             })
-            .setOrigin(0.5);
+        .setOrigin(0.5);
 
         //creates 4 circles for the players.
         //Player 1
@@ -139,8 +138,8 @@ export default class LobbyScene extends Phaser.Scene {
             stroke: "#000000",
             strokeThickness: 12,
         });
-        scene.boxes.fillStyle(0xc1a87d, 1);
-        scene.boxes.fillRect(275, 500, 250, 75);
+
+        // start game button
         var startGame = scene.add
             .text(400, 535, "Start Game", {
                 fontFamily: "Chela One",
@@ -170,6 +169,7 @@ export default class LobbyScene extends Phaser.Scene {
             });
         });
 
+        // player 1 sprite
         var mycats = this.add.sprite(300, 300, "icon");
         mycats.setScale(0.3).setPosition(125, 200);
     }
