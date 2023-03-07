@@ -3,16 +3,18 @@ export default class MainScene extends Phaser.Scene {
         super("MainScene");
         this.state = {};
     }
-    
+
     preload() {
         this.load.setBaseURL('http://labs.phaser.io');
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+
     }
 
     create() {
         this.socket = io();
         var add = this.add;
         const scene = this;
+        scene.roomKey = '';
 
         WebFont.load({
             google: {
@@ -39,7 +41,7 @@ export default class MainScene extends Phaser.Scene {
                 });
 
                 // buttons
-                const playButton = add.text(400, 325, 'Start', {
+                const playButton = add.text(400, 325, 'Create A Room', {
                     fontFamily: 'Chela One',
                     fontSize: 60,
                     color: '#FFFBF4',
@@ -47,6 +49,8 @@ export default class MainScene extends Phaser.Scene {
                 })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
+
+
 
                 const howToPlayButton = add.text(400, 440, 'How To Play', {
                     fontFamily: 'Chela One',
@@ -59,15 +63,29 @@ export default class MainScene extends Phaser.Scene {
 
                 playButton.setInteractive();
                 howToPlayButton.setInteractive();
+
                 // how to pop up
-                // messy way of doing it, basically pasting a textbox on top of the home screen
-                // can clean up by creating a background sprite and placing text on top of it,
-                // or by making new scene when we get more comfortable with it
                 howToPlayButton.on('pointerup', () => {
                     scene.scene.launch("HowtoPlayScene", { ...scene.state, socket: scene.socket });
                 });
                 playButton.on('pointerup', () => {
-                    scene.scene.start("LobbyScene", { ...scene.state, socket: scene.socket });
+                    scene.socket.emit("getRoomCode");
+
+                    scene.socket.on("roomCreated", function (roomKey) {
+                      scene.socket.emit("isKeyValid", roomKey);
+
+                      scene.socket.on("keyNotValid", function () {
+                        scene.notValidText.setText("Invalid Room Key");
+                      });
+
+                      scene.socket.on("keyIsValid", function (input) {
+                        scene.socket.emit("joinRoom", input);
+                      });
+
+                      scene.scene.start("LobbyScene", { ...scene.state, socket: scene.socket, roomKey: roomKey });
+                    });
+
+
                 })
             }
         });
