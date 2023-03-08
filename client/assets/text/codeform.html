@@ -1,21 +1,36 @@
 <style>
-    #input-box {
-      resize: none;
-      background: none;
-      border: none;
-      outline: none;
+    form {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
     }
-  </style>
-  
-  <div class="container">
+
+    input {
+        height: 50px;
+    }
+
+    .input-box {
+        border: 2px solid black;
+        font-family: Chela One;
+        font-size: 35px;
+    }
+
+    button {
+        height: 55px;
+        width: 400px;
+        font-family: Chela One;
+        font-size: 45px;
+        color: #FFFBF4;
+        font-style: normal;
+        -webkit-text-stroke-width: 2px;
+        -webkit-text-stroke-color: black;
+        background-color: #C1A87D;
+    }
+</style>
+
+<div class="container">
     <form>
-      <input
-        type="text"
-        id="code-form-id"
-        name="code-form"
-        placeholder="enter room key"
-      />
-      <button type="button" id="enterRoom-id" name="enterRoom">enter</button>
+        <input type="text" id="code-form-id" name="code-form" placeholder="Enter Room Key" class="input-box" />
+        <button type="button" id="enterRoom-id" name="enterRoom">Join a Room</button>
     </form>
-  </div>
-  
+</div>

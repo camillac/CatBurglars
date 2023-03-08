@@ -70,18 +70,6 @@ export default class MainScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
-                
-                const joinButton = add
-                .text(600, 440, "Join A Room", {
-                    fontFamily: "Chela One",
-                    fontSize: 50,
-                    color: "#FFFBF4",
-                    fontStyle: "normal",
-                    stroke: "#000000",
-                    strokeThickness: 12,
-                })
-                .setOrigin(0.5)
-                .setPadding(10, 10, 10, 10);
 
                 const howToPlayButton = add
                     .text(400, 555, "How To Play", {
@@ -96,7 +84,6 @@ export default class MainScene extends Phaser.Scene {
                     .setPadding(10, 10, 10, 10);
 
                 playButton.setInteractive();
-                joinButton.setInteractive();
                 howToPlayButton.setInteractive();
 
                 // how to play button events
@@ -148,19 +135,8 @@ export default class MainScene extends Phaser.Scene {
                         });
                     });
                 });
-                //join BUtton controls
-                joinButton.on("pointerover", () => {
-                    joinButton.setStyle({
-                        color: "#FFEBB9",
-                    });
-                });
-                joinButton.on("pointerout", () => {
-                    joinButton.setStyle({
-                        color: "#FFFBF4",
-                    });
-                });
-
-                scene.inputElement = scene.add.dom(300, 440).createFromCache("codeform");
+                //Join a room
+                scene.inputElement = scene.add.dom(400, 440).createFromCache("codeform");
                 scene.inputElement.addListener("click");
                 scene.inputElement.on("click", function (event) {
                     if (event.target.name === "enterRoom") {
@@ -170,19 +146,19 @@ export default class MainScene extends Phaser.Scene {
                     }
                     scene.socket.on("keyNotValid", function () {
                         scene.notValidText.setText("Invalid Room Key");
-                      });
-                      scene.socket.on("keyIsValid", function (input) {
+                    });
+                    scene.socket.on("keyIsValid", function (input) {
                         scene.socket.emit("joinRoom", input);
                         scene.scene.start("LobbyScene", {
                             ...scene.state,
                             socket: scene.socket,
                             roomKey: input,
                         });
-                      });
+                    });
                 });
             },
         });
     }
 
-    update() {}
+    update() { }
 }
