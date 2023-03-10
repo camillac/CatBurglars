@@ -7,7 +7,8 @@ export default class MainScene extends Phaser.Scene {
     preload() {
         this.load.script(
             "webfont",
-            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
+            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js",
+            this.load.html("codeform", "client/assets/text/codeform.html")
         );
         this.load.image(
             "background",
@@ -61,7 +62,7 @@ export default class MainScene extends Phaser.Scene {
                 const playButton = add
                     .text(400, 325, "Create A Room", {
                         fontFamily: "Chela One",
-                        fontSize: 60,
+                        fontSize: 50,
                         color: "#FFFBF4",
                         fontStyle: "normal",
                         stroke: "#000000",
@@ -71,9 +72,9 @@ export default class MainScene extends Phaser.Scene {
                     .setPadding(10, 10, 10, 10);
 
                 const howToPlayButton = add
-                    .text(400, 440, "How To Play", {
+                    .text(400, 555, "How To Play", {
                         fontFamily: "Chela One",
-                        fontSize: 60,
+                        fontSize: 50,
                         color: "#FFFBF4",
                         fontStyle: "normal",
                         stroke: "#000000",
@@ -134,9 +135,30 @@ export default class MainScene extends Phaser.Scene {
                         });
                     });
                 });
+                //Join a room
+                scene.inputElement = scene.add.dom(400, 440).createFromCache("codeform");
+                scene.inputElement.addListener("click");
+                scene.inputElement.on("click", function (event) {
+                    if (event.target.name === "enterRoom") {
+                        const input = scene.inputElement.getChildByName("code-form");
+
+                        scene.socket.emit("isKeyValid", input.value);
+                    }
+                    scene.socket.on("keyNotValid", function () {
+                        scene.notValidText.setText("Invalid Room Key");
+                    });
+                    scene.socket.on("keyIsValid", function (input) {
+                        scene.socket.emit("joinRoom", input);
+                        scene.scene.start("LobbyScene", {
+                            ...scene.state,
+                            socket: scene.socket,
+                            roomKey: input,
+                        });
+                    });
+                });
             },
         });
     }
 
-    update() {}
+    update() { }
 }
