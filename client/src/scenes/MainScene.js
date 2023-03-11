@@ -7,9 +7,9 @@ export default class MainScene extends Phaser.Scene {
     preload() {
         this.load.script(
             "webfont",
-            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js",
-            this.load.html("codeform", "client/assets/text/codeform.html")
+            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
         );
+        
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
@@ -17,10 +17,8 @@ export default class MainScene extends Phaser.Scene {
     }
 
     create() {
-        this.socket = io();
         var add = this.add;
         const scene = this;
-        scene.roomKey = "";
 
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
@@ -30,7 +28,8 @@ export default class MainScene extends Phaser.Scene {
                 families: ["Chela One"],
             },
             active: function () {
-                // title
+                
+                // Title
                 add.text(125, 110, "Cat", {
                     fontFamily: "Chela One",
                     fontSize: 100,
@@ -39,7 +38,6 @@ export default class MainScene extends Phaser.Scene {
                     stroke: "#000000",
                     strokeThickness: 12,
                 });
-
                 add.text(250, 110, "Burglars", {
                     fontFamily: "Chela One",
                     fontSize: 100,
@@ -48,7 +46,6 @@ export default class MainScene extends Phaser.Scene {
                     stroke: "#000000",
                     strokeThickness: 12,
                 });
-
                 add.text(565, 110, ".io", {
                     fontFamily: "Chela One",
                     fontSize: 100,
@@ -58,9 +55,9 @@ export default class MainScene extends Phaser.Scene {
                     strokeThickness: 12,
                 });
 
-                // buttons
+                // Play button
                 const playButton = add
-                    .text(400, 325, "Create A Room", {
+                    .text(400, 325, "Play", {
                         fontFamily: "Chela One",
                         fontSize: 50,
                         color: "#FFFBF4",
@@ -69,10 +66,11 @@ export default class MainScene extends Phaser.Scene {
                         strokeThickness: 12,
                     })
                     .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);
+                    .setPadding(5, 5, 5, 5);
 
+                // How to Play button
                 const howToPlayButton = add
-                    .text(400, 555, "How To Play", {
+                    .text(400, 455, "How To Play", {
                         fontFamily: "Chela One",
                         fontSize: 50,
                         color: "#FFFBF4",
@@ -81,12 +79,12 @@ export default class MainScene extends Phaser.Scene {
                         strokeThickness: 12,
                     })
                     .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);
+                    .setPadding(15, 15, 15, 15);
 
                 playButton.setInteractive();
                 howToPlayButton.setInteractive();
 
-                // how to play button events
+                // How to Play button events
                 howToPlayButton.on("pointerover", () => {
                     howToPlayButton.setStyle({
                         color: "#FFEBB9",
@@ -104,7 +102,7 @@ export default class MainScene extends Phaser.Scene {
                     });
                 });
 
-                // play button events
+                // Play button events
                 playButton.on("pointerover", () => {
                     playButton.setStyle({
                         color: "#FFEBB9",
@@ -116,44 +114,9 @@ export default class MainScene extends Phaser.Scene {
                     });
                 });
                 playButton.on("pointerup", () => {
-                    scene.socket.emit("getRoomCode");
-
-                    scene.socket.on("roomCreated", function (roomKey) {
-                        scene.socket.emit("isKeyValid", roomKey);
-
-                        scene.socket.on("keyNotValid", function () {
-                            scene.notValidText.setText("Invalid Room Key");
-                        });
-
-                        scene.socket.on("keyIsValid", function (input) {
-                            scene.socket.emit("joinRoom", input);
-                            scene.scene.start("LobbyScene", {
-                                ...scene.state,
-                                socket: scene.socket,
-                                roomKey: roomKey,
-                            });
-                        });
-                    });
-                });
-                //Join a room
-                scene.inputElement = scene.add.dom(400, 440).createFromCache("codeform");
-                scene.inputElement.addListener("click");
-                scene.inputElement.on("click", function (event) {
-                    if (event.target.name === "enterRoom") {
-                        const input = scene.inputElement.getChildByName("code-form");
-
-                        scene.socket.emit("isKeyValid", input.value);
-                    }
-                    scene.socket.on("keyNotValid", function () {
-                        scene.notValidText.setText("Invalid Room Key");
-                    });
-                    scene.socket.on("keyIsValid", function (input) {
-                        scene.socket.emit("joinRoom", input);
-                        scene.scene.start("LobbyScene", {
-                            ...scene.state,
-                            socket: scene.socket,
-                            roomKey: input,
-                        });
+                    scene.scene.start("PlayScene", {
+                        ...scene.state,
+                        socket: scene.socket,
                     });
                 });
             },

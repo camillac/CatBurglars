@@ -10,6 +10,7 @@ export default class HowtoPlayScene extends Phaser.Scene {
             "webfont",
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
         );
+        
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
@@ -23,6 +24,7 @@ export default class HowtoPlayScene extends Phaser.Scene {
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
 
+        // Title
         var title = scene.add
             .text(400, 150, "How To Play", {
                 fontFamily: "Chela One",
@@ -33,6 +35,7 @@ export default class HowtoPlayScene extends Phaser.Scene {
             .setOrigin(0.5)
             .setPadding(10, 10, 10, 10);
 
+        // Instructions
         var instructions = scene.add
             .text(
                 400,
@@ -47,6 +50,7 @@ export default class HowtoPlayScene extends Phaser.Scene {
             )
             .setOrigin(0.5);
 
+        // Close Button
         var closeButton = scene.add
             .text(400, 450, "Close", {
                 fontFamily: "Chela One",
@@ -65,6 +69,7 @@ export default class HowtoPlayScene extends Phaser.Scene {
         box.add(instructions);
         box.add(closeButton);
 
+        // Close button events
         closeButton.on("pointerover", () => {
             closeButton.setStyle({
                 color: "#FFEBB9",
