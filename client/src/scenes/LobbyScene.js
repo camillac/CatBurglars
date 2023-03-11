@@ -19,7 +19,10 @@ export default class LobbyScene extends Phaser.Scene {
         );
 
         //load images from the assets folder
-        this.load.image("icon", "client/assets/sprites/cat.png"); //Files might not be in the root
+        this.load.image("icon_01", "client/assets/sprites/cat.png"); //Files might not be in the root
+        this.load.image("icon_02", "client/assets/sprites/cat.png");
+        this.load.image("icon_03", "client/assets/sprites/cat.png");
+        this.load.image("icon_04", "client/assets/sprites/cat.png");
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
@@ -170,8 +173,14 @@ export default class LobbyScene extends Phaser.Scene {
             });
         });
 
-        var mycats = this.add.sprite(300, 300, "icon");
-        mycats.setScale(0.3).setPosition(125, 200);
+        // Adding sprites to the lobby scene
+        var position = 125
+        for(let x=1; x <= 4; x++ ) {
+            var mycats = scene.add.sprite(300, 300, `icon_0${x}`);
+            mycats.setScale(0.3).setPosition(position, 200);
+            position+=200;
+        }
+
     }
 
     update() {}
