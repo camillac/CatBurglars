@@ -83,7 +83,15 @@ export default class PlayScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
-
+                scene.notValidText = scene.add.text(400, 500, "", {
+                    fill: "#ff0000",
+                    fontSize: "35px",
+                    fontFamily: "Chela One",
+                    fontStyle: "normal",
+                    strokeThickness: 12,
+                    })
+                    .setOrigin(0.5)
+                    .setPadding(10, 10, 10, 10);;
                 createButton.setInteractive();
                 backButton.setInteractive();
 
@@ -149,6 +157,7 @@ export default class PlayScene extends Phaser.Scene {
                     }
                     scene.socket.on("keyNotValid", function () {
                         scene.notValidText.setText("Invalid Room Key");
+                        console.log("eciehch");
                     });
                     scene.socket.on("keyIsValid", function (input) {
                         scene.socket.emit("joinRoom", input);
