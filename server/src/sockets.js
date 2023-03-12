@@ -34,9 +34,10 @@ module.exports = (io) => {
 
             // Update number of players
             roomInfo.numPlayers = Object.keys(roomInfo.players).length;
-
+            console.log("JOIN ROOM "); 
             // Set initial state
             socket.emit("setState", roomInfo);
+            console.log("THHYGUYCEGUCEYGCE");
 
             // Send the players object to the new player
             socket.emit("currentPlayers", {

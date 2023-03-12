@@ -20,14 +20,23 @@ export default class LobbyScene extends Phaser.Scene {
 
         //load images from the assets folder
         this.load.image("icon", "client/assets/sprites/cat.png"); //Files might not be in the root
+        // this.load.spritesheet("icon", "client/assets/sprites/cat.png", {
+        //     frameWidth: 300,
+        //     frameHeight: 300,
+        // });
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
         );
+        this.load.image("icon_01", "client/assets/sprites/cat.png"); //Files might not be in the root
+        this.load.image("icon_02", "client/assets/sprites/cat.png");
+        this.load.image("icon_03", "client/assets/sprites/cat.png");
+        this.load.image("icon_04", "client/assets/sprites/cat.png");
     }
 
     create() {
         const scene = this;
+        scene.socket.emit("joinRoom", this.roomKey);
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
 
@@ -39,7 +48,12 @@ export default class LobbyScene extends Phaser.Scene {
 
         // JOINED ROOM - SET STATE
         this.socket.on("setState", function (state) {
+            console.log("udheihduehiude")
             const { roomKey, players, numPlayers } = state;
+            console.log(state); 
+            console.log(roomKey); 
+            console.log(players); 
+            console.log(numPlayers);
             scene.physics.resume();
 
             // STATE
@@ -50,22 +64,25 @@ export default class LobbyScene extends Phaser.Scene {
 
         // PLAYERS
         this.socket.on("currentPlayers", function (arg) {
+            console.log("HELLO")
             const { players, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
-            Object.keys(players).forEach(function (id) {
-                if (players[id].playerId === scene.socket.id) {
-                    scene.addPlayer(scene, players[id]);
-                } else {
-                    scene.addOtherPlayers(scene, players[id]);
-                }
-            });
+            // Object.keys(players).forEach(function (id) {
+            //     if (players[id].playerId === scene.socket.id) {
+            //         scene.addPlayer(scene, players[id]);
+            //     } else {
+            //         scene.addOtherPlayers(scene, players[id]);
+            //     }
+            // });
         });
 
         // NEW PLAYER
         this.socket.on("newPlayer", function (arg) {
             const { playerInfo, numPlayers } = arg;
-            scene.addOtherPlayers(scene, playerInfo);
+            // scene.addOtherPlayers(scene, playerInfo);
             scene.state.numPlayers = numPlayers;
+            console.log(numPlayers); 
+            console.log(scene.state.numPlayers);
         });
 
         // DISCONNECT
@@ -177,5 +194,70 @@ export default class LobbyScene extends Phaser.Scene {
         mycats.setScale(0.3).setPosition(125, 200);
     }
 
-    update() {}
+    update() {
+        const scene = this;
+        console.log( scene.state.numPlayers);
+        var position = 125
+        for(let x=1; x <=  scene.state.numPlayers; x++ ) {
+            console.log("eiudhie")
+            var mycats = scene.add.sprite(300, 300, `icon`);
+            mycats.setScale(0.3).setPosition(position, 200);
+            position+=175;
+        }
+        this.socket.on("disconnected", function (arg) {
+            const { playerId, numPlayers } = arg;
+            scene.state.numPlayers = numPlayers;
+            scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+              if (playerId === otherPlayer.playerId) {
+                otherPlayer.destroy();
+              }
+            });
+            position -= 175; 
+          });
+        // this.socket.on("setState", function (state) {
+        //     console.log("udheihduehiude")
+        //     const { roomKey, players, numPlayers } = state;
+        //     console.log(state); 
+        //     console.log(roomKey); 
+        //     console.log(players); 
+        //     console.log(numPlayers);
+        //     scene.physics.resume();
+
+        //     // STATE
+        //     scene.state.roomKey = roomKey;
+        //     scene.state.players = players;
+        //     scene.state.numPlayers = numPlayers;
+        // });
+
+        // // PLAYERS
+        // this.socket.on("currentPlayers", function (arg) {
+        //     console.log("HELLO")
+        //     const { players, numPlayers } = arg;
+        //     scene.state.numPlayers = numPlayers;
+        //     Object.keys(players).forEach(function (id) {
+        //         if (players[id].playerId === scene.socket.id) {
+        //             scene.addPlayer(scene, players[id]);
+        //         } else {
+        //             scene.addOtherPlayers(scene, players[id]);
+        //         }
+        //     });
+        // });
+    }
+    // addPlayer(scene, playerInfo) {
+    //     scene.joined = true;
+    //     scene.icon = scene.physics.add
+    //       .sprite(playerInfo.x, playerInfo.y, "astru")
+    //       .setOrigin(0.5, 0.5)
+    //       .setSize(30, 40)
+    //       .setOffset(0, 300);
+    //   }
+    //   addOtherPlayers(scene, playerInfo) {
+    //     const otherPlayer = scene.add.sprite(
+    //       playerInfo.x + 40,
+    //       playerInfo.y + 40,
+    //       "astru"
+    //     );
+    //     otherPlayer.playerId = playerInfo.playerId;
+    //     scene.otherPlayers.add(otherPlayer);
+    //   }
 }
