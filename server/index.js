@@ -1,3 +1,4 @@
+// Imports
 const path = require("path");
 const PORT = process.env.PORT || 8080;
 const express = require("express");
@@ -5,6 +6,7 @@ const app = express();
 const socketio = require("socket.io");
 module.exports = app;
 
+// Create the express app
 const createApp = () => {
     app.use("/client", express.static(__dirname + "/../client"));
 
@@ -13,6 +15,7 @@ const createApp = () => {
     });
 };
 
+// Create the server
 const startListening = () => {
     const server = app.listen(PORT, () =>
         console.log(`Listening on http://localhost:${PORT}`)
@@ -21,6 +24,7 @@ const startListening = () => {
     require("./src/sockets")(io);
 };
 
+// Boot the server up
 async function bootApp() {
     await createApp();
     await startListening();

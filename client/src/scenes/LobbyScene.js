@@ -61,6 +61,7 @@ export default class LobbyScene extends Phaser.Scene {
             });
         });
 
+        // NEW PLAYER
         this.socket.on("newPlayer", function (arg) {
             const { playerInfo, numPlayers } = arg;
             scene.addOtherPlayers(scene, playerInfo);
@@ -80,9 +81,9 @@ export default class LobbyScene extends Phaser.Scene {
 
         scene.boxes = scene.add.graphics();
         scene.circle = scene.add.graphics();
-        //add circle
+        // Add circle
 
-        //creates box for the lobby and start page
+        // Creates box for the lobby and start page
         scene.boxes.fillStyle(0xbeb2a8, 1);
         scene.boxes.fillRect(275, 400, 250, 90);
         scene.makeButton = scene.add
@@ -93,28 +94,25 @@ export default class LobbyScene extends Phaser.Scene {
             })
             .setOrigin(0.5);
 
-        //creates 4 circles for the players.
+        // Creates 4 circles for the players.
+        
         //Player 1
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(125, 200, 50);
-        //player 2
+        
+        // Player 2
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(300, 200, 50);
-        //player 3
+        
+        // Player 3
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(475, 200, 50);
-        //player 4
+        
+        // Player 4
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(650, 200, 50);
 
-        //title
-        var back = scene.add.text(100, 100, "back", {
-            fontFamily: "Chela One",
-            fontSize: 40,
-            color: "#FFFBF4",
-        });
-
-        // title
+        // Title
         var cat = scene.add.text(125, 5, "Cat", {
             fontFamily: "Chela One",
             fontSize: 100,
@@ -141,6 +139,8 @@ export default class LobbyScene extends Phaser.Scene {
         });
         scene.boxes.fillStyle(0xc1a87d, 1);
         scene.boxes.fillRect(275, 500, 250, 75);
+        
+        // Start Game button
         var startGame = scene.add
             .text(400, 535, "Start Game", {
                 fontFamily: "Chela One",
@@ -152,7 +152,10 @@ export default class LobbyScene extends Phaser.Scene {
             })
             .setOrigin(0.5)
             .setPadding(0.0, 0.0, 0);
+        
         startGame.setInteractive();
+        
+        // Start Game button events
         startGame.on("pointerup", () => {
             scene.scene.start("FirstTask", {
                 ...scene.state,

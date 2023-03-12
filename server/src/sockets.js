@@ -22,6 +22,7 @@ module.exports = (io) => {
             socket.emit("roomCreated", key);
         });
 
+        // JOIN A ROOM
         socket.on("joinRoom", (roomKey) => {
             socket.join(roomKey);
             console.log("test" + roomKey);
@@ -31,19 +32,19 @@ module.exports = (io) => {
                 playerId: socket.id,
             };
 
-            // update number of players
+            // Update number of players
             roomInfo.numPlayers = Object.keys(roomInfo.players).length;
 
-            // set initial state
+            // Set initial state
             socket.emit("setState", roomInfo);
 
-            // send the players object to the new player
+            // Send the players object to the new player
             socket.emit("currentPlayers", {
                 players: roomInfo.players,
                 numPlayers: roomInfo.numPlayers,
             });
 
-            // update all other players of the new player
+            // Update all other players of the new player
             socket.to(roomKey).emit("newPlayer", {
                 playerInfo: roomInfo.players[socket.id],
                 numPlayers: roomInfo.numPlayers,
@@ -53,8 +54,9 @@ module.exports = (io) => {
         });
 
         socket.on("join", function (roomID, callback) {
-            // join existing room
             console.log("join");
+            
+            // Join existing room
             if (connectClientToRoom(roomID, client.id, false)) {
                 callback(roomID);
             }
@@ -62,7 +64,8 @@ module.exports = (io) => {
 
         socket.on("disconnect", () => {
             console.log(`A socket has disconnected`);
-            //find which room they belong to
+            
+            // Find which room they belong to
             let roomKey = 0;
             for (let keys1 in gameRooms) {
                 for (let keys2 in gameRooms[keys1]) {
@@ -78,11 +81,14 @@ module.exports = (io) => {
 
             if (roomInfo) {
                 console.log("user disconnected: ", socket.id);
-                // remove this player from our players object
+                
+                // Remove this player from our players object
                 delete roomInfo.players[socket.id];
-                // update numPlayers
+                
+                // Update numPlayers
                 roomInfo.numPlayers = Object.keys(roomInfo.players).length;
-                // emit a message to all players to remove this player
+                
+                // Emit a message to all players to remove this player
                 io.to(roomKey).emit("disconnected", {
                     playerId: socket.id,
                     numPlayers: roomInfo.numPlayers,
@@ -98,6 +104,7 @@ module.exports = (io) => {
     });
 };
 
+// CODE GENERATOR FOR LOBBY
 function codeGenerator() {
     let code = "";
     let chars = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
