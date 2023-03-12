@@ -28,10 +28,10 @@ export default class LobbyScene extends Phaser.Scene {
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
         );
-        this.load.image("icon_01", "client/assets/sprites/cat.png"); //Files might not be in the root
-        this.load.image("icon_02", "client/assets/sprites/cat.png");
-        this.load.image("icon_03", "client/assets/sprites/cat.png");
-        this.load.image("icon_04", "client/assets/sprites/cat.png");
+        this.load.image("player1", "client/assets/sprites/player1.png"); //Files might not be in the root
+        this.load.image("player2", "client/assets/sprites/player2.png");
+        this.load.image("player3", "client/assets/sprites/player3.png");
+        this.load.image("player4", "client/assets/sprites/player4.png");
     }
 
     create() {
@@ -44,16 +44,14 @@ export default class LobbyScene extends Phaser.Scene {
 
         this.otherPlayers = this.physics.add.group();
 
-        // scene.socket.emit("joinRoom", scene.roomKey);
-
         // JOINED ROOM - SET STATE
         this.socket.on("setState", function (state) {
-            console.log("udheihduehiude")
+            // console.log("udheihduehiude");
             const { roomKey, players, numPlayers } = state;
-            console.log(state); 
-            console.log(roomKey); 
-            console.log(players); 
-            console.log(numPlayers);
+            // console.log(state);
+            // console.log(roomKey);
+            // console.log(players);
+            // console.log(numPlayers);
             scene.physics.resume();
 
             // STATE
@@ -64,16 +62,15 @@ export default class LobbyScene extends Phaser.Scene {
 
         // PLAYERS
         this.socket.on("currentPlayers", function (arg) {
-            console.log("HELLO")
             const { players, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
-            // Object.keys(players).forEach(function (id) {
-            //     if (players[id].playerId === scene.socket.id) {
-            //         scene.addPlayer(scene, players[id]);
-            //     } else {
-            //         scene.addOtherPlayers(scene, players[id]);
-            //     }
-            // });
+            Object.keys(players).forEach(function (id) {
+                if (players[id].playerId === scene.socket.id) {
+                    scene.addPlayer(scene, players[id]);
+                } else {
+                    scene.addOtherPlayers(scene, players[id]);
+                }
+            });
         });
 
         // NEW PLAYER
@@ -81,7 +78,7 @@ export default class LobbyScene extends Phaser.Scene {
             const { playerInfo, numPlayers } = arg;
             // scene.addOtherPlayers(scene, playerInfo);
             scene.state.numPlayers = numPlayers;
-            console.log(numPlayers); 
+            console.log(numPlayers);
             console.log(scene.state.numPlayers);
         });
 
@@ -112,19 +109,19 @@ export default class LobbyScene extends Phaser.Scene {
             .setOrigin(0.5);
 
         // Creates 4 circles for the players.
-        
+
         //Player 1
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(125, 200, 50);
-        
+
         // Player 2
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(300, 200, 50);
-        
+
         // Player 3
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(475, 200, 50);
-        
+
         // Player 4
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(650, 200, 50);
@@ -156,7 +153,7 @@ export default class LobbyScene extends Phaser.Scene {
         });
         scene.boxes.fillStyle(0xc1a87d, 1);
         scene.boxes.fillRect(275, 500, 250, 75);
-        
+
         // Start Game button
         var startGame = scene.add
             .text(400, 535, "Start Game", {
@@ -169,9 +166,9 @@ export default class LobbyScene extends Phaser.Scene {
             })
             .setOrigin(0.5)
             .setPadding(0.0, 0.0, 0);
-        
+
         startGame.setInteractive();
-        
+
         // Start Game button events
         startGame.on("pointerup", () => {
             scene.scene.start("FirstTask", {
@@ -196,30 +193,30 @@ export default class LobbyScene extends Phaser.Scene {
 
     update() {
         const scene = this;
-        console.log( scene.state.numPlayers);
-        var position = 125
-        for(let x=1; x <=  scene.state.numPlayers; x++ ) {
-            console.log("eiudhie")
+        // console.log(scene.state.numPlayers);
+        var position = 125;
+        for (let x = 1; x <= scene.state.numPlayers; x++) {
+            // console.log("eiudhie");
             var mycats = scene.add.sprite(300, 300, `icon`);
             mycats.setScale(0.3).setPosition(position, 200);
-            position+=175;
+            position += 175;
         }
         this.socket.on("disconnected", function (arg) {
             const { playerId, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-              if (playerId === otherPlayer.playerId) {
-                otherPlayer.destroy();
-              }
+                if (playerId === otherPlayer.playerId) {
+                    otherPlayer.destroy();
+                }
             });
-            position -= 175; 
-          });
+            position -= 175;
+        });
         // this.socket.on("setState", function (state) {
         //     console.log("udheihduehiude")
         //     const { roomKey, players, numPlayers } = state;
-        //     console.log(state); 
-        //     console.log(roomKey); 
-        //     console.log(players); 
+        //     console.log(state);
+        //     console.log(roomKey);
+        //     console.log(players);
         //     console.log(numPlayers);
         //     scene.physics.resume();
 

@@ -24,10 +24,11 @@ module.exports = (io) => {
 
         // JOIN A ROOM
         socket.on("joinRoom", (roomKey) => {
+            console.log(socket.id);
             socket.join(roomKey);
-            console.log("test" + roomKey);
+            // console.log("test" + roomKey);
             const roomInfo = gameRooms[roomKey];
-            console.log("roomInfo", roomInfo);
+            // console.log("roomInfo", roomInfo);
             roomInfo.players[socket.id] = {
                 playerId: socket.id,
                 playerNum: Object.keys(roomInfo.players).length + 1,
@@ -38,7 +39,6 @@ module.exports = (io) => {
             console.log("JOIN ROOM ");
             // Set initial state
             socket.emit("setState", roomInfo);
-            console.log("THHYGUYCEGUCEYGCE");
 
             // Send the players object to the new player
             socket.emit("currentPlayers", {
@@ -83,6 +83,13 @@ module.exports = (io) => {
 
             if (roomInfo) {
                 console.log("user disconnected: ", socket.id);
+
+                var deletedNum = roomInfo.players[socket.id].playerNum;
+                for (let player in roomInfo.players) {
+                    if (player.playerNum > deletedNum) {
+                        player.playerNum = player.playerNum - 1;
+                    }
+                }
 
                 // Remove this player from our players object
                 delete roomInfo.players[socket.id];
