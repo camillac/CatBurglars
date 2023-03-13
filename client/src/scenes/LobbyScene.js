@@ -42,6 +42,7 @@ export default class LobbyScene extends Phaser.Scene {
 
         console.log("Room Key " + this.roomKey);
 
+        // this.currentPlayer = this.physics.add.group();
         this.otherPlayers = this.physics.add.group();
 
         // JOINED ROOM - SET STATE
@@ -78,18 +79,21 @@ export default class LobbyScene extends Phaser.Scene {
             const { playerInfo, numPlayers } = arg;
             scene.addOtherPlayers(scene, playerInfo);
             scene.state.numPlayers = numPlayers;
-            console.log(numPlayers);
-            console.log(scene.state.numPlayers);
+            // console.log(numPlayers);
+            // console.log(scene.state.numPlayers);
         });
 
         // DISCONNECT
         this.socket.on("disconnected", function (arg) {
             const { playerId, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
+            // scene.currentPlayer.setScale(0.3)
+            // .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
                 if (playerId === otherPlayer.playerId) {
                     otherPlayer.destroy();
                 }
+                // if ()
             });
         });
 
@@ -171,10 +175,14 @@ export default class LobbyScene extends Phaser.Scene {
 
         // Start Game button events
         startGame.on("pointerup", () => {
-            scene.scene.start("FirstTask", {
-                ...scene.state,
-                socket: scene.socket,
-            });
+            if (scene.state.numPlayers == 4) {
+                scene.scene.start("FirstTask", {
+                    ...scene.state,
+                    socket: scene.socket,
+                });
+            } else {
+                console.log("Not Enough Players!");
+            }
         });
         startGame.on("pointerover", () => {
             startGame.setStyle({
@@ -186,9 +194,6 @@ export default class LobbyScene extends Phaser.Scene {
                 color: "#FFFBF4",
             });
         });
-
-        var mycats = this.add.sprite(300, 300, "player1");
-        mycats.setScale(0.3).setPosition(125, 200);
     }
 
     update() {
@@ -203,13 +208,18 @@ export default class LobbyScene extends Phaser.Scene {
         // }
         this.socket.on("disconnected", function (arg) {
             const { playerId, numPlayers } = arg;
-            scene.state.numPlayers = numPlayers;
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
                 if (playerId === otherPlayer.playerId) {
                     otherPlayer.destroy();
                 }
             });
-            position -= 175;
+            // .setScale(0.3)
+            // .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
+            scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+                if (playerId === otherPlayer.playerId) {
+                    otherPlayer.destroy();
+                }
+            });
         });
         // this.socket.on("setState", function (state) {
         //     console.log("udheihduehiude")
@@ -251,6 +261,10 @@ export default class LobbyScene extends Phaser.Scene {
 
     addPlayer(scene, playerInfo) {
         scene.joined = true;
+        // scene.circle.fillStyle(0xe8ded1, 1);
+        // scene.circle.fillCircle(300, 200, 50);
+        var circle = scene.circle.fillStyle(0xffffff, 1);
+        circle.fillCircle(125 + 175 * (playerInfo.playerNum - 1), 200, 50);
         var mycats = scene.add.sprite(
             300,
             300,
@@ -259,6 +273,7 @@ export default class LobbyScene extends Phaser.Scene {
         mycats
             .setScale(0.3)
             .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
+        // scene.currentPlayer = mycats;
     }
     addOtherPlayers(scene, playerInfo) {
         const otherPlayer = scene.add.sprite(
