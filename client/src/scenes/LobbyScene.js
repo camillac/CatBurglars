@@ -170,6 +170,21 @@ export default class LobbyScene extends Phaser.Scene {
                 });
             } else {
                 console.log("Not Enough Players!");
+                scene.notEnoughPlayers = scene.add
+                    .text(400, 325, "Not Enough Players!", {
+                        fontFamily: "Chela One",
+                        fontSize: 35,
+                        color: "#FF0000",
+                        fontStyle: "normal",
+                        stroke: "#000000",
+                        strokeThickness: 12,
+                    })
+                    .setOrigin(0.5)
+                    .setPadding(0.0, 0.0, 0);
+                function notEnough (){
+                    scene.notEnoughPlayers.destroy();
+                }
+                    this.time.addEvent({ delay: 1000, callback: notEnough, callbackScope:this});
             }
         });
         startGame.on("pointerover", () => {
