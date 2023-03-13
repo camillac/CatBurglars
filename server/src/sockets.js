@@ -114,6 +114,7 @@ module.exports = (io) => {
                 io.to(roomKey).emit("disconnected", {
                     playerId: socket.id,
                     numPlayers: roomInfo.numPlayers,
+                    roomInfo: roomInfo,
                 });
 
                 console.log(roomInfo);
