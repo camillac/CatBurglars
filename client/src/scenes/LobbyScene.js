@@ -199,24 +199,13 @@ export default class LobbyScene extends Phaser.Scene {
     update() {
         const scene = this;
         // console.log(scene.state.numPlayers);
-        // var position = 125;
+        var position = 125;
         // for (let x = 1; x <= scene.state.numPlayers; x++) {
         //     // console.log("eiudhie");
         //     var mycats = scene.add.sprite(300, 300, `player` + x);
         //     mycats.setScale(0.3).setPosition(position, 200);
         //     position += 175;
         // }
-        this.socket.on("currentPlayers", function (arg) {
-            const { players, numPlayers } = arg;
-            scene.state.numPlayers = numPlayers;
-            Object.keys(players).forEach(function (id) {
-                if (players[id].playerId === scene.socket.id) {
-                    scene.addPlayer(scene, players[id]);
-                } else {
-                    scene.addOtherPlayers(scene, players[id]);
-                }
-            });
-        });
         this.socket.on("disconnected", function (arg) {
             const { playerId, numPlayers } = arg;
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
@@ -226,16 +215,50 @@ export default class LobbyScene extends Phaser.Scene {
             });
             // .setScale(0.3)
             // .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
-            console.log("num: ", scene.state.numPlayers); 
-            // console.log(scene.otherPlayers.getChildren());
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-                console.log(otherPlayer)
                 if (playerId === otherPlayer.playerId) {
                     otherPlayer.destroy();
                 }
             });
         });
+        // this.socket.on("setState", function (state) {
+        //     console.log("udheihduehiude")
+        //     const { roomKey, players, numPlayers } = state;
+        //     console.log(state);
+        //     console.log(roomKey);
+        //     console.log(players);
+        //     console.log(numPlayers);
+        //     scene.physics.resume();
+
+        //     // STATE
+        //     scene.state.roomKey = roomKey;
+        //     scene.state.players = players;
+        //     scene.state.numPlayers = numPlayers;
+        // });
+
+        // // PLAYERS
+        // this.socket.on("currentPlayers", function (arg) {
+        //     console.log("HELLO")
+        //     const { players, numPlayers } = arg;
+        //     scene.state.numPlayers = numPlayers;
+        //     Object.keys(players).forEach(function (id) {
+        //         if (players[id].playerId === scene.socket.id) {
+        //             scene.addPlayer(scene, players[id]);
+        //         } else {
+        //             scene.addOtherPlayers(scene, players[id]);
+        //         }
+        //     });
+        // });
     }
+
+    // var position = 125;
+    //     for (let x = 1; x <= scene.state.numPlayers; x++) {
+    //         // console.log("eiudhie");
+    //         var mycats = scene.add.sprite(300, 300, `player` + x);
+    //         mycats.setScale(0.3).setPosition(position, 200);
+    //         position += 175;
+    //     }
+
     addPlayer(scene, playerInfo) {
         scene.joined = true;
         // scene.circle.fillStyle(0xe8ded1, 1);
