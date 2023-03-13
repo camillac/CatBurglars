@@ -31,8 +31,12 @@ module.exports = (io) => {
             // console.log("roomInfo", roomInfo);
             roomInfo.players[socket.id] = {
                 playerId: socket.id,
-                playerNum: Object.keys(roomInfo.players).length + 1,
+                playerNum: 0,
             };
+
+            roomInfo.players[socket.id].playerNum = Object.keys(
+                roomInfo.players
+            ).length;
 
             // Update number of players
             roomInfo.numPlayers = Object.keys(roomInfo.players).length;
