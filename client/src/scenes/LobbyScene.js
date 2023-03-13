@@ -43,10 +43,6 @@ export default class LobbyScene extends Phaser.Scene {
         this.socket.on("setState", function (state) {
             // console.log("udheihduehiude");
             const { roomKey, players, numPlayers } = state;
-            // console.log(state);
-            // console.log(roomKey);
-            // console.log(players);
-            // console.log(numPlayers);
             scene.physics.resume();
 
             // STATE
@@ -74,8 +70,6 @@ export default class LobbyScene extends Phaser.Scene {
             const { playerInfo, numPlayers } = arg;
             scene.addOtherPlayers(scene, playerInfo);
             scene.state.numPlayers = numPlayers;
-            // console.log(numPlayers);
-            // console.log(scene.state.numPlayers);
         });
 
         // DISCONNECT
@@ -88,7 +82,6 @@ export default class LobbyScene extends Phaser.Scene {
                 if (playerId === otherPlayer.playerId) {
                     otherPlayer.destroy();
                 }
-                // if ()
             });
         });
 
@@ -194,34 +187,32 @@ export default class LobbyScene extends Phaser.Scene {
     update() {
         const scene = this;
         this.socket.on("disconnected", function (arg) {
-            const { playerId, numPlayers, roomInfo} = arg;
-            scene.numPlayers = numPlayers; 
+            const { playerId, numPlayers, roomInfo } = arg;
+            scene.numPlayers = numPlayers;
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
                 // if (playerId === otherPlayer.playerId) {
-                    otherPlayer.destroy();
+                otherPlayer.destroy();
                 // }
             });
-            scene.currentPlayer.getChildren().forEach(function(curr){
+            scene.currentPlayer.getChildren().forEach(function (curr) {
                 curr.destroy();
             })
             scene.circle.fillStyle(0xe8ded1, 1);
-        scene.circle.fillCircle(125, 200, 50);
+            scene.circle.fillCircle(125, 200, 50);
 
-        // Player 2
-        scene.circle.fillStyle(0xe8ded1, 1);
-        scene.circle.fillCircle(300, 200, 50);
+            // Player 2
+            scene.circle.fillStyle(0xe8ded1, 1);
+            scene.circle.fillCircle(300, 200, 50);
 
-        // Player 3
-        scene.circle.fillStyle(0xe8ded1, 1);
-        scene.circle.fillCircle(475, 200, 50);
+            // Player 3
+            scene.circle.fillStyle(0xe8ded1, 1);
+            scene.circle.fillCircle(475, 200, 50);
 
-        // Player 4
-        scene.circle.fillStyle(0xe8ded1, 1);
-        scene.circle.fillCircle(650, 200, 50);
-            // scene.currentPlayer.destroy();
-            
-            // console.log(numPlayers); 
-            const players = roomInfo.players; 
+            // Player 4
+            scene.circle.fillStyle(0xe8ded1, 1);
+            scene.circle.fillCircle(650, 200, 50);
+
+            const players = roomInfo.players;
             console.log(players);
             Object.keys(players).forEach(function (id) {
                 if (players[id].playerId === scene.socket.id) {
@@ -230,13 +221,11 @@ export default class LobbyScene extends Phaser.Scene {
                     scene.addOtherPlayers(scene, players[id]);
                 }
             });
-            // console.log(playerInfo.playerNum);
         });
     }
 
     addPlayer(scene, playerInfo) {
         scene.joined = true;
-        // var container = scene.add.container(125 + 175 * (playerInfo.playerNum - 1), 200); 
         var circle = scene.circle.fillStyle(0xffffff, 1);
         circle.fillCircle(125 + 175 * (playerInfo.playerNum - 1), 200, 50);
         var mycats = scene.add.sprite(
@@ -247,8 +236,6 @@ export default class LobbyScene extends Phaser.Scene {
         mycats
             .setScale(0.6)
             .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
-        // container.add([circle, mycats]); 
-        // scene.currentPlayer.add(container);
         scene.currentPlayer.add(mycats);
     }
     addOtherPlayers(scene, playerInfo) {
