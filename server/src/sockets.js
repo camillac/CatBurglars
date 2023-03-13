@@ -87,11 +87,20 @@ module.exports = (io) => {
 
             if (roomInfo) {
                 console.log("user disconnected: ", socket.id);
+                console.log(roomInfo);
 
                 var deletedNum = roomInfo.players[socket.id].playerNum;
-                for (let player in roomInfo.players) {
-                    if (player.playerNum > deletedNum) {
-                        player.playerNum = player.playerNum - 1;
+                console.log(deletedNum);
+                console.log(roomInfo.players);
+                for (playerId in roomInfo.players) {
+                    console.log("player: " + playerId);
+                    console.log(
+                        "playerNum: " + roomInfo.players[playerId].playerNum
+                    );
+
+                    if (roomInfo.players[playerId].playerNum > deletedNum) {
+                        roomInfo.players[playerId].playerNum =
+                            roomInfo.players[playerId].playerNum - 1;
                     }
                 }
 
@@ -106,6 +115,8 @@ module.exports = (io) => {
                     playerId: socket.id,
                     numPlayers: roomInfo.numPlayers,
                 });
+
+                console.log(roomInfo);
             }
         });
 
