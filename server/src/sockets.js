@@ -55,14 +55,14 @@ module.exports = (io) => {
             console.log(roomInfo);
         });
 
-        socket.on("join", function (roomID, callback) {
-            console.log("join");
+        // socket.on("join", function (roomID, callback) {
+        //     console.log("join");
 
-            // Join existing room
-            if (connectClientToRoom(roomID, client.id, false)) {
-                callback(roomID);
-            }
-        });
+        //     // Join existing room
+        //     if (connectClientToRoom(roomID, client.id, false)) {
+        //         callback(roomID);
+        //     }
+        // });
 
         socket.on("disconnect", () => {
             console.log(`A socket has disconnected`);

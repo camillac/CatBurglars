@@ -76,7 +76,7 @@ export default class LobbyScene extends Phaser.Scene {
         // NEW PLAYER
         this.socket.on("newPlayer", function (arg) {
             const { playerInfo, numPlayers } = arg;
-            // scene.addOtherPlayers(scene, playerInfo);
+            scene.addOtherPlayers(scene, playerInfo);
             scene.state.numPlayers = numPlayers;
             console.log(numPlayers);
             console.log(scene.state.numPlayers);
@@ -187,7 +187,7 @@ export default class LobbyScene extends Phaser.Scene {
             });
         });
 
-        var mycats = this.add.sprite(300, 300, "icon");
+        var mycats = this.add.sprite(300, 300, "player1");
         mycats.setScale(0.3).setPosition(125, 200);
     }
 
@@ -195,12 +195,12 @@ export default class LobbyScene extends Phaser.Scene {
         const scene = this;
         // console.log(scene.state.numPlayers);
         var position = 125;
-        for (let x = 1; x <= scene.state.numPlayers; x++) {
-            // console.log("eiudhie");
-            var mycats = scene.add.sprite(300, 300, `icon`);
-            mycats.setScale(0.3).setPosition(position, 200);
-            position += 175;
-        }
+        // for (let x = 1; x <= scene.state.numPlayers; x++) {
+        //     // console.log("eiudhie");
+        //     var mycats = scene.add.sprite(300, 300, `player` + x);
+        //     mycats.setScale(0.3).setPosition(position, 200);
+        //     position += 175;
+        // }
         this.socket.on("disconnected", function (arg) {
             const { playerId, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
@@ -240,21 +240,36 @@ export default class LobbyScene extends Phaser.Scene {
         //     });
         // });
     }
-    // addPlayer(scene, playerInfo) {
-    //     scene.joined = true;
-    //     scene.icon = scene.physics.add
-    //       .sprite(playerInfo.x, playerInfo.y, "astru")
-    //       .setOrigin(0.5, 0.5)
-    //       .setSize(30, 40)
-    //       .setOffset(0, 300);
-    //   }
-    //   addOtherPlayers(scene, playerInfo) {
-    //     const otherPlayer = scene.add.sprite(
-    //       playerInfo.x + 40,
-    //       playerInfo.y + 40,
-    //       "astru"
-    //     );
-    //     otherPlayer.playerId = playerInfo.playerId;
-    //     scene.otherPlayers.add(otherPlayer);
-    //   }
+
+    // var position = 125;
+    //     for (let x = 1; x <= scene.state.numPlayers; x++) {
+    //         // console.log("eiudhie");
+    //         var mycats = scene.add.sprite(300, 300, `player` + x);
+    //         mycats.setScale(0.3).setPosition(position, 200);
+    //         position += 175;
+    //     }
+
+    addPlayer(scene, playerInfo) {
+        scene.joined = true;
+        var mycats = scene.add.sprite(
+            300,
+            300,
+            `player` + playerInfo.playerNum
+        );
+        mycats
+            .setScale(0.3)
+            .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
+    }
+    addOtherPlayers(scene, playerInfo) {
+        const otherPlayer = scene.add.sprite(
+            300,
+            300,
+            `player` + playerInfo.playerNum
+        );
+        otherPlayer
+            .setScale(0.3)
+            .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
+        otherPlayer.playerId = playerInfo.playerId;
+        scene.otherPlayers.add(otherPlayer);
+    }
 }
