@@ -204,6 +204,21 @@ export default class LobbyScene extends Phaser.Scene {
             scene.currentPlayer.getChildren().forEach(function(curr){
                 curr.destroy();
             })
+            scene.circle.fillStyle(0xe8ded1, 1);
+        scene.circle.fillCircle(125, 200, 50);
+
+        // Player 2
+        scene.circle.fillStyle(0xe8ded1, 1);
+        scene.circle.fillCircle(300, 200, 50);
+
+        // Player 3
+        scene.circle.fillStyle(0xe8ded1, 1);
+        scene.circle.fillCircle(475, 200, 50);
+
+        // Player 4
+        scene.circle.fillStyle(0xe8ded1, 1);
+        scene.circle.fillCircle(650, 200, 50);
+            // scene.currentPlayer.destroy();
             
             // console.log(numPlayers); 
             const players = roomInfo.players; 
@@ -221,6 +236,7 @@ export default class LobbyScene extends Phaser.Scene {
 
     addPlayer(scene, playerInfo) {
         scene.joined = true;
+        // var container = scene.add.container(125 + 175 * (playerInfo.playerNum - 1), 200); 
         var circle = scene.circle.fillStyle(0xffffff, 1);
         circle.fillCircle(125 + 175 * (playerInfo.playerNum - 1), 200, 50);
         var mycats = scene.add.sprite(
@@ -231,6 +247,8 @@ export default class LobbyScene extends Phaser.Scene {
         mycats
             .setScale(0.6)
             .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
+        // container.add([circle, mycats]); 
+        // scene.currentPlayer.add(container);
         scene.currentPlayer.add(mycats);
     }
     addOtherPlayers(scene, playerInfo) {
