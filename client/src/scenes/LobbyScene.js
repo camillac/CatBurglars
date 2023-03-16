@@ -12,7 +12,6 @@ export default class LobbyScene extends Phaser.Scene {
     }
 
     preload() {
-        // this.load.setBaseURL('http://labs.phaser.io');
         this.load.script(
             "webfont",
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
@@ -24,21 +23,25 @@ export default class LobbyScene extends Phaser.Scene {
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
         );
+        this.load.image("player1", "client/assets/sprites/player1.png"); //Files might not be in the root
+        this.load.image("player2", "client/assets/sprites/player2.png");
+        this.load.image("player3", "client/assets/sprites/player3.png");
+        this.load.image("player4", "client/assets/sprites/player4.png");
     }
 
     create() {
         const scene = this;
+        scene.socket.emit("joinRoom", this.roomKey);
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
 
         console.log("Room Key " + this.roomKey);
-
+        this.currentPlayer = this.physics.add.group();
         this.otherPlayers = this.physics.add.group();
-
-        // scene.socket.emit("joinRoom", scene.roomKey);
 
         // JOINED ROOM - SET STATE
         this.socket.on("setState", function (state) {
+            // console.log("udheihduehiude");
             const { roomKey, players, numPlayers } = state;
             scene.physics.resume();
 
@@ -46,10 +49,12 @@ export default class LobbyScene extends Phaser.Scene {
             scene.state.roomKey = roomKey;
             scene.state.players = players;
             scene.state.numPlayers = numPlayers;
+            // scene.state.currentPlayer = scene.socket.id;
         });
 
         // PLAYERS
         this.socket.on("currentPlayers", function (arg) {
+            // console.log("currentPlayers");
             const { players, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
             Object.keys(players).forEach(function (id) {
@@ -63,15 +68,27 @@ export default class LobbyScene extends Phaser.Scene {
 
         // NEW PLAYER
         this.socket.on("newPlayer", function (arg) {
+            console.log("newPlayer");
             const { playerInfo, numPlayers } = arg;
             scene.addOtherPlayers(scene, playerInfo);
             scene.state.numPlayers = numPlayers;
+        });
+
+        // Other Player Started Game
+        this.socket.on("startRoom", function () {
+            console.log("gameStarted");
+            scene.scene.start("FirstTask", {
+                ...scene.state,
+                socket: scene.socket,
+            });
         });
 
         // DISCONNECT
         this.socket.on("disconnected", function (arg) {
             const { playerId, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
+            // scene.currentPlayer.setScale(0.3)
+            // .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
                 if (playerId === otherPlayer.playerId) {
                     otherPlayer.destroy();
@@ -95,19 +112,19 @@ export default class LobbyScene extends Phaser.Scene {
             .setOrigin(0.5);
 
         // Creates 4 circles for the players.
-        
+
         //Player 1
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(125, 200, 50);
-        
+
         // Player 2
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(300, 200, 50);
-        
+
         // Player 3
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(475, 200, 50);
-        
+
         // Player 4
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(650, 200, 50);
@@ -139,7 +156,7 @@ export default class LobbyScene extends Phaser.Scene {
         });
         scene.boxes.fillStyle(0xc1a87d, 1);
         scene.boxes.fillRect(275, 500, 250, 75);
-        
+
         // Start Game button
         var startGame = scene.add
             .text(400, 535, "Start Game", {
@@ -152,15 +169,39 @@ export default class LobbyScene extends Phaser.Scene {
             })
             .setOrigin(0.5)
             .setPadding(0.0, 0.0, 0);
-        
+
         startGame.setInteractive();
-        
+
         // Start Game button events
         startGame.on("pointerup", () => {
-            scene.scene.start("FirstTask", {
-                ...scene.state,
-                socket: scene.socket,
-            });
+            if (scene.state.numPlayers == 4) {
+                scene.socket.emit("startGame", this.roomKey);
+                scene.scene.start("FirstTask", {
+                    ...scene.state,
+                    socket: scene.socket,
+                });
+            } else {
+                console.log("Not Enough Players!");
+                scene.notEnoughPlayers = scene.add
+                    .text(400, 325, "Not Enough Players!", {
+                        fontFamily: "Chela One",
+                        fontSize: 35,
+                        color: "#FF0000",
+                        fontStyle: "normal",
+                        stroke: "#000000",
+                        strokeThickness: 12,
+                    })
+                    .setOrigin(0.5)
+                    .setPadding(0.0, 0.0, 0);
+                function notEnough() {
+                    scene.notEnoughPlayers.destroy();
+                }
+                this.time.addEvent({
+                    delay: 1000,
+                    callback: notEnough,
+                    callbackScope: this,
+                });
+            }
         });
         startGame.on("pointerover", () => {
             startGame.setStyle({
@@ -172,10 +213,71 @@ export default class LobbyScene extends Phaser.Scene {
                 color: "#FFFBF4",
             });
         });
-
-        var mycats = this.add.sprite(300, 300, "icon");
-        mycats.setScale(0.3).setPosition(125, 200);
     }
 
-    update() {}
+    update() {
+        const scene = this;
+        this.socket.on("disconnected", function (arg) {
+            const { playerId, numPlayers, roomInfo } = arg;
+            scene.numPlayers = numPlayers;
+            scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+                // if (playerId === otherPlayer.playerId) {
+                otherPlayer.destroy();
+                // }
+            });
+            scene.currentPlayer.getChildren().forEach(function (curr) {
+                curr.destroy();
+            });
+            scene.circle.fillStyle(0xe8ded1, 1);
+            scene.circle.fillCircle(125, 200, 50);
+
+            // Player 2
+            scene.circle.fillStyle(0xe8ded1, 1);
+            scene.circle.fillCircle(300, 200, 50);
+
+            // Player 3
+            scene.circle.fillStyle(0xe8ded1, 1);
+            scene.circle.fillCircle(475, 200, 50);
+
+            // Player 4
+            scene.circle.fillStyle(0xe8ded1, 1);
+            scene.circle.fillCircle(650, 200, 50);
+
+            const players = roomInfo.players;
+            Object.keys(players).forEach(function (id) {
+                if (players[id].playerId === scene.socket.id) {
+                    scene.addPlayer(scene, players[id]);
+                } else {
+                    scene.addOtherPlayers(scene, players[id]);
+                }
+            });
+        });
+    }
+
+    addPlayer(scene, playerInfo) {
+        scene.joined = true;
+        var circle = scene.circle.fillStyle(0xffffff, 1);
+        circle.fillCircle(125 + 175 * (playerInfo.playerNum - 1), 200, 50);
+        var mycats = scene.add.sprite(
+            300,
+            300,
+            `player` + playerInfo.playerNum
+        );
+        mycats
+            .setScale(0.6)
+            .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
+        scene.currentPlayer.add(mycats);
+    }
+    addOtherPlayers(scene, playerInfo) {
+        const otherPlayer = scene.add.sprite(
+            300,
+            300,
+            `player` + playerInfo.playerNum
+        );
+        otherPlayer
+            .setScale(0.5)
+            .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
+        otherPlayer.playerId = playerInfo.playerId;
+        scene.otherPlayers.add(otherPlayer);
+    }
 }
