@@ -32,11 +32,14 @@ module.exports = (io) => {
             roomInfo.players[socket.id] = {
                 playerId: socket.id,
                 playerNum: 0,
+                playerName: "",
             };
 
             roomInfo.players[socket.id].playerNum = Object.keys(
                 roomInfo.players
             ).length;
+            roomInfo.players[socket.id].playerName =
+                "Player " + roomInfo.players[socket.id].playerNum;
 
             // Update number of players
             roomInfo.numPlayers = Object.keys(roomInfo.players).length;
@@ -125,6 +128,10 @@ module.exports = (io) => {
             Object.keys(gameRooms).includes(input)
                 ? socket.emit("keyIsValid", input)
                 : socket.emit("keyNotValid");
+        });
+
+        socket.on("startGame", function (roomKey) {
+            socket.to(roomKey).emit("startRoom");
         });
     });
 };

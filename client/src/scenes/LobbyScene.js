@@ -49,11 +49,12 @@ export default class LobbyScene extends Phaser.Scene {
             scene.state.roomKey = roomKey;
             scene.state.players = players;
             scene.state.numPlayers = numPlayers;
-            // scene.state.currentPlayer = scene.socket.id; 
+            // scene.state.currentPlayer = scene.socket.id;
         });
 
         // PLAYERS
         this.socket.on("currentPlayers", function (arg) {
+            // console.log("currentPlayers");
             const { players, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
             Object.keys(players).forEach(function (id) {
@@ -67,9 +68,19 @@ export default class LobbyScene extends Phaser.Scene {
 
         // NEW PLAYER
         this.socket.on("newPlayer", function (arg) {
+            console.log("newPlayer");
             const { playerInfo, numPlayers } = arg;
             scene.addOtherPlayers(scene, playerInfo);
             scene.state.numPlayers = numPlayers;
+        });
+
+        // Other Player Started Game
+        this.socket.on("startRoom", function () {
+            console.log("gameStarted");
+            scene.scene.start("FirstTask", {
+                ...scene.state,
+                socket: scene.socket,
+            });
         });
 
         // DISCONNECT
@@ -164,6 +175,7 @@ export default class LobbyScene extends Phaser.Scene {
         // Start Game button events
         startGame.on("pointerup", () => {
             if (scene.state.numPlayers == 4) {
+                scene.socket.emit("startGame", this.roomKey);
                 scene.scene.start("FirstTask", {
                     ...scene.state,
                     socket: scene.socket,
@@ -181,10 +193,14 @@ export default class LobbyScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(0.0, 0.0, 0);
-                function notEnough (){
+                function notEnough() {
                     scene.notEnoughPlayers.destroy();
                 }
-                    this.time.addEvent({ delay: 1000, callback: notEnough, callbackScope:this});
+                this.time.addEvent({
+                    delay: 1000,
+                    callback: notEnough,
+                    callbackScope: this,
+                });
             }
         });
         startGame.on("pointerover", () => {
@@ -211,7 +227,7 @@ export default class LobbyScene extends Phaser.Scene {
             });
             scene.currentPlayer.getChildren().forEach(function (curr) {
                 curr.destroy();
-            })
+            });
             scene.circle.fillStyle(0xe8ded1, 1);
             scene.circle.fillCircle(125, 200, 50);
 
@@ -228,7 +244,6 @@ export default class LobbyScene extends Phaser.Scene {
             scene.circle.fillCircle(650, 200, 50);
 
             const players = roomInfo.players;
-            console.log(players);
             Object.keys(players).forEach(function (id) {
                 if (players[id].playerId === scene.socket.id) {
                     scene.addPlayer(scene, players[id]);
