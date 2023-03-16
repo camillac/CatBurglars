@@ -277,11 +277,9 @@ export default class LobbyScene extends Phaser.Scene {
                 playerInfo.playerName,
                 {
                     fontFamily: "Chela One",
-                    fontSize: 15,
-                    color: "#FF0000",
+                    fontSize: 20,
+                    color: "#000000",
                     fontStyle: "normal",
-                    stroke: "#000000",
-                    strokeThickness: 12,
                 }
             )
             .setOrigin(0.5)
