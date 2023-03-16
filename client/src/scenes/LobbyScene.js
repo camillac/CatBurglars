@@ -38,6 +38,7 @@ export default class LobbyScene extends Phaser.Scene {
         console.log("Room Key " + this.roomKey);
         this.currentPlayer = this.physics.add.group();
         this.otherPlayers = this.physics.add.group();
+        this.playerNames = this.physics.add.group();
 
         // JOINED ROOM - SET STATE
         this.socket.on("setState", function (state) {
@@ -228,6 +229,9 @@ export default class LobbyScene extends Phaser.Scene {
             scene.currentPlayer.getChildren().forEach(function (curr) {
                 curr.destroy();
             });
+            scene.playerNames.getChildren().forEach(function (curr) {
+                curr.destroy();
+            });
             scene.circle.fillStyle(0xe8ded1, 1);
             scene.circle.fillCircle(125, 200, 50);
 
@@ -266,6 +270,23 @@ export default class LobbyScene extends Phaser.Scene {
         mycats
             .setScale(0.6)
             .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
+        var playerNameDisplay = scene.add
+            .text(
+                125 + 175 * (playerInfo.playerNum - 1),
+                275,
+                playerInfo.playerName,
+                {
+                    fontFamily: "Chela One",
+                    fontSize: 15,
+                    color: "#FF0000",
+                    fontStyle: "normal",
+                    stroke: "#000000",
+                    strokeThickness: 12,
+                }
+            )
+            .setOrigin(0.5)
+            .setPadding(0.0, 0.0, 0);
+        scene.playerNames.add(playerNameDisplay);
         scene.currentPlayer.add(mycats);
     }
     addOtherPlayers(scene, playerInfo) {
@@ -278,6 +299,23 @@ export default class LobbyScene extends Phaser.Scene {
             .setScale(0.5)
             .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
         otherPlayer.playerId = playerInfo.playerId;
+        var playerNameDisplay = scene.add
+            .text(
+                125 + 175 * (playerInfo.playerNum - 1),
+                275,
+                playerInfo.playerName,
+                {
+                    fontFamily: "Chela One",
+                    fontSize: 15,
+                    color: "#FF0000",
+                    fontStyle: "normal",
+                    stroke: "#000000",
+                    strokeThickness: 12,
+                }
+            )
+            .setOrigin(0.5)
+            .setPadding(0.0, 0.0, 0);
+        scene.playerNames.add(playerNameDisplay);
         scene.otherPlayers.add(otherPlayer);
     }
 }
