@@ -137,7 +137,7 @@ export default class PlayScene extends Phaser.Scene {
                         });
 
                         scene.socket.on("keyIsValid", function (input) {
-                            scene.socket.emit("joinRoom", input);
+                            
                             scene.scene.start("LobbyScene", {
                                 ...scene.state,
                                 socket: scene.socket,
@@ -159,7 +159,6 @@ export default class PlayScene extends Phaser.Scene {
                         scene.notValidText.setText("Invalid Room Key");
                     });
                     scene.socket.on("keyIsValid", function (input) {
-                        scene.socket.emit("joinRoom", input);
                         scene.scene.start("LobbyScene", {
                             ...scene.state,
                             socket: scene.socket,

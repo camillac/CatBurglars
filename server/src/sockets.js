@@ -24,17 +24,26 @@ module.exports = (io) => {
 
         // JOIN A ROOM
         socket.on("joinRoom", (roomKey) => {
+            console.log(socket.id);
             socket.join(roomKey);
-            console.log("test" + roomKey);
+            // console.log("test" + roomKey);
             const roomInfo = gameRooms[roomKey];
-            console.log("roomInfo", roomInfo);
+            // console.log("roomInfo", roomInfo);
             roomInfo.players[socket.id] = {
                 playerId: socket.id,
+                playerNum: 0,
+                playerName: "",
             };
+
+            roomInfo.players[socket.id].playerNum = Object.keys(
+                roomInfo.players
+            ).length;
+            roomInfo.players[socket.id].playerName =
+                "Player " + roomInfo.players[socket.id].playerNum;
 
             // Update number of players
             roomInfo.numPlayers = Object.keys(roomInfo.players).length;
-
+            console.log("JOIN ROOM ");
             // Set initial state
             socket.emit("setState", roomInfo);
 
@@ -53,18 +62,18 @@ module.exports = (io) => {
             console.log(roomInfo);
         });
 
-        socket.on("join", function (roomID, callback) {
-            console.log("join");
-            
-            // Join existing room
-            if (connectClientToRoom(roomID, client.id, false)) {
-                callback(roomID);
-            }
-        });
+        // socket.on("join", function (roomID, callback) {
+        //     console.log("join");
+
+        //     // Join existing room
+        //     if (connectClientToRoom(roomID, client.id, false)) {
+        //         callback(roomID);
+        //     }
+        // });
 
         socket.on("disconnect", () => {
             console.log(`A socket has disconnected`);
-            
+
             // Find which room they belong to
             let roomKey = 0;
             for (let keys1 in gameRooms) {
@@ -81,18 +90,37 @@ module.exports = (io) => {
 
             if (roomInfo) {
                 console.log("user disconnected: ", socket.id);
-                
+                console.log(roomInfo);
+
+                var deletedNum = roomInfo.players[socket.id].playerNum;
+                console.log(deletedNum);
+                console.log(roomInfo.players);
+                for (playerId in roomInfo.players) {
+                    console.log("player: " + playerId);
+                    console.log(
+                        "playerNum: " + roomInfo.players[playerId].playerNum
+                    );
+
+                    if (roomInfo.players[playerId].playerNum > deletedNum) {
+                        roomInfo.players[playerId].playerNum =
+                            roomInfo.players[playerId].playerNum - 1;
+                    }
+                }
+
                 // Remove this player from our players object
                 delete roomInfo.players[socket.id];
-                
+
                 // Update numPlayers
                 roomInfo.numPlayers = Object.keys(roomInfo.players).length;
-                
+
                 // Emit a message to all players to remove this player
                 io.to(roomKey).emit("disconnected", {
                     playerId: socket.id,
                     numPlayers: roomInfo.numPlayers,
+                    roomInfo: roomInfo,
                 });
+
+                console.log(roomInfo);
             }
         });
 
@@ -100,6 +128,10 @@ module.exports = (io) => {
             Object.keys(gameRooms).includes(input)
                 ? socket.emit("keyIsValid", input)
                 : socket.emit("keyNotValid");
+        });
+
+        socket.on("startGame", function (roomKey) {
+            socket.to(roomKey).emit("startRoom");
         });
     });
 };
