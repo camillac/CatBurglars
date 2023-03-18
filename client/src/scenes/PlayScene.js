@@ -83,7 +83,7 @@ export default class PlayScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
-                scene.notValidText = scene.add.text(400, 500, "", {
+                scene.notValidText = scene.add.text(400, 550, "", {
                     fill: "#ff0000",
                     fontSize: "35px",
                     fontFamily: "Chela One",
@@ -148,7 +148,7 @@ export default class PlayScene extends Phaser.Scene {
                 });
                 
                 // Join a room
-                scene.inputElement = scene.add.dom(400, 440).createFromCache("codeform");
+                scene.inputElement = scene.add.dom(400, 450).createFromCache("codeform");
                 scene.inputElement.addListener("click");
                 scene.inputElement.on("click", function (event) {
                     if (event.target.name === "enterRoom") {
