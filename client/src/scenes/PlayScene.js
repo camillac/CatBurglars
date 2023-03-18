@@ -83,7 +83,7 @@ export default class PlayScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
-                scene.notValidText = scene.add.text(400, 500, "", {
+                scene.notValidText = scene.add.text(400, 550, "", {
                     fill: "#ff0000",
                     fontSize: "35px",
                     fontFamily: "Chela One",

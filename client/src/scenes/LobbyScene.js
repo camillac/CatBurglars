@@ -99,9 +99,9 @@ export default class LobbyScene extends Phaser.Scene {
 
         // Creates box for the lobby and start page
         scene.boxes.fillStyle(0xbeb2a8, 1);
-        scene.boxes.fillRect(275, 400, 250, 90);
+        scene.boxes.fillRect(275, 425, 250, 70);
         scene.makeButton = scene.add
-            .text(400, 450, this.roomKey, {
+            .text(400, 465, this.roomKey, {
                 fontFamily: "Chela One",
                 fontcolor: "#FFFBF4'",
                 fontSize: "40px",

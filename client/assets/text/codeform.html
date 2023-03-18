@@ -28,27 +28,18 @@
     }
 </style>
 
-<div class="container">
-    <form>
+<asp:panel class = "container" >
        <input type="text" id="code-form-id" name="code-form" placeholder="Enter Room Key" class="input-box" /><br>
         <br><button type="button" id="enterRoom-id" name="enterRoom">Join a Room</button>
-
-    </form>
+</asp:panel>
     <script>
-        $("#code-form-id").keypress(function(event){
-            if(event.keycode === 13)
-            { 
-                $(enterRoom-id).click();
-            }
-        }); 
-        
         var input = document.getElementById("code-form-id"); 
         input.addEventListener("Keypress", function(event){
-            if(event.keyCode === 13)
+            if(event.keyCode === "Enter")
             { 
-                event.preventDefault();
-                document.getElementById("button").click();
+               submitform
             }
         });
+   
     </script>
 </div>

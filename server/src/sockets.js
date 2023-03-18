@@ -32,11 +32,14 @@ module.exports = (io) => {
             roomInfo.players[socket.id] = {
                 playerId: socket.id,
                 playerNum: 0,
+                playerName: "",
             };
 
             roomInfo.players[socket.id].playerNum = Object.keys(
                 roomInfo.players
             ).length;
+            roomInfo.players[socket.id].playerName =
+                "Player " + roomInfo.players[socket.id].playerNum;
 
             // Update number of players
             roomInfo.numPlayers = Object.keys(roomInfo.players).length;
@@ -87,11 +90,20 @@ module.exports = (io) => {
 
             if (roomInfo) {
                 console.log("user disconnected: ", socket.id);
+                console.log(roomInfo);
 
                 var deletedNum = roomInfo.players[socket.id].playerNum;
-                for (let player in roomInfo.players) {
-                    if (player.playerNum > deletedNum) {
-                        player.playerNum = player.playerNum - 1;
+                console.log(deletedNum);
+                console.log(roomInfo.players);
+                for (playerId in roomInfo.players) {
+                    console.log("player: " + playerId);
+                    console.log(
+                        "playerNum: " + roomInfo.players[playerId].playerNum
+                    );
+
+                    if (roomInfo.players[playerId].playerNum > deletedNum) {
+                        roomInfo.players[playerId].playerNum =
+                            roomInfo.players[playerId].playerNum - 1;
                     }
                 }
 
@@ -105,7 +117,10 @@ module.exports = (io) => {
                 io.to(roomKey).emit("disconnected", {
                     playerId: socket.id,
                     numPlayers: roomInfo.numPlayers,
+                    roomInfo: roomInfo,
                 });
+
+                console.log(roomInfo);
             }
         });
 
@@ -113,6 +128,10 @@ module.exports = (io) => {
             Object.keys(gameRooms).includes(input)
                 ? socket.emit("keyIsValid", input)
                 : socket.emit("keyNotValid");
+        });
+
+        socket.on("startGame", function (roomKey) {
+            socket.to(roomKey).emit("startRoom");
         });
     });
 };
