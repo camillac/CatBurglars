@@ -13,7 +13,7 @@ export default class FirstTask extends Phaser.Scene {
         this.load.image('Player_2','client/assets/sprites/player2.png');
         this.load.image('Player_3','client/assets/sprites/player3.png');
         this.load.image('Player_4','client/assets/sprites/player4.png');
-        this.load.image("House","client/assets/sprites/House.png") //Need to Update this
+        this.load.image("House","client/assets/sprites/log-cabin.png") //Need to Update this
        //load background
         this.load.image(
             "background",
@@ -27,8 +27,8 @@ export default class FirstTask extends Phaser.Scene {
         this.cameras.main.setBounds(0,0,50,150);
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
-        var House = this.add.image(500,500,"House");
-        House.setScale(2.5).setPosition(450,300);
+        var House = this.add.image(500,500,"House").setOrigin(0.5);
+        House.setScale(1).setPosition(450,300);
         this.cameras.startFollow(House);
 
 
