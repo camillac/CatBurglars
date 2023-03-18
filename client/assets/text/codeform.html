@@ -1,9 +1,9 @@
 <style>
-    form {
+   /*form {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-    }
+    } --> */
 
     input {
         height: 50px;
@@ -17,7 +17,7 @@
 
     button {
         height: 55px;
-        width: 400px;
+        width: 335px;
         font-family: Chela One;
         font-size: 45px;
         color: #FFFBF4;
@@ -30,7 +30,25 @@
 
 <div class="container">
     <form>
-        <input type="text" id="code-form-id" name="code-form" placeholder="Enter Room Key" class="input-box" />
-        <button type="button" id="enterRoom-id" name="enterRoom">Join a Room</button>
+       <input type="text" id="code-form-id" name="code-form" placeholder="Enter Room Key" class="input-box" /><br>
+        <br><button type="button" id="enterRoom-id" name="enterRoom">Join a Room</button>
+
     </form>
+    <script>
+        $("#code-form-id").keypress(function(event){
+            if(event.keycode === 13)
+            { 
+                $(enterRoom-id).click();
+            }
+        }); 
+        
+        var input = document.getElementById("code-form-id"); 
+        input.addEventListener("Keypress", function(event){
+            if(event.keyCode === 13)
+            { 
+                event.preventDefault();
+                document.getElementById("button").click();
+            }
+        });
+    </script>
 </div>

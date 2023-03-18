@@ -148,7 +148,7 @@ export default class PlayScene extends Phaser.Scene {
                 });
                 
                 // Join a room
-                scene.inputElement = scene.add.dom(400, 440).createFromCache("codeform");
+                scene.inputElement = scene.add.dom(400, 450).createFromCache("codeform");
                 scene.inputElement.addListener("click");
                 scene.inputElement.on("click", function (event) {
                     if (event.target.name === "enterRoom") {
