@@ -12,7 +12,6 @@ export default class LobbyScene extends Phaser.Scene {
     }
 
     preload() {
-        // this.load.setBaseURL('http://labs.phaser.io');
         this.load.script(
             "webfont",
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
@@ -85,12 +84,19 @@ export default class LobbyScene extends Phaser.Scene {
 
         // Creates box for the lobby and start page
         scene.boxes.fillStyle(0xbeb2a8, 1);
-        scene.boxes.fillRect(275, 400, 250, 90);
+        scene.boxes.fillRect(275, 380, 250, 110);
+        scene.lobbyText = scene.add.text(400,410, "Lobby Code:", {
+          fontFamily: "Chela One",
+          fontcolor: "#FFFBF4",
+          fontSize: "40px",
+        })
+        .setOrigin(0.5);
         scene.makeButton = scene.add
-            .text(400, 450, this.roomKey, {
-                fontFamily: "Chela One",
+            .text(400, 460, this.roomKey, {
+                fontFamily: "Martian Mono",
                 fontcolor: "#FFFBF4'",
                 fontSize: "40px",
+                fontWeight: "bold"
             })
             .setOrigin(0.5);
 
