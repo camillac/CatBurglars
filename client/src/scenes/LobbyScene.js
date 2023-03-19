@@ -106,7 +106,7 @@ export default class LobbyScene extends Phaser.Scene {
     scene.lobbyText = scene.add
       .text(400, 410, "Lobby Code:", {
         fontFamily: "Chela One",
-        fontcolor: "#FFFBF4",
+        color: "#FFFBF4",
         fontSize: "40px",
       })
       .setOrigin(0.5);
@@ -115,7 +115,7 @@ export default class LobbyScene extends Phaser.Scene {
     var key = scene.add
       .text(400, 460, this.roomKey, {
         fontFamily: "Martian Mono",
-        fontcolor: "#FFFBF4'",
+        color: "#FFFBF4",
         fontSize: "40px",
         fontWeight: "bold",
       })
