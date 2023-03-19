@@ -15,6 +15,7 @@ export default class FirstTask extends Phaser.Scene {
         this.load.image('Player_4','client/assets/sprites/player4.png');
         this.load.image("House","client/assets/sprites/House_1.png"); //Need to Update this
         this.load.image("Sky", "client/assets/sprites/Sky.png");
+        this.load.image("settings", "client/assets/sprites/settings_icon.png");
        //load background
         this.load.image(
             "background",
@@ -45,6 +46,22 @@ export default class FirstTask extends Phaser.Scene {
             onComplete: () => {
                 House.destroy();
             }
+        });
+
+        // Left side menu dimensions
+        const width = this.game.config.width;
+        const height = this.game.config.height;
+
+        const menu = this.add.graphics();
+        menu.fillStyle(0xE9D6C5, 1);
+        menu.fillRect(0, 0, width/4, height);
+
+        // Add the setting wheel button
+        const settingsBtn = this.add.image(100, 530, 'settings').setInteractive();
+        settingsBtn.setScale(0.75);
+        settingsBtn.on('pointerup', () => {
+            // Open the settings popup
+            this.showSettingsPopup();
         });
 
 
@@ -83,5 +100,20 @@ export default class FirstTask extends Phaser.Scene {
     }
 
     upload() {
+    }
+    showSettingsPopup() {
+        // Create and display the settings popup
+        const popup = this.add.container(this.game.config.width / 2, this.game.config.height / 2);
+        const background = this.add.graphics();
+        background.fillStyle(0xffffff, 1);
+        background.fillRect(-150, -150, 300, 300);
+        const closeButton = this.add.text(130, -130, 'X', {fontSize: '24px', color: '#000000'}).setInteractive();
+        closeButton.on('pointerup', () => {
+            // Close the popup
+            popup.destroy();
+        });
+        popup.add(background);
+        popup.add(closeButton);
+        // Pop Up Seeings
     }
 }
