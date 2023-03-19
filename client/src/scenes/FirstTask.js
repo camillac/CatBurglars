@@ -30,6 +30,18 @@ export default class FirstTask extends Phaser.Scene {
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
 
+        var House = this.add.image(500,300,"House").setOrigin(0.5).setScale(0.2);
+        scene.tweens.add({
+            targets: House,
+            scaleX: 2,
+            scaleY: 2,
+            ease: 'Cubic.easeIn',
+            duration: 4000,
+            onComplete: () => {
+                House.destroy();
+            }
+        });
+
         // Left side menu dimensions
         const width = this.game.config.width;
         const height = this.game.config.height;
@@ -46,13 +58,8 @@ export default class FirstTask extends Phaser.Scene {
             this.showSettingsPopup();
         });
 
-        // var cam = this.cameras.main.setBounds(0,0,600,800);
-        // cam.pan(400, 400, 2000, 'Linear');
-        // // cam.zoomTo(4, 3000);
         background.setScale(2.0);
-        var House = this.add.image(500,500,"House");
-        House.setPosition(450,300);
-        this.cameras.main.startFollow(House);
+        
 
         //Add Players Sprite
         var player_1 = this.add.sprite(100,300,"Player_1");
