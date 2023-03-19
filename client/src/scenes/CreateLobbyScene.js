@@ -1,14 +1,14 @@
-export default class PlayScene extends Phaser.Scene {
+export default class CreateLobbyScene extends Phaser.Scene {
     constructor() {
-        super("PlayScene");
+        super("CreateLobbyScene");
         this.state = {};
+        this.hasBeenSet = false;
     }
-
+    
     preload() {
         this.load.script(
             "webfont",
-            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js",
-            this.load.html("codeform", "client/assets/text/codeform.html")
+            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
         );
         
         this.load.image(
@@ -20,6 +20,8 @@ export default class PlayScene extends Phaser.Scene {
     create() {
         var add = this.add;
         const scene = this;
+        scene.roomKey = "";
+        this.socket = io();
 
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
@@ -58,7 +60,7 @@ export default class PlayScene extends Phaser.Scene {
                 
                 // Create lobby button
                 const createButton = add
-                    .text(400, 325, "Create A Lobby", {
+                    .text(400, 325, "Create A Room", {
                         fontFamily: "Chela One",
                         fontSize: 50,
                         color: "#FFFBF4",
@@ -81,20 +83,6 @@ export default class PlayScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
-
-                // Join lobby button
-                const joinButton = add
-                    .text(400, 440, "Join A Lobby", {
-                        fontFamily: "Chela One",
-                        fontSize: 50,
-                        color: "#FFFBF4",
-                        fontStyle: "normal",
-                        stroke: "#000000",
-                        strokeThickness: 12,
-                    })
-                    .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);
-                
                 scene.notValidText = scene.add.text(400, 500, "", {
                     fill: "#ff0000",
                     fontSize: "35px",
@@ -104,10 +92,8 @@ export default class PlayScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);;
-                
                 createButton.setInteractive();
                 backButton.setInteractive();
-                joinButton.setInteractive();
 
                 // Back button events
                 backButton.on("pointerover", () => {
@@ -123,13 +109,13 @@ export default class PlayScene extends Phaser.Scene {
                 backButton.on("pointerup", () => {
                     backButton.destroy();
         
-                    scene.scene.start("MainScene", {
+                    scene.scene.start("PlayScene", {
                         ...scene.state,
                         socket: scene.socket,
                     });
                 });
 
-                // Play button events
+                // Create lobby button events
                 createButton.on("pointerover", () => {
                     createButton.setStyle({
                         color: "#FFEBB9",
@@ -141,32 +127,28 @@ export default class PlayScene extends Phaser.Scene {
                     });
                 });
                 createButton.on("pointerup", () => {
-                    scene.scene.start("CreateLobbyScene", {
-                        ...scene.state,
-                        socket: scene.socket,
-                    });
-                });
+                    scene.socket.emit("getRoomCode");
 
-                // Join button events
-                joinButton.on("pointerover", () => {
-                    joinButton.setStyle({
-                        color: "#FFEBB9",
-                    });
-                });
-                joinButton.on("pointerout", () => {
-                    joinButton.setStyle({
-                        color: "#FFFBF4",
-                    });
-                });
-                joinButton.on("pointerup", () => {
-                    scene.scene.start("JoinLobbyScene", {
-                        ...scene.state,
-                        socket: scene.socket,
+                    scene.socket.on("roomCreated", function (roomKey) {
+                        scene.socket.emit("isKeyValid", roomKey);
+
+                        scene.socket.on("keyNotValid", function () {
+                            scene.notValidText.setText("Invalid Room Key");
+                        });
+
+                        scene.socket.on("keyIsValid", function (input) {
+                            
+                            scene.scene.start("LobbyScene", {
+                                ...scene.state,
+                                socket: scene.socket,
+                                roomKey: roomKey,
+                            });
+                        });
                     });
                 });
             },
         });
     }
 
-    update() { }
+    upload() {}
 }
