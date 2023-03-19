@@ -35,7 +35,17 @@ export default class FirstTask extends Phaser.Scene {
         var House = this.add.image(500,600,"House");
         House.setScale(3).setPosition(450,300);
         
-        
+        var House = this.add.image(500,300,"House").setOrigin(0.5).setScale(0.2);
+        scene.tweens.add({
+            targets: House,
+            scaleX: 2,
+            scaleY: 2,
+            ease: 'Cubic.easeIn',
+            duration: 4000,
+            onComplete: () => {
+                House.destroy();
+            }
+        });
 
 
         // Add Rectangle 
