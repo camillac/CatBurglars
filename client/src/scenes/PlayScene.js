@@ -25,7 +25,7 @@ export default class PlayScene extends Phaser.Scene {
 
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
-
+    
         WebFont.load({
             google: {
                 families: ["Chela One"],
@@ -75,7 +75,7 @@ export default class PlayScene extends Phaser.Scene {
                 const backButton = add
                     .text(50, 30, "Back", {
                         fontFamily: "Chela One",
-                        fontSize: 20,
+                        fontSize:30,
                         color: "#FFFBF4",
                         fontStyle: "normal",
                         stroke: "#000000",
@@ -88,7 +88,6 @@ export default class PlayScene extends Phaser.Scene {
                     fontSize: "35px",
                     fontFamily: "Chela One",
                     fontStyle: "normal",
-                    strokeThickness: 12,
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);;
@@ -170,5 +169,6 @@ export default class PlayScene extends Phaser.Scene {
         });
     }
 
-    update() { }
+    update() {
+    }
 }

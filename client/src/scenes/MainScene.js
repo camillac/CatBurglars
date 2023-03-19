@@ -25,7 +25,7 @@ export default class MainScene extends Phaser.Scene {
 
         WebFont.load({
             google: {
-                families: ["Chela One"],
+                families: ["Chela One", "Martian Mono"],
             },
             active: function () {
                 
