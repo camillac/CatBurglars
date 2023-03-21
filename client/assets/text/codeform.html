@@ -16,7 +16,7 @@
     }
 
     button {
-        height: 55px;
+       height: 55px;
         width: 335px;
         font-family: Chela One;
         font-size: 45px;
@@ -30,17 +30,15 @@
 
 <asp:panel class = "container" >
        <input type="text" id="code-form-id" name="code-form" placeholder="Enter Room Key" class="input-box" /><br>
-        <br><button type="button" id="enterRoom-id" name="enterRoom">Join a Room</button>
+        <br><button type="button" id="enterRoom-id" name="enterRoom" onclick= "myFunction()" >Join a Room</button>
     <script>
-       (function(){
            var enter = document.getElementById("Code-form-id"); 
            enter.addEventListener('keypress', function(event){ 
                if(event.keyCode == 13)
                { 
                    event.preventDefault();
+                   document.getElementById(enterRoom-id).click()
                }
            });
-       }); 
-        
     </script>
 </asp:panel>

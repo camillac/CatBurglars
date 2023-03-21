@@ -16,6 +16,10 @@ export default class FirstTask extends Phaser.Scene {
         this.load.image("House","client/assets/sprites/House_1.png"); //Need to Update this
         this.load.image("Sky", "client/assets/sprites/Sky.png");
         this.load.image("settings", "client/assets/sprites/settings_icon.png");
+        this.load.image("Door","client/assets/sprites/oor.png")
+        this.load.image("big_clouds","client/assets/sprites/big_clouds.png");
+        this.load.image("Clouds_small","client/assets/sprites/clouds-white-small.png");
+        this.load.image("Grass", "client/assets/sprites/grass.png");
        //load background
         this.load.image(
             "background",
@@ -26,18 +30,42 @@ export default class FirstTask extends Phaser.Scene {
     create() {
         // Add Background 
         const scene = this;
-
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
         var sky = this.add.image(400,300,"Sky");
-        sky.setScale(2.0)
-      
+        sky.setScale(4.0)
+
+      // Add moving Clouds 
+        var Clouds_bg1 = this.add.tileSprite(400,100,800,600,"Clouds_small");
+        var Clouds_bg2 = this.add.tileSprite(400,100,800,600,"big_clouds");
+        scene.tweens.add({
+            targets: Clouds_bg1,
+            tilePositionX: { from: 0, to: 180},
+            ease: 'linear', 
+            duration: 8000, 
+            repeat: -1, //Infinity Times 
+            yoyo: (true, 2000)
+        });
+        scene.tweens.add({
+            targets: Clouds_bg2,
+            tilePositionX: { from: 0, to: 180},
+            ease: 'linear', 
+            duration: 8000, 
+            repeat: -1, //Infinity Times
+            yoyo: false
+        });
+        //Add Grass
+        var Grass = this.add.sprite(300,450,"Grass");
+        Grass.setScale(1.5)
+       
+       // var Clouds_bg3 = this.add.sprite(200,80,"Clouds").setOrigin(0.5);
+
       //Add House with Zoom In effect  
-        var House = this.add.image(500,300,"House").setOrigin(0.5).setScale(0.2);
+        var House = this.add.image(450,300,"House").setOrigin(0.5).setScale(0.5);
         scene.tweens.add({
             targets: House,
-            scaleX: 2,
-            scaleY: 2,
+            scaleX: 4,
+            scaleY: 4,
             ease: 'Cubic.easeIn',
             duration: 4000,
             onComplete: () => {
@@ -65,14 +93,9 @@ export default class FirstTask extends Phaser.Scene {
             this.showSettingsPopup();
         });
 
-
-    
-
-
         //Add Players Sprite
         scene.circle = scene.add.graphics();
         
-
         //Player 1 
         scene.circle.fillStyle(0xADD8E6, 1);
         scene.circle.fillCircle(57,80, 50);
@@ -80,7 +103,6 @@ export default class FirstTask extends Phaser.Scene {
 
         var player_1 = this.add.sprite(100,260,"Player_1");
         player_1.setScale(0.75).setPosition(57, 80);
-        
 
         //Player 2 
         scene.circle.fillStyle(0xADD8E6, 1);
@@ -107,8 +129,12 @@ export default class FirstTask extends Phaser.Scene {
     }
 
     upload() {
+        //Cloud Effect 
+        Clouds_bg1.tilePositionX += 0.9; 
+        Clouds_bg2.tilePositionX += 0.25;
     }
     showSettingsPopup() {
+
         // Create and display the settings popup
         const popup = this.add.container(this.game.config.width / 2, this.game.config.height / 2);
         const background = this.add.graphics();
@@ -122,5 +148,7 @@ export default class FirstTask extends Phaser.Scene {
         popup.add(background);
         popup.add(closeButton);
         // Pop Up Seeings
+
+       
     }
 }
