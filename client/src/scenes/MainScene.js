@@ -9,7 +9,7 @@ export default class MainScene extends Phaser.Scene {
             "webfont",
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
         );
-        
+
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
@@ -28,7 +28,6 @@ export default class MainScene extends Phaser.Scene {
                 families: ["Chela One", "Martian Mono"],
             },
             active: function () {
-                
                 // Title
                 add.text(125, 110, "Cat", {
                     fontFamily: "Chela One",
@@ -123,5 +122,5 @@ export default class MainScene extends Phaser.Scene {
         });
     }
 
-    update() { }
+    update() {}
 }

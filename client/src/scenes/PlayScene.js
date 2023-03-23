@@ -10,7 +10,7 @@ export default class PlayScene extends Phaser.Scene {
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js",
             this.load.html("codeform", "client/assets/text/codeform.html")
         );
-        
+
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
@@ -31,7 +31,6 @@ export default class PlayScene extends Phaser.Scene {
                 families: ["Chela One"],
             },
             active: function () {
-                
                 // Title
                 add.text(125, 110, "Cat", {
                     fontFamily: "Chela One",
@@ -57,7 +56,7 @@ export default class PlayScene extends Phaser.Scene {
                     stroke: "#000000",
                     strokeThickness: 12,
                 });
-                
+
                 // Create lobby button
                 const createButton = add
                     .text(400, 325, "Create A Room", {
@@ -83,15 +82,16 @@ export default class PlayScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
-                scene.notValidText = scene.add.text(400, 550, "", {
-                    fill: "#ff0000",
-                    fontSize: "35px",
-                    fontFamily: "Chela One",
-                    fontStyle: "normal",
-                    strokeThickness: 12,
+                scene.notValidText = scene.add
+                    .text(400, 550, "", {
+                        fill: "#ff0000",
+                        fontSize: "35px",
+                        fontFamily: "Chela One",
+                        fontStyle: "normal",
+                        strokeThickness: 12,
                     })
                     .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);;
+                    .setPadding(10, 10, 10, 10);
                 createButton.setInteractive();
                 backButton.setInteractive();
 
@@ -108,7 +108,7 @@ export default class PlayScene extends Phaser.Scene {
                 });
                 backButton.on("pointerup", () => {
                     backButton.destroy();
-        
+
                     scene.scene.start("MainScene", {
                         ...scene.state,
                         socket: scene.socket,
@@ -137,7 +137,6 @@ export default class PlayScene extends Phaser.Scene {
                         });
 
                         scene.socket.on("keyIsValid", function (input) {
-                            
                             scene.scene.start("LobbyScene", {
                                 ...scene.state,
                                 socket: scene.socket,
@@ -146,13 +145,16 @@ export default class PlayScene extends Phaser.Scene {
                         });
                     });
                 });
-                
+
                 // Join a room
-                scene.inputElement = scene.add.dom(400, 450).createFromCache("codeform");
+                scene.inputElement = scene.add
+                    .dom(400, 450)
+                    .createFromCache("codeform");
                 scene.inputElement.addListener("click");
                 scene.inputElement.on("click", function (event) {
                     if (event.target.name === "enterRoom") {
-                        const input = scene.inputElement.getChildByName("code-form");
+                        const input =
+                            scene.inputElement.getChildByName("code-form");
                         scene.socket.emit("isKeyValid", input.value);
                     }
                     scene.socket.on("keyNotValid", function () {
@@ -170,5 +172,5 @@ export default class PlayScene extends Phaser.Scene {
         });
     }
 
-    update() { }
+    update() {}
 }

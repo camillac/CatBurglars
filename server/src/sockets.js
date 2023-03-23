@@ -7,6 +7,8 @@ module.exports = (io) => {
             `A socket connection to the server has been made: ${socket.id}`
         );
 
+        // ************************************* PLAY SCENE SOCKETS **********************************************
+
         // CREATE A ROOM
         socket.on("getRoomCode", async function () {
             let key = codeGenerator();
@@ -62,15 +64,11 @@ module.exports = (io) => {
             console.log(roomInfo);
         });
 
-        // socket.on("join", function (roomID, callback) {
-        //     console.log("join");
+        // ************************************* END OF PLAY SCENE SOCKETS **********************************************
 
-        //     // Join existing room
-        //     if (connectClientToRoom(roomID, client.id, false)) {
-        //         callback(roomID);
-        //     }
-        // });
+        // ************************************* LOBBY SCENE SOCKETS **********************************************
 
+        // CLIENT DISCONNECT
         socket.on("disconnect", () => {
             console.log(`A socket has disconnected`);
 
@@ -89,12 +87,13 @@ module.exports = (io) => {
             const roomInfo = gameRooms[roomKey];
 
             if (roomInfo) {
-                console.log("user disconnected: ", socket.id);
+                console.log("User Disconnected: ", socket.id);
+                console.log("Room Info BEFORE Removing Player");
                 console.log(roomInfo);
 
                 var deletedNum = roomInfo.players[socket.id].playerNum;
-                console.log(deletedNum);
-                console.log(roomInfo.players);
+
+                // SHIFT PLAYERNUMS DOWN IF PLAYERNUM > DELETED_PLAYERNUM
                 for (playerId in roomInfo.players) {
                     console.log("player: " + playerId);
                     console.log(
@@ -120,19 +119,27 @@ module.exports = (io) => {
                     roomInfo: roomInfo,
                 });
 
+                console.log("Room Info AFTER Removing Player");
                 console.log(roomInfo);
             }
         });
 
+        // CHECKS IF INPUTTED ROOM KEY IS VALID
         socket.on("isKeyValid", function (input) {
             Object.keys(gameRooms).includes(input)
                 ? socket.emit("keyIsValid", input)
                 : socket.emit("keyNotValid");
         });
 
+        // RECEIVES STARTGAME EMIT FROM ONE PLAYER, EMIT STARTGAME TO ALL PLAYERS IN THE ROOM
         socket.on("startGame", function (roomKey) {
+            console.log("start game");
             socket.to(roomKey).emit("startRoom");
         });
+
+        // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
+
+        // ************************************* TASK ONE SCENE SOCKETS **********************************************
     });
 };
 
