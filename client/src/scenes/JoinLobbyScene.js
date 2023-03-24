@@ -8,7 +8,8 @@ export default class JoinLobbyScene extends Phaser.Scene {
     preload() {
         this.load.script(
             "webfont",
-            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
+            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js",
+            this.load.html("codeform", "client/assets/text/codeform.html")
         );
         
         this.load.image(
@@ -106,17 +107,21 @@ export default class JoinLobbyScene extends Phaser.Scene {
                 scene.inputElement.addListener("click");
                 scene.inputElement.on("click", function (event) {
                     if (event.target.name === "enterRoom") {
-                        const input = scene.inputElement.getChildByName("code-form");
-                        scene.socket.emit("isKeyValid", input.value);
+                        const name = scene.inputElement.getChildByName("name-form");
+                        console.log(name.value);
+                        const code = scene.inputElement.getChildByName("code-form");
+                        console.log(code.value);
+                        scene.socket.emit("isKeyValid", code.value, name.value);
                     }
                     scene.socket.on("keyNotValid", function () {
                         scene.notValidText.setText("Invalid Room Key");
                     });
-                    scene.socket.on("keyIsValid", function (input) {
+                    scene.socket.on("keyIsValid", function (code, name) {
                         scene.scene.start("LobbyScene", {
                             ...scene.state,
                             socket: scene.socket,
-                            roomKey: input,
+                            roomKey: code,
+                            playerName: name
                         });
                     });
                 });

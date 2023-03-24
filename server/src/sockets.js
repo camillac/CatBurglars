@@ -1,5 +1,6 @@
 // local variables
 var gameRooms = {};
+var users = {};
 
 module.exports = (io) => {
     io.on("connection", (socket) => {
@@ -8,7 +9,7 @@ module.exports = (io) => {
         );
 
         // CREATE A ROOM
-        socket.on("getRoomCode", async function () {
+        socket.on("getRoomCode", async function (name) {
             let key = codeGenerator();
             while (Object.keys(gameRooms).includes(key)) {
                 key = codeGenerator();
@@ -19,11 +20,11 @@ module.exports = (io) => {
                 numPlayers: 0,
             };
             console.log("ROOM CREATED - ROOM KEY: " + key);
-            socket.emit("roomCreated", key);
+            socket.emit("roomCreated", key, name);
         });
 
         // JOIN A ROOM
-        socket.on("joinRoom", (roomKey) => {
+        socket.on("joinRoom", (roomKey, playerName) => {
             console.log(socket.id);
             socket.join(roomKey);
             // console.log("test" + roomKey);
@@ -32,14 +33,12 @@ module.exports = (io) => {
             roomInfo.players[socket.id] = {
                 playerId: socket.id,
                 playerNum: 0,
-                playerName: "",
+                playerName: playerName
             };
 
             roomInfo.players[socket.id].playerNum = Object.keys(
                 roomInfo.players
             ).length;
-            roomInfo.players[socket.id].playerName =
-                "Player " + roomInfo.players[socket.id].playerNum;
 
             // Update number of players
             roomInfo.numPlayers = Object.keys(roomInfo.players).length;
@@ -104,8 +103,6 @@ module.exports = (io) => {
                     if (roomInfo.players[playerId].playerNum > deletedNum) {
                         roomInfo.players[playerId].playerNum =
                             roomInfo.players[playerId].playerNum - 1;
-                        roomInfo.players[playerId].playerName =
-                            "Player " + roomInfo.players[playerId].playerNum;
                     }
                 }
 
@@ -126,9 +123,9 @@ module.exports = (io) => {
             }
         });
 
-        socket.on("isKeyValid", function (input) {
-            Object.keys(gameRooms).includes(input)
-                ? socket.emit("keyIsValid", input)
+        socket.on("isKeyValid", function (code, name) {
+            Object.keys(gameRooms).includes(code)
+                ? socket.emit("keyIsValid", code, name)
                 : socket.emit("keyNotValid");
         });
 

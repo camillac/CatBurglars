@@ -9,6 +9,7 @@ export default class LobbyScene extends Phaser.Scene {
     console.log(data);
     this.socket = data.socket;
     this.roomKey = data.roomKey;
+    this.playerName = data.playerName;
   }
 
   preload() {
@@ -31,7 +32,7 @@ export default class LobbyScene extends Phaser.Scene {
 
   create() {
     const scene = this;
-    scene.socket.emit("joinRoom", this.roomKey);
+    scene.socket.emit("joinRoom", this.roomKey, this.playerName);
     const background = this.add.image(400, 300, "background");
     background.setScale(2.0);
 

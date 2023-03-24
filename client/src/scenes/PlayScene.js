@@ -7,8 +7,7 @@ export default class PlayScene extends Phaser.Scene {
     preload() {
         this.load.script(
             "webfont",
-            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js",
-            this.load.html("codeform", "client/assets/text/codeform.html")
+            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
         );
         
         this.load.image(

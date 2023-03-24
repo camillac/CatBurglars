@@ -8,7 +8,8 @@ export default class CreateLobbyScene extends Phaser.Scene {
     preload() {
         this.load.script(
             "webfont",
-            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
+            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js",
+            this.load.html("nameform", "client/assets/text/nameform.html")
         );
         
         this.load.image(
@@ -58,19 +59,6 @@ export default class CreateLobbyScene extends Phaser.Scene {
                     strokeThickness: 12,
                 });
                 
-                // Create lobby button
-                const createButton = add
-                    .text(400, 325, "Create A Room", {
-                        fontFamily: "Chela One",
-                        fontSize: 50,
-                        color: "#FFFBF4",
-                        fontStyle: "normal",
-                        stroke: "#000000",
-                        strokeThickness: 12,
-                    })
-                    .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);
-
                 // Back button
                 const backButton = add
                     .text(50, 30, "Back", {
@@ -92,8 +80,8 @@ export default class CreateLobbyScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);;
-                createButton.setInteractive();
-                backButton.setInteractive();
+                
+                    backButton.setInteractive();
 
                 // Back button events
                 backButton.on("pointerover", () => {
@@ -115,36 +103,23 @@ export default class CreateLobbyScene extends Phaser.Scene {
                     });
                 });
 
-                // Create lobby button events
-                createButton.on("pointerover", () => {
-                    createButton.setStyle({
-                        color: "#FFEBB9",
-                    });
-                });
-                createButton.on("pointerout", () => {
-                    createButton.setStyle({
-                        color: "#FFFBF4",
-                    });
-                });
-                createButton.on("pointerup", () => {
-                    scene.socket.emit("getRoomCode");
-
-                    scene.socket.on("roomCreated", function (roomKey) {
-                        scene.socket.emit("isKeyValid", roomKey);
-
-                        scene.socket.on("keyNotValid", function () {
-                            scene.notValidText.setText("Invalid Room Key");
-                        });
-
-                        scene.socket.on("keyIsValid", function (input) {
-                            
+                // Create a room
+                scene.inputElement = scene.add.dom(400, 440).createFromCache("nameform");
+                scene.inputElement.addListener("click");
+                scene.inputElement.on("click", function (event) {
+                    if (event.target.name === "createRoom") {
+                        const name = scene.inputElement.getChildByName("name-form");
+                        console.log(name.value);
+                        scene.socket.emit("getRoomCode", name.value);
+                        scene.socket.on("roomCreated", function (roomKey, name) {
                             scene.scene.start("LobbyScene", {
                                 ...scene.state,
                                 socket: scene.socket,
                                 roomKey: roomKey,
+                                playerName: name
                             });
                         });
-                    });
+                    }
                 });
             },
         });
