@@ -142,13 +142,17 @@ module.exports = (io) => {
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
 
         socket.on("startTaskOne", function (roomKey, num) {
-            console.log("taskOne");
-
+            console.log(gameRooms);
+            console.log(roomKey);
             const roomInfo = gameRooms[roomKey];
+            console.log("taskOne");
+            console.log(roomInfo);
 
-            for (playerId in roomInfo.players) {
-                if (roomInfo.players[playerId].playerNum == num) {
-                    socket.to(playerId).emit("displayTaskOne");
+            if (roomInfo) {
+                for (playerId in roomInfo.players) {
+                    if (roomInfo.players[playerId].playerNum == num) {
+                        socket.to(playerId).emit("displayTaskOne");
+                    }
                 }
             }
         });

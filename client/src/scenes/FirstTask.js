@@ -26,6 +26,7 @@ export default class FirstTask extends Phaser.Scene {
 
     create() {
         const scene = this;
+        console.log("ROOM KEY: " + this.roomKey);
 
         // Setting up background for the game
         const background = this.add.image(400, 300, "background");
@@ -45,6 +46,10 @@ export default class FirstTask extends Phaser.Scene {
                 House.destroy();
                 scene.socket.emit("startTaskOne", this.roomKey, 1);
             },
+        });
+
+        scene.socket.on("displayTaskOne", function (roomKey, num) {
+            console.log("player1");
         });
 
         // Left side menu dimensions
