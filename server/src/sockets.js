@@ -134,7 +134,8 @@ module.exports = (io) => {
         // RECEIVES STARTGAME EMIT FROM ONE PLAYER, EMIT STARTGAME TO ALL PLAYERS IN THE ROOM
         socket.on("startGame", function (roomKey) {
             console.log("start game");
-            socket.to(roomKey).emit("startRoom");
+
+            socket.to(roomKey).emit("startRoom", {roomKey: roomKey});
         });
 
         // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
@@ -145,10 +146,14 @@ module.exports = (io) => {
             console.log("taskOne");
 
             const roomInfo = gameRooms[roomKey];
-
+            console.log(roomInfo.players); 
+            console.log("num: ", num); 
+            // console.log(roomInfo);
+            // console.log(roomKey);
             for (playerId in roomInfo.players) {
+                console.log(playerId);
                 if (roomInfo.players[playerId].playerNum == num) {
-                    socket.to(playerId).emit("displayTaskOne");
+                    io.to(playerId).emit("displayTaskOne", playerId);
                 }
             }
         });

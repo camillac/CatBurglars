@@ -7,6 +7,9 @@ export default class FirstTask extends Phaser.Scene {
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
+        this.playerNum = data.playerNum;
+        // console.log(this.playerNum);
+        console.log(this.socket.id);
     }
     preload() {
         //load cats/players
@@ -77,6 +80,20 @@ export default class FirstTask extends Phaser.Scene {
         var player_4 = this.add.sprite(100, 300, "Player_4");
         player_4.setScale(0.75).setPosition(100, 415);
         //Add House
+
+        this.socket.on("displayTaskOne", function (arg) {
+            console.log("displayTaskOne");
+            console.log(arg);
+            const playerId = arg; 
+            console.log(playerId);
+            // console.log(this.roomKey)
+            // scene.scene.start("FirstTask", {
+            //     ...scene.state,
+            //     socket: scene.socket,
+            //     roomKey: arg,
+            // });
+        });
+
     }
 
     update() {}
