@@ -81,11 +81,36 @@ export default class FirstTask extends Phaser.Scene {
         player_4.setScale(0.75).setPosition(100, 415);
         //Add House
 
-        this.socket.on("displayTaskOne", function (arg) {
-            console.log("displayTaskOne");
+        this.socket.on("displayMainTaskOne", function (arg) {
+            console.log("displayMainTaskOne");
             console.log(arg);
-            const playerId = arg; 
+            const {playerId, playerNum, key1, key2, key3} = arg; 
             console.log(playerId);
+            console.log(playerNum); 
+            // console.log(this.roomKey)
+            // scene.scene.start("FirstTask", {
+            //     ...scene.state,
+            //     socket: scene.socket,
+            //     roomKey: arg,
+            // });
+        });
+        this.socket.on("displaySideTaskOne", function (arg) {
+            console.log("displaySideTaskOne");
+            console.log(arg);
+            let playerKey = 0 ; 
+            const {playerId, playerNum, key1, key2, key3} = arg; 
+            if(playerNum ==2){
+                playerKey = key1; 
+            }
+            if(playerNum ==3){
+                playerKey = key2; 
+            }
+            if(playerNum ==4){
+                playerKey = key3
+            }
+            console.log(playerKey); 
+            console.log(playerId);
+            console.log(playerNum); 
             // console.log(this.roomKey)
             // scene.scene.start("FirstTask", {
             //     ...scene.state,
