@@ -43,6 +43,7 @@ export default class FirstTask extends Phaser.Scene {
             duration: 4000,
             onComplete: () => {
                 House.destroy();
+                scene.socket.emit("startTaskOne", this.roomKey, 1);
             },
         });
 
