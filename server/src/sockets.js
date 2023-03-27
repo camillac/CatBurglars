@@ -161,8 +161,14 @@ module.exports = (io) => {
                 if (roomInfo.players[playerId].playerNum == mainPlayer) {
                     io.to(playerId).emit("displayMainTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key1: key1, key2:key2, key3:key3});
                 }
+                else if (roomInfo.players[playerId].playerNum == 2){
+                    io.to(playerId).emit("displaySideTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key: key1}); 
+                }
+                else if (roomInfo.players[playerId].playerNum == 3){
+                    io.to(playerId).emit("displaySideTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key: key2}); 
+                }
                 else{
-                    io.to(playerId).emit("displaySideTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key1: key1, key2:key2, key3:key3}); 
+                    io.to(playerId).emit("displaySideTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key: key3}); 
                 }
             }
         });

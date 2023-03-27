@@ -8,7 +8,6 @@ export default class FirstTask extends Phaser.Scene {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
         this.playerNum = data.playerNum;
-        // console.log(this.playerNum);
         console.log(this.socket.id);
     }
     preload() {
@@ -85,8 +84,7 @@ export default class FirstTask extends Phaser.Scene {
             console.log("displayMainTaskOne");
             console.log(arg);
             const {playerId, playerNum, key1, key2, key3} = arg; 
-            console.log(playerId);
-            console.log(playerNum); 
+            // console.log(key1, key2, key3);
             // console.log(this.roomKey)
             // scene.scene.start("FirstTask", {
             //     ...scene.state,
@@ -97,20 +95,18 @@ export default class FirstTask extends Phaser.Scene {
         this.socket.on("displaySideTaskOne", function (arg) {
             console.log("displaySideTaskOne");
             console.log(arg);
-            let playerKey = 0 ; 
-            const {playerId, playerNum, key1, key2, key3} = arg; 
-            if(playerNum ==2){
-                playerKey = key1; 
-            }
-            if(playerNum ==3){
-                playerKey = key2; 
-            }
-            if(playerNum ==4){
-                playerKey = key3
-            }
-            console.log(playerKey); 
-            console.log(playerId);
-            console.log(playerNum); 
+            // let playerKey = 0 ; 
+            const {playerId, playerNum, key} = arg; 
+            // if(playerNum ==2){
+            //     playerKey = key1; 
+            // }
+            // if(playerNum ==3){
+            //     playerKey = key2; 
+            // }
+            // if(playerNum ==4){
+            //     playerKey = key3
+            // }
+            console.log(key); 
             // console.log(this.roomKey)
             // scene.scene.start("FirstTask", {
             //     ...scene.state,
