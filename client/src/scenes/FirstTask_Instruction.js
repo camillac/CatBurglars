@@ -51,10 +51,10 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             )
             .setOrigin(0.5);
 
-            timedEvent = this.time.delayedCall(3000, onEvent, [], this);
-            onEvent({ 
-                
-            })
+            //timedEvent = this.time.delayedCall(3000, onEvent, [], this);
+           // onEvent({ 
+
+           // })
     }
     update() {}
 
