@@ -77,7 +77,7 @@ export default class LobbyScene extends Phaser.Scene {
     // Other Player Started Game
     this.socket.on("startRoom", function () {
       console.log("gameStarted");
-      scene.scene.start("FirstTask", {
+      scene.scene.start("IntroductionScene", {
         ...scene.state,
         socket: scene.socket,
       });
@@ -225,7 +225,7 @@ export default class LobbyScene extends Phaser.Scene {
     startGame.on("pointerup", () => {
       if (scene.state.numPlayers == 4) {
         scene.socket.emit("startGame", this.roomKey);
-        scene.scene.start("FirstTask", {
+        scene.scene.start("IntroductionScene", {
           ...scene.state,
           socket: scene.socket,
         });

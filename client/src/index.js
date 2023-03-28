@@ -4,11 +4,15 @@ import HowtoPlayScene from "./scenes/HowtoPlayScene.js";
 import LobbyScene from "./scenes/LobbyScene.js";
 import PlayScene from "./scenes/PlayScene.js";
 import FirstTask from "./scenes/FirstTask.js";
+import FirstTask_Instruction from "./scenes/FirstTask_Instruction.js";
+import IntroductionScene from "./scenes/IntroductionScene.js";
 
 // Insert all of the scenes into the game
 class Game extends Phaser.Game {
     constructor() {
         super(config);
+        this.scene.add("FirstTask_Instruction",FirstTask_Instruction);
+        this.scene.add("IntroductionScene",IntroductionScene); 
         this.scene.add("FirstTask", FirstTask);
         this.scene.add("MainScene", MainScene);
         this.scene.add("HowtoPlayScene", HowtoPlayScene);
