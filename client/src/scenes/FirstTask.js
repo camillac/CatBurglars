@@ -9,7 +9,6 @@ export default class FirstTask extends Phaser.Scene {
         this.roomKey = data.roomKey;
         this.playerNum = data.playerNum;
         console.log(this.socket.id);
-        this.start = data.start
     }
     preload() {
         //load cats/players
@@ -52,9 +51,13 @@ export default class FirstTask extends Phaser.Scene {
             duration: 4000,
             onComplete: () => {
                 House.destroy();
-                if(scene.socket.id == this.start){
-                    scene.socket.emit("startTaskOne", this.roomKey, 1);
-                }
+
+                scene.socket.emit(
+                    "startTaskOne",
+                    this.roomKey,
+                    1, // MAIN PLAYER: HARDCODED AS 1
+                    scene.socket.id
+                );
             },
         });
 
@@ -92,7 +95,7 @@ export default class FirstTask extends Phaser.Scene {
         this.socket.on("displayMainTaskOne", function (arg) {
             console.log("displayMainTaskOne");
             console.log(arg);
-            const {playerId, playerNum, key1, key2, key3} = arg; 
+            const { playerId, playerNum, key1, key2, key3 } = arg;
             var key_1 = scene.add.sprite(200, 300, "key1Image");
             key_1.setScale(0.05).setPosition(300, 70);
             // var key_2 = scene.add.sprite(200, 300, "key2Image");
@@ -116,20 +119,20 @@ export default class FirstTask extends Phaser.Scene {
         this.socket.on("displaySideTaskOne", function (arg) {
             console.log("displaySideTaskOne");
             console.log(arg);
-            // let playerKey = 0 ; 
-            const {playerId, playerNum, key} = arg; 
+            // let playerKey = 0 ;
+            const { playerId, playerNum, key } = arg;
             // if(playerNum ==2){
-            //     playerKey = key1; 
+            //     playerKey = key1;
             // }
             // if(playerNum ==3){
-            //     playerKey = key2; 
+            //     playerKey = key2;
             // }
             // if(playerNum ==4){
             //     playerKey = key3
             // }
             var keyImage = scene.add.sprite(200, 300, `key` + key + `Image`);
             keyImage.setScale(0.05).setPosition(300, 70);
-            console.log(key); 
+            console.log(key);
             // console.log(this.roomKey)
             // scene.scene.start("FirstTask", {
             //     ...scene.state,
@@ -137,7 +140,6 @@ export default class FirstTask extends Phaser.Scene {
             //     roomKey: arg,
             // });
         });
-
     }
 
     update() {}
