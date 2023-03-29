@@ -132,15 +132,18 @@ module.exports = (io) => {
         });
 
         // RECEIVES STARTGAME EMIT FROM ONE PLAYER, EMIT STARTGAME TO ALL PLAYERS IN THE ROOM
-        socket.on("startGame", function (roomKey) {
+        socket.on("startGame", function (roomKey, start) {
             console.log("start game");
-
-            socket.to(roomKey).emit("startRoom", {roomKey: roomKey});
+            // const {roomkey, startId} = arg; 
+            socket.to(roomKey).emit("startRoom", {roomKey: roomKey, start:start});
         });
 
         // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
+
+
+
 
         socket.on("startTaskOne", function (roomKey, mainPlayer) {
             console.log("taskOne");
@@ -159,15 +162,19 @@ module.exports = (io) => {
             for (playerId in roomInfo.players) {
                 console.log(playerId);
                 if (roomInfo.players[playerId].playerNum == mainPlayer) {
+                    console.log("mainPlater");
                     io.to(playerId).emit("displayMainTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key1: key1, key2:key2, key3:key3});
                 }
                 else if (roomInfo.players[playerId].playerNum == 2){
+                    console.log("plater 2");
                     io.to(playerId).emit("displaySideTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key: key1}); 
                 }
                 else if (roomInfo.players[playerId].playerNum == 3){
+                    console.log("plater 3");
                     io.to(playerId).emit("displaySideTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key: key2}); 
                 }
                 else{
+                    console.log("plater 4");
                     io.to(playerId).emit("displaySideTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key: key3}); 
                 }
             }
