@@ -40,6 +40,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             repeat: -1, //Infinity Times
             yoyo: false
         });
+        this.cameras.main.fadeIn(5000,0,0,0,instructions);
         var instructions = scene.add.text(400, 300,
                 "Communicate with your team and\ninsert the key in order.",
                 {
@@ -50,6 +51,13 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                 }
             )
             .setOrigin(0.5);
+        
+            this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, (cam, effect) => 
+            {  this.cameras.main.fadeOut(10000,0,0,0);
+            this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+                this.scene.start('FirstTask');
+            });
+            });
 
             //timedEvent = this.time.delayedCall(3000, onEvent, [], this);
            // onEvent({ 
