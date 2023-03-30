@@ -45,6 +45,8 @@ export default class FirstTask_Instruction extends Phaser.Scene {
       yoyo: false,
     });
 
+    // this.cameras.main.fadeIn(5000, 0, 0, 0, instructions);
+
     var instructions = scene.add
       .text(
         400,
@@ -59,72 +61,70 @@ export default class FirstTask_Instruction extends Phaser.Scene {
       )
       .setOrigin(0.5);
 
+    // i commented this out just b/c we need to factor in the second instruction scene before the fade
+    // this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, (cam, effect) =>
+    // {  this.cameras.main.fadeOut(10000,0,0,0);
+    // this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+    //     this.scene.start('FirstTask');
+    // });
+    // });
+
     function destroyInstructions() {
       instructions.destroy();
     }
 
     this.time.addEvent({
-      delay: 3000,
+      delay: 4000,
       callback: destroyInstructions,
       callbackScope: this,
     });
     this.time.addEvent({
-      delay: 3000,
+      delay: 4000,
       callback: playerInstruction,
       callbackScope: this,
     });
 
-    // data.data
-    // data.data.playerInfo
-    // if socket == playerInfo[x]
-    //      set playerNum
-    //      if playerNum is 1 display instruction 1
-    //      if playerNum > 1 display instruction 2
-
-
-    // console.log(this.data);
-    // console.log(this.socket.id);
-    console.log(this.data.data.playerInfo);
-    console.log(this.data.data.playerInfo[this.socket.id].playerNum);
-
-function playerInstruction() {
-    if (this.data.data.playerInfo[this.socket.id].playerNum === 1) {
+    function playerInstruction() {
+      if (this.data.data.playerInfo[this.socket.id].playerNum === 1) {
         var playerInfo = scene.add
-        .text(
-          400,
-          300,
-          `You are Player 1.\nCommunicate with your team\nto figure out the correct\nthree keys in the\ncorrect order!`,
-          {
-            fontFamily: "Chela One",
-            fontSize: 60,
-            color: "#000000",
-            align: "center",
-          }
-        )
-        .setOrigin(0.5);
-    }
-    else {
-        otherPlayerInstruction(this.data.data.playerInfo[this.socket.id].playerNum);
-    }
+          .text(
+            400,
+            300,
+            `You are Player 1.\nCommunicate with your team\nto figure out the correct\nthree keys in the\ncorrect order!`,
+            {
+              fontFamily: "Chela One",
+              fontSize: 60,
+              color: "#000000",
+              align: "center",
+            }
+          )
+          .setOrigin(0.5);
+      } else {
+        otherPlayerInstruction(
+          this.data.data.playerInfo[this.socket.id].playerNum
+        );
+      }
 
-
-    function otherPlayerInstruction(playerNum, playerOneUsername = "Player_1_Username") {
+      function otherPlayerInstruction(
+        playerNum,
+        playerOneUsername = "Player_1_Username"
+      ) {
         // playerOneUsername is not used for now, will implement when we merge with the username branch
-      var playerInfo = scene.add
-        .text(
-          400,
-          300,
-          `You are Player ${playerNum}.\nDescribe your key to\n${playerOneUsername}\nand pay attention to which\nnumber your key is!`,
-          {
-            fontFamily: "Chela One",
-            fontSize: 60,
-            color: "#000000",
-            align: "center",
-          }
-        )
-        .setOrigin(0.5);
+        var playerInfo = scene.add
+          .text(
+            400,
+            300,
+            `You are Player ${playerNum}.\nDescribe your key to\n${playerOneUsername}\nand pay attention to which\nnumber your key is!`,
+            {
+              fontFamily: "Chela One",
+              fontSize: 60,
+              color: "#000000",
+              align: "center",
+            }
+          )
+          .setOrigin(0.5);
+      }
     }
-}
   }
   update() {}
 }
