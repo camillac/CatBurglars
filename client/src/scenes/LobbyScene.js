@@ -79,6 +79,7 @@ export default class LobbyScene extends Phaser.Scene {
       console.log("gameStarted");
       scene.scene.start("IntroductionScene", {
         ...scene.state,
+        playerInfo: scene.state.players,
         socket: scene.socket,
       });
     });
@@ -227,9 +228,11 @@ export default class LobbyScene extends Phaser.Scene {
         scene.socket.emit("startGame", this.roomKey);
         scene.scene.start("IntroductionScene", {
           ...scene.state,
+          playerInfo: scene.state.players,
           socket: scene.socket,
         });
-      } else {
+      } 
+      else {
         console.log("Not Enough Players!");
         scene.notEnoughPlayers = scene.add
           .text(400, 325, "Not Enough Players!", {

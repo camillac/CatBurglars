@@ -6,6 +6,8 @@ export default class IntroductionScene extends Phaser.Scene {
     }
     init(data) {
         this.socket = data.socket;
+        this.data = data;
+        console.log(data);
     }
     preload() {
         //load cats/players
@@ -70,8 +72,11 @@ export default class IntroductionScene extends Phaser.Scene {
             duration: 4000,
             onComplete: () => {
                 House.destroy();
-                this.scene.start('FirstTask_Instruction');
-                
+                this.scene.start('FirstTask_Instruction', {
+                    ...scene.state,
+                    socket: scene.socket,
+                    data: scene.data
+                  });   
             }
         });
         //Add Rectangle 
