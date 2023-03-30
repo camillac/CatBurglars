@@ -44,8 +44,8 @@ export default class FirstTask_Instruction extends Phaser.Scene {
       repeat: -1, //Infinity Times
       yoyo: false,
     });
-
-    // this.cameras.main.fadeIn(5000, 0, 0, 0, instructions);
+    //Fade in Effect for the Instruction
+    this.cameras.main.fadeIn(5000, 0, 0, 0, instructions);
 
     var instructions = scene.add
       .text(
@@ -58,6 +58,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
           color: "#000000",
           align: "center",
         }
+       
       )
       .setOrigin(0.5);
 
@@ -70,22 +71,28 @@ export default class FirstTask_Instruction extends Phaser.Scene {
     // });
 
     function destroyInstructions() {
-      instructions.destroy();
+      
+        instructions.destroy();
     }
 
     this.time.addEvent({
-      delay: 4000,
+      delay: 6000,
       callback: destroyInstructions,
       callbackScope: this,
     });
     this.time.addEvent({
-      delay: 4000,
+      delay: 6000,
       callback: playerInstruction,
       callbackScope: this,
     });
 
     function playerInstruction() {
       if (this.data.data.playerInfo[this.socket.id].playerNum === 1) {
+
+            this.cameras.main.fadeOut(7000,0,0,0);
+            this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+            this.scene.start('FirstTask');
+        });
         var playerInfo = scene.add
           .text(
             400,
@@ -100,6 +107,11 @@ export default class FirstTask_Instruction extends Phaser.Scene {
           )
           .setOrigin(0.5);
       } else {
+            this.cameras.main.fadeOut(7000,0,0,0);
+            this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+            this.scene.start('FirstTask');
+            });
+
         otherPlayerInstruction(
           this.data.data.playerInfo[this.socket.id].playerNum
         );
@@ -109,6 +121,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         playerNum,
         playerOneUsername = "Player_1_Username"
       ) {
+        //Fade out after the Instruction
         // playerOneUsername is not used for now, will implement when we merge with the username branch
         var playerInfo = scene.add
           .text(
@@ -123,6 +136,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             }
           )
           .setOrigin(0.5);
+            
       }
     }
   }
