@@ -138,6 +138,21 @@ module.exports = (io) => {
             socket.to(roomKey).emit("startRoom", {roomKey: roomKey});
         });
 
+        socket.on("startTimer", function (roomKey, counter) {
+            console.log("startTimer");
+            console.log(counter);
+            var Countdown = setInterval (function() {
+                console.log(counter);
+                io.to(roomKey).emit("counter", counter);
+                counter--
+                if (counter === 0) {
+                    console.log("Lost!");
+                    io.to(roomKey).emit("lost", roomKey);
+                    clearInterval(Countdown);
+                }
+            }, 1000);
+        });
+
         // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
