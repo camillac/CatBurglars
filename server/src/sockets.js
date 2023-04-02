@@ -134,42 +134,58 @@ module.exports = (io) => {
         // RECEIVES STARTGAME EMIT FROM ONE PLAYER, EMIT STARTGAME TO ALL PLAYERS IN THE ROOM
         socket.on("startGame", function (roomKey) {
             console.log("start game");
-
-            socket.to(roomKey).emit("startRoom", {roomKey: roomKey});
+            // const {roomkey, startId} = arg;
+            socket.to(roomKey).emit("startRoom", { roomKey: roomKey });
         });
 
         // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
 
-        socket.on("startTaskOne", function (roomKey, mainPlayer) {
+        socket.on("startTaskOne", function (roomKey, mainPlayer, playerId) {
             console.log("taskOne");
-            let arr = [1,2,3,4,5,6]; 
-            shuffleArray(arr); 
-            console.log(arr); 
-            const key1 = arr[0]; 
-            const key2 = arr[1]; 
-            const key3 = arr[2]; 
+            let arr = [1, 2, 3, 4, 5, 6];
+            shuffleArray(arr);
+            console.log(arr);
+            const key1 = arr[0];
+            const key2 = arr[1];
+            const key3 = arr[2];
             console.log(key1, key2, key3);
             const roomInfo = gameRooms[roomKey];
-            console.log(roomInfo.players); 
-            console.log("num: ", mainPlayer); 
+            console.log(roomInfo.players);
+            console.log("num: ", mainPlayer);
             // console.log(roomInfo);
             // console.log(roomKey);
-            for (playerId in roomInfo.players) {
-                console.log(playerId);
-                if (roomInfo.players[playerId].playerNum == mainPlayer) {
-                    io.to(playerId).emit("displayMainTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key1: key1, key2:key2, key3:key3});
-                }
-                else if (roomInfo.players[playerId].playerNum == 2){
-                    io.to(playerId).emit("displaySideTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key: key1}); 
-                }
-                else if (roomInfo.players[playerId].playerNum == 3){
-                    io.to(playerId).emit("displaySideTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key: key2}); 
-                }
-                else{
-                    io.to(playerId).emit("displaySideTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key: key3}); 
-                }
+            if (roomInfo.players[playerId].playerNum == mainPlayer) {
+                console.log("mainPlater");
+                io.to(playerId).emit("displayMainTaskOne", {
+                    playerId: playerId,
+                    playerNum: roomInfo.players[playerId].playerNum,
+                    key1: key1,
+                    key2: key2,
+                    key3: key3,
+                });
+            } else if (roomInfo.players[playerId].playerNum == 2) {
+                console.log("plater 2");
+                io.to(playerId).emit("displaySideTaskOne", {
+                    playerId: playerId,
+                    playerNum: roomInfo.players[playerId].playerNum,
+                    key: key1,
+                });
+            } else if (roomInfo.players[playerId].playerNum == 3) {
+                console.log("plater 3");
+                io.to(playerId).emit("displaySideTaskOne", {
+                    playerId: playerId,
+                    playerNum: roomInfo.players[playerId].playerNum,
+                    key: key2,
+                });
+            } else {
+                console.log("plater 4");
+                io.to(playerId).emit("displaySideTaskOne", {
+                    playerId: playerId,
+                    playerNum: roomInfo.players[playerId].playerNum,
+                    key: key3,
+                });
             }
         });
 
