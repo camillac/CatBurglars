@@ -81,7 +81,7 @@ export default class LobbyScene extends Phaser.Scene {
         // Other Player Started Game
         this.socket.on("startRoom", function (arg) {
             console.log("gameStarted");
-            const {roomKey} = arg;
+            const { roomKey } = arg;
             // const {roomKey, playerNum} =  arg;
             // console.log(playerNum);
             // console.log(this.roomKey)
@@ -90,7 +90,6 @@ export default class LobbyScene extends Phaser.Scene {
                 socket: scene.socket,
                 roomKey: roomKey,
                 // playerNum: playerNum
-
             });
         });
 
