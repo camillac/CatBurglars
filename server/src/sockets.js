@@ -7,6 +7,8 @@ module.exports = (io) => {
             `A socket connection to the server has been made: ${socket.id}`
         );
 
+        // ************************************* PLAY SCENE SOCKETS **********************************************
+
         // CREATE A ROOM
         socket.on("getRoomCode", async function () {
             let key = codeGenerator();
@@ -62,15 +64,11 @@ module.exports = (io) => {
             console.log(roomInfo);
         });
 
-        // socket.on("join", function (roomID, callback) {
-        //     console.log("join");
+        // ************************************* END OF PLAY SCENE SOCKETS **********************************************
 
-        //     // Join existing room
-        //     if (connectClientToRoom(roomID, client.id, false)) {
-        //         callback(roomID);
-        //     }
-        // });
+        // ************************************* LOBBY SCENE SOCKETS **********************************************
 
+        // CLIENT DISCONNECT
         socket.on("disconnect", () => {
             console.log(`A socket has disconnected`);
 
@@ -89,12 +87,13 @@ module.exports = (io) => {
             const roomInfo = gameRooms[roomKey];
 
             if (roomInfo) {
-                console.log("user disconnected: ", socket.id);
+                console.log("User Disconnected: ", socket.id);
+                console.log("Room Info BEFORE Removing Player");
                 console.log(roomInfo);
 
                 var deletedNum = roomInfo.players[socket.id].playerNum;
-                console.log(deletedNum);
-                console.log(roomInfo.players);
+
+                // SHIFT PLAYERNUMS DOWN IF PLAYERNUM > DELETED_PLAYERNUM
                 for (playerId in roomInfo.players) {
                     console.log("player: " + playerId);
                     console.log(
@@ -104,8 +103,6 @@ module.exports = (io) => {
                     if (roomInfo.players[playerId].playerNum > deletedNum) {
                         roomInfo.players[playerId].playerNum =
                             roomInfo.players[playerId].playerNum - 1;
-                        roomInfo.players[playerId].playerName =
-                            "Player " + roomInfo.players[playerId].playerNum;
                     }
                 }
 
@@ -122,19 +119,92 @@ module.exports = (io) => {
                     roomInfo: roomInfo,
                 });
 
+                console.log("Room Info AFTER Removing Player");
                 console.log(roomInfo);
             }
         });
 
+        // CHECKS IF INPUTTED ROOM KEY IS VALID
         socket.on("isKeyValid", function (input) {
             Object.keys(gameRooms).includes(input)
                 ? socket.emit("keyIsValid", input)
                 : socket.emit("keyNotValid");
         });
 
+        // RECEIVES STARTGAME EMIT FROM ONE PLAYER, EMIT STARTGAME TO ALL PLAYERS IN THE ROOM
         socket.on("startGame", function (roomKey) {
-            socket.to(roomKey).emit("startRoom");
+            console.log("start game");
+            // const {roomkey, startId} = arg;
+            socket.to(roomKey).emit("startRoom", { roomKey: roomKey });
         });
+
+        socket.on("startTimer", function (roomKey, counter) {
+            console.log("startTimer");
+            console.log(counter);
+            var Countdown = setInterval (function() {
+                console.log(counter);
+                io.to(roomKey).emit("counter", counter);
+                counter--
+                if (counter === 0) {
+                    console.log("Lost!");
+                    io.to(roomKey).emit("lost", roomKey);
+                    clearInterval(Countdown);
+                }
+            }, 1000);
+        });
+
+        // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
+
+        // ************************************* TASK ONE SCENE SOCKETS **********************************************
+
+        socket.on("startTaskOne", function (roomKey, mainPlayer, playerId) {
+            console.log("taskOne");
+            let arr = [1, 2, 3, 4, 5, 6];
+            shuffleArray(arr);
+            console.log(arr);
+            const key1 = arr[0];
+            const key2 = arr[1];
+            const key3 = arr[2];
+            console.log(key1, key2, key3);
+            const roomInfo = gameRooms[roomKey];
+            console.log(roomInfo.players);
+            console.log("num: ", mainPlayer);
+            // console.log(roomInfo);
+            // console.log(roomKey);
+            if (roomInfo.players[playerId].playerNum == mainPlayer) {
+                console.log("mainPlater");
+                io.to(playerId).emit("displayMainTaskOne", {
+                    playerId: playerId,
+                    playerNum: roomInfo.players[playerId].playerNum,
+                    key1: key1,
+                    key2: key2,
+                    key3: key3,
+                });
+            } else if (roomInfo.players[playerId].playerNum == 2) {
+                console.log("plater 2");
+                io.to(playerId).emit("displaySideTaskOne", {
+                    playerId: playerId,
+                    playerNum: roomInfo.players[playerId].playerNum,
+                    key: key1,
+                });
+            } else if (roomInfo.players[playerId].playerNum == 3) {
+                console.log("plater 3");
+                io.to(playerId).emit("displaySideTaskOne", {
+                    playerId: playerId,
+                    playerNum: roomInfo.players[playerId].playerNum,
+                    key: key2,
+                });
+            } else {
+                console.log("plater 4");
+                io.to(playerId).emit("displaySideTaskOne", {
+                    playerId: playerId,
+                    playerNum: roomInfo.players[playerId].playerNum,
+                    key: key3,
+                });
+            }
+        });
+
+        // ************************************* TASK ONE SCENE SOCKETS **********************************************
     });
 };
 
@@ -146,4 +216,12 @@ function codeGenerator() {
         code += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return code;
+}
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
 }
