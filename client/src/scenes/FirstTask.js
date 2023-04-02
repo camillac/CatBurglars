@@ -4,12 +4,14 @@ export default class FirstTask extends Phaser.Scene {
         this.state = {};
         this.hasBeenSet = false;
     }
+
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
         this.playerNum = data.playerNum;
         console.log(this.socket.id);
     }
+
     preload() {
         //load cats/players
         this.load.image("Player_1", "client/assets/sprites/player1.png");
@@ -139,6 +141,19 @@ export default class FirstTask extends Phaser.Scene {
             //     socket: scene.socket,
             //     roomKey: arg,
             // });
+        });
+
+        this.socket.on("counter", function (counter) {
+            console.log(counter);
+        });
+
+        this.socket.on("lost", function (roomKey) {
+            console.log("Lost!");
+            scene.scene.start("LostScene", {
+                ...scene.state,
+                socket: scene.socket,
+                roomKey: scene.roomKey,
+            });
         });
     }
 
