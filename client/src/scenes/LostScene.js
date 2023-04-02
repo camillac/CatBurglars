@@ -1,7 +1,12 @@
-export default class MainScene extends Phaser.Scene {
+export default class LostScene extends Phaser.Scene {
     constructor() {
-        super("MainScene");
+        super("LostScene");
         this.state = {};
+    }
+
+    init(data) {
+        this.socket = data.socket;
+        this.roomKey = data.roomKey;
     }
 
     preload() {
@@ -54,9 +59,9 @@ export default class MainScene extends Phaser.Scene {
                     strokeThickness: 12,
                 });
 
-                // Play button
-                const playButton = add
-                    .text(400, 325, "Play", {
+                // Back to lobby button
+                const backtolobbyButton = add
+                    .text(400, 325, "Back to Homepage", {
                         fontFamily: "Chela One",
                         fontSize: 50,
                         color: "#FFFBF4",
@@ -65,62 +70,31 @@ export default class MainScene extends Phaser.Scene {
                         strokeThickness: 12,
                     })
                     .setOrigin(0.5)
-                    .setPadding(5, 5, 5, 5);
+                    .setPadding(10, 10, 10, 10);
 
-                // How to Play button
-                const howToPlayButton = add
-                    .text(400, 455, "How To Play", {
-                        fontFamily: "Chela One",
-                        fontSize: 50,
-                        color: "#FFFBF4",
-                        fontStyle: "normal",
-                        stroke: "#000000",
-                        strokeThickness: 12,
-                    })
-                    .setOrigin(0.5)
-                    .setPadding(15, 15, 15, 15);
-
-                playButton.setInteractive();
-                howToPlayButton.setInteractive();
-
-                // How to Play button events
-                howToPlayButton.on("pointerover", () => {
-                    howToPlayButton.setStyle({
-                        color: "#FFEBB9",
-                    });
-                });
-                howToPlayButton.on("pointerout", () => {
-                    howToPlayButton.setStyle({
-                        color: "#FFFBF4",
-                    });
-                });
-                howToPlayButton.on("pointerup", () => {
-                    scene.scene.start("HowtoPlayScene", {
-                        ...scene.state,
-                        socket: scene.socket,
-                    });
-                });
+                backtolobbyButton.setInteractive();
 
                 // Play button events
-                playButton.on("pointerover", () => {
-                    playButton.setStyle({
+                backtolobbyButton.on("pointerover", () => {
+                    backtolobbyButton.setStyle({
                         color: "#FFEBB9",
                     });
                 });
-                playButton.on("pointerout", () => {
-                    playButton.setStyle({
+                backtolobbyButton.on("pointerout", () => {
+                    backtolobbyButton.setStyle({
                         color: "#FFFBF4",
                     });
                 });
-                playButton.on("pointerup", () => {
-                    scene.scene.start("PlayScene", {
-                        ...scene.state,
-                        socket: scene.socket,
+                backtolobbyButton.on("pointerup", () => {
+                    scene.scene.start("MainScene", {
+                        ...scene.state
                     });
                 });
-            },
+            }
         });
     }
 
-    update() {}
+    update() {
+
+    }
 }

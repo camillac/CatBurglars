@@ -9,7 +9,7 @@ export default class PlayScene extends Phaser.Scene {
             "webfont",
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
         );
-        
+
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
@@ -28,7 +28,6 @@ export default class PlayScene extends Phaser.Scene {
                 families: ["Chela One"],
             },
             active: function () {
-                
                 // Title
                 add.text(125, 110, "Cat", {
                     fontFamily: "Chela One",
@@ -54,7 +53,7 @@ export default class PlayScene extends Phaser.Scene {
                     stroke: "#000000",
                     strokeThickness: 12,
                 });
-                
+
                 // Create lobby button
                 const createButton = add
                     .text(400, 325, "Create A Lobby", {
@@ -93,17 +92,18 @@ export default class PlayScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
-                
-                scene.notValidText = scene.add.text(400, 500, "", {
-                    fill: "#ff0000",
-                    fontSize: "35px",
-                    fontFamily: "Chela One",
-                    fontStyle: "normal",
-                    strokeThickness: 12,
+
+                scene.notValidText = scene.add
+                    .text(400, 500, "", {
+                        fill: "#ff0000",
+                        fontSize: "35px",
+                        fontFamily: "Chela One",
+                        fontStyle: "normal",
+                        strokeThickness: 12,
                     })
                     .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);;
-                
+                    .setPadding(10, 10, 10, 10);
+
                 createButton.setInteractive();
                 backButton.setInteractive();
                 joinButton.setInteractive();
@@ -121,7 +121,7 @@ export default class PlayScene extends Phaser.Scene {
                 });
                 backButton.on("pointerup", () => {
                     backButton.destroy();
-        
+
                     scene.scene.start("MainScene", {
                         ...scene.state,
                         socket: scene.socket,
@@ -167,5 +167,5 @@ export default class PlayScene extends Phaser.Scene {
         });
     }
 
-    update() { }
+    update() {}
 }

@@ -4,14 +4,14 @@ export default class JoinLobbyScene extends Phaser.Scene {
         this.state = {};
         this.hasBeenSet = false;
     }
-    
+
     preload() {
         this.load.script(
             "webfont",
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js",
             this.load.html("codeform", "client/assets/text/codeform.html")
         );
-        
+
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
@@ -32,7 +32,6 @@ export default class JoinLobbyScene extends Phaser.Scene {
                 families: ["Chela One"],
             },
             active: function () {
-                
                 // Title
                 add.text(125, 110, "Cat", {
                     fontFamily: "Chela One",
@@ -71,12 +70,13 @@ export default class JoinLobbyScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
-                scene.notValidText = scene.add.text(400, 500, "", {
-                    fill: "#ff0000",
-                    fontSize: "35px",
-                    fontFamily: "Chela One",
-                    fontStyle: "normal",
-                    strokeThickness: 12,
+                scene.notValidText = scene.add
+                    .text(400, 500, "", {
+                        fill: "#ff0000",
+                        fontSize: "35px",
+                        fontFamily: "Chela One",
+                        fontStyle: "normal",
+                        strokeThickness: 12,
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
@@ -95,21 +95,25 @@ export default class JoinLobbyScene extends Phaser.Scene {
                 });
                 backButton.on("pointerup", () => {
                     backButton.destroy();
-        
+
                     scene.scene.start("PlayScene", {
                         ...scene.state,
                         socket: scene.socket,
                     });
                 });
-                
+
                 // Join a room
-                scene.inputElement = scene.add.dom(400, 440).createFromCache("codeform");
+                scene.inputElement = scene.add
+                    .dom(400, 450)
+                    .createFromCache("codeform");
                 scene.inputElement.addListener("click");
                 scene.inputElement.on("click", function (event) {
                     if (event.target.name === "enterRoom") {
-                        const name = scene.inputElement.getChildByName("name-form");
+                        const name =
+                            scene.inputElement.getChildByName("name-form");
                         console.log(name.value);
-                        const code = scene.inputElement.getChildByName("code-form");
+                        const code =
+                            scene.inputElement.getChildByName("code-form");
                         console.log(code.value);
                         scene.socket.emit("isKeyValid", code.value, name.value);
                     }
@@ -121,7 +125,7 @@ export default class JoinLobbyScene extends Phaser.Scene {
                             ...scene.state,
                             socket: scene.socket,
                             roomKey: code,
-                            playerName: name
+                            playerName: name,
                         });
                     });
                 });

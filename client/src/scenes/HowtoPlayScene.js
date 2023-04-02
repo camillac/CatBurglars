@@ -10,7 +10,7 @@ export default class HowtoPlayScene extends Phaser.Scene {
             "webfont",
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
         );
-        
+
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
