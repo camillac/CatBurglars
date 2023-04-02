@@ -6,10 +6,10 @@ export default class LobbyScene extends Phaser.Scene {
     }
 
     init(data) {
-        // console.log(data);
+        console.log(data);
         this.socket = data.socket;
         this.roomKey = data.roomKey;
-        console.log(this.roomKey);
+        this.playerName = data.playerName;
     }
 
     preload() {
@@ -34,7 +34,7 @@ export default class LobbyScene extends Phaser.Scene {
         const scene = this;
 
         var counter = 15;
-        scene.socket.emit("joinRoom", this.roomKey);
+        scene.socket.emit("joinRoom", this.roomKey, this.playerName);
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
 
@@ -341,9 +341,11 @@ export default class LobbyScene extends Phaser.Scene {
                 playerInfo.playerName,
                 {
                     fontFamily: "Chela One",
-                    fontSize: 25,
-                    color: "#000000",
+                    fontSize: 20,
+                    color: "#FFFFFF",
                     fontStyle: "normal",
+                    stroke: "#000000",
+                    strokeThickness: 12,
                 }
             )
             .setOrigin(0.5)
@@ -368,11 +370,9 @@ export default class LobbyScene extends Phaser.Scene {
                 playerInfo.playerName,
                 {
                     fontFamily: "Chela One",
-                    fontSize: 20,
-                    color: "#FFFFFF",
+                    fontSize: 25,
+                    color: "#000000",
                     fontStyle: "normal",
-                    stroke: "#000000",
-                    strokeThickness: 12,
                 }
             )
             .setOrigin(0.5)
