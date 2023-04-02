@@ -10,8 +10,8 @@ import LostScene from "./scenes/LostScene.js";
 class Game extends Phaser.Game {
     constructor() {
         super(config);
-        this.scene.add("FirstTask", FirstTask);
         this.scene.add("MainScene", MainScene);
+        this.scene.add("FirstTask", FirstTask);
         this.scene.add("HowtoPlayScene", HowtoPlayScene);
         this.scene.add("LobbyScene", LobbyScene);
         this.scene.add("PlayScene", PlayScene);

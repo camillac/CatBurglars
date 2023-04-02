@@ -295,7 +295,7 @@ export default class LobbyScene extends Phaser.Scene {
             scene.playerNames.getChildren().forEach(function (curr) {
                 curr.destroy();
             });
-            
+
             scene.circle.fillStyle(0xe8ded1, 1);
             scene.circle.fillCircle(125, 200, 50);
 
@@ -341,7 +341,7 @@ export default class LobbyScene extends Phaser.Scene {
                 playerInfo.playerName,
                 {
                     fontFamily: "Chela One",
-                    fontSize: 20,
+                    fontSize: 25,
                     color: "#000000",
                     fontStyle: "normal",
                 }
@@ -351,7 +351,6 @@ export default class LobbyScene extends Phaser.Scene {
         scene.playerNames.add(playerNameDisplay);
         scene.currentPlayer.add(mycats);
     }
-    
     addOtherPlayers(scene, playerInfo) {
         const otherPlayer = scene.add.sprite(
             300,
@@ -369,8 +368,8 @@ export default class LobbyScene extends Phaser.Scene {
                 playerInfo.playerName,
                 {
                     fontFamily: "Chela One",
-                    fontSize: 15,
-                    color: "#FF0000",
+                    fontSize: 20,
+                    color: "#FFFFFF",
                     fontStyle: "normal",
                     stroke: "#000000",
                     strokeThickness: 12,

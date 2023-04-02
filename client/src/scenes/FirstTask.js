@@ -1,17 +1,18 @@
+import Sidebar from "./Sidebar.js";
+
 export default class FirstTask extends Phaser.Scene {
     constructor() {
         super("FirstTask");
         this.state = {};
         this.hasBeenSet = false;
     }
-
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
         this.playerNum = data.playerNum;
         console.log(this.socket.id);
+        this.players = data.players;
     }
-
     preload() {
         //load cats/players
         this.load.image("Player_1", "client/assets/sprites/player1.png");
@@ -62,38 +63,13 @@ export default class FirstTask extends Phaser.Scene {
                 );
             },
         });
-
-        // Left side menu dimensions
-        const width = this.game.config.width;
-        const height = this.game.config.height;
-
-        const menu = this.add.graphics();
-        menu.fillStyle(0xe9d6c5, 1);
-        menu.fillRect(0, 0, width / 4, height);
-
-        // Add the setting wheel button
-        const settingsBtn = this.add
-            .image(100, 530, "settings")
-            .setInteractive();
-        settingsBtn.setScale(0.75);
-        settingsBtn.on("pointerup", () => {
-            // Open the settings popup
-            this.showSettingsPopup();
-        });
-
-        background.setScale(2.0);
-
-        //Add Players Sprite
-        var player_1 = this.add.sprite(100, 300, "Player_1");
-        player_1.setScale(0.75).setPosition(100, 70);
-        var player_2 = this.add.sprite(100, 300, "Player_2");
-        player_2.setScale(0.75).setPosition(100, 185);
-        var player_3 = this.add.sprite(100, 300, "Player_3");
-        player_3.setScale(0.75).setPosition(100, 300);
-        var player_4 = this.add.sprite(100, 300, "Player_4");
-        player_4.setScale(0.75).setPosition(100, 415);
-        //Add House
-
+        const sidebar = new Sidebar(
+            scene,
+            this.game.config.width,
+            this.game.config.height,
+            scene.players,
+            scene.socket
+        );
         this.socket.on("displayMainTaskOne", function (arg) {
             console.log("displayMainTaskOne");
             console.log(arg);
@@ -157,26 +133,5 @@ export default class FirstTask extends Phaser.Scene {
         });
     }
 
-    update() {}
-
-    showSettingsPopup() {
-        // Create and display the settings popup
-        const popup = this.add.container(
-            this.game.config.width / 2,
-            this.game.config.height / 2
-        );
-        const background = this.add.graphics();
-        background.fillStyle(0xffffff, 1);
-        background.fillRect(-150, -150, 300, 300);
-        const closeButton = this.add
-            .text(130, -130, "X", { fontSize: "24px", color: "#000000" })
-            .setInteractive();
-        closeButton.on("pointerup", () => {
-            // Close the popup
-            popup.destroy();
-        });
-        popup.add(background);
-        popup.add(closeButton);
-        // Pop Up Seeings
-    }
+    upload() {}
 }
