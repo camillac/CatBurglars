@@ -18,12 +18,12 @@ export default class FirstTask extends Phaser.Scene {
         this.load.image("Player_4", "client/assets/sprites/player4.png");
         this.load.image("House", "client/assets/sprites/log-cabin.png"); //Need to Update this
         this.load.image("settings", "client/assets/sprites/settings_icon.png");
-        this.load.image("key1Image", "client/assets/sprites/key1.jpg");
-        this.load.image("key2Image", "client/assets/sprites/key2.jpg");
-        this.load.image("key3Image", "client/assets/sprites/key3.jpg");
-        this.load.image("key4Image", "client/assets/sprites/key4.jpg");
-        this.load.image("key5Image", "client/assets/sprites/key5.jpg");
-        this.load.image("key6Image", "client/assets/sprites/key6.jpg");
+        this.load.image("key1Image", "client/assets/sprites/key1.png");
+        this.load.image("key2Image", "client/assets/sprites/key2.png");
+        this.load.image("key3Image", "client/assets/sprites/key3.png");
+        this.load.image("key4Image", "client/assets/sprites/key4.png");
+        this.load.image("key5Image", "client/assets/sprites/key5.png");
+        this.load.image("key6Image", "client/assets/sprites/key6.png");
         //load background
 
         this.load.image(
