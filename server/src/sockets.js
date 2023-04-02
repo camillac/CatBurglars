@@ -104,6 +104,8 @@ module.exports = (io) => {
                     if (roomInfo.players[playerId].playerNum > deletedNum) {
                         roomInfo.players[playerId].playerNum =
                             roomInfo.players[playerId].playerNum - 1;
+                        roomInfo.players[playerId].playerName =
+                            "Player " + roomInfo.players[playerId].playerNum;
                     }
                 }
 
