@@ -33,7 +33,7 @@ export default class LobbyScene extends Phaser.Scene {
     create() {
         const scene = this;
 
-        var counter = 15;
+        var counter = 45;
         scene.socket.emit("joinRoom", this.roomKey, this.playerName);
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
@@ -81,7 +81,7 @@ export default class LobbyScene extends Phaser.Scene {
         // Other Player Started Game
         this.socket.on("startRoom", function (arg) {
             console.log("gameStarted");
-            const { roomKey } = arg;
+            const { roomKey, start } = arg;
             // const {roomKey, playerNum} =  arg;
             // console.log(playerNum);
             // console.log(this.roomKey)
@@ -89,6 +89,7 @@ export default class LobbyScene extends Phaser.Scene {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: roomKey,
+                start: start
                 // playerNum: playerNum
             });
         });
@@ -233,14 +234,15 @@ export default class LobbyScene extends Phaser.Scene {
         // Start Game button events
         startGame.on("pointerup", () => {
             if (scene.state.numPlayers == 4) {
-                scene.socket.emit("startGame", this.roomKey);
-                scene.socket.emit("startTimer", this.roomKey, counter);
+                scene.socket.emit("startGame", this.roomKey, this.socket.id);
+                // scene.socket.emit("startTimer", this.roomKey, counter);
                 console.log("startGame", this.roomKey);
                 console.log("startTimer", counter);
                 scene.scene.start("FirstTask", {
                     ...scene.state,
                     socket: scene.socket,
                     roomKey: this.roomKey,
+                    start: this.socket.id
                 });
             } else {
                 console.log("Not Enough Players!");
