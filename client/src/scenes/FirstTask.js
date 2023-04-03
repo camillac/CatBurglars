@@ -10,7 +10,7 @@ export default class FirstTask extends Phaser.Scene {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
         this.playerNum = data.playerNum;
-        console.log(this.socket.id);
+        // console.log(this.socket.id);
         this.players = data.players;
     }
     preload() {
@@ -19,7 +19,6 @@ export default class FirstTask extends Phaser.Scene {
         this.load.image("Player_2", "client/assets/sprites/player2.png");
         this.load.image("Player_3", "client/assets/sprites/player3.png");
         this.load.image("Player_4", "client/assets/sprites/player4.png");
-        this.load.image("House", "client/assets/sprites/log-cabin.png"); //Need to Update this
         this.load.image("settings", "client/assets/sprites/settings_icon.png");
         this.load.image("key1Image", "client/assets/sprites/key1.png");
         this.load.image("key2Image", "client/assets/sprites/key2.png");
@@ -42,27 +41,13 @@ export default class FirstTask extends Phaser.Scene {
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
 
-        var House = this.add
-            .image(500, 300, "House")
-            .setOrigin(0.5)
-            .setScale(0.2);
-        scene.tweens.add({
-            targets: House,
-            scaleX: 2,
-            scaleY: 2,
-            ease: "Cubic.easeIn",
-            duration: 4000,
-            onComplete: () => {
-                House.destroy();
+        scene.socket.emit(
+            "startTaskOne",
+            this.roomKey,
+            1, // MAIN PLAYER: HARDCODED AS 1
+            scene.socket.id
+        );
 
-                scene.socket.emit(
-                    "startTaskOne",
-                    this.roomKey,
-                    1, // MAIN PLAYER: HARDCODED AS 1
-                    scene.socket.id
-                );
-            },
-        });
         const sidebar = new Sidebar(
             scene,
             this.game.config.width,
@@ -128,7 +113,7 @@ export default class FirstTask extends Phaser.Scene {
             scene.scene.start("LostScene", {
                 ...scene.state,
                 socket: scene.socket,
-                roomKey: scene.roomKey,
+                roomKey: this.roomKey,
             });
         });
     }

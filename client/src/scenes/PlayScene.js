@@ -71,7 +71,7 @@ export default class PlayScene extends Phaser.Scene {
                 const backButton = add
                     .text(50, 30, "Back", {
                         fontFamily: "Chela One",
-                        fontSize: 20,
+                        fontSize: 30,
                         color: "#FFFBF4",
                         fontStyle: "normal",
                         stroke: "#000000",
