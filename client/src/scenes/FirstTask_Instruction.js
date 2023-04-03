@@ -28,7 +28,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         background.setScale(2);
         //background.setScale(1);
         // const scroll = this.add.image(400,300,"Scroll");
-        var sky = this.add.image(400, 300, "Sky");
+        var sky = this.add.image(400, 350, "Sky");
         sky.setScale(4.0);
 
         var Clouds_bg1 = this.add.tileSprite(
