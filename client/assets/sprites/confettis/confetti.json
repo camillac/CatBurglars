@@ -1,51 +1,51 @@
 {"frames": {
 
-"confetti1.png":
+"confeti1.png":
 {
-	"frame": {"x":1,"y":886,"w":1091,"h":837},
+	"frame": {"x":1,"y":1,"w":161,"h":143},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":379,"y":489,"w":1091,"h":837},
+	"spriteSourceSize": {"x":347,"y":1126,"w":161,"h":143},
 	"sourceSize": {"w":1640,"h":2360}
 },
-"confetti2.png":
+"confeti2.png":
 {
-	"frame": {"x":822,"y":1,"w":1091,"h":837},
+	"frame": {"x":164,"y":1,"w":161,"h":143},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":379,"y":489,"w":1091,"h":837},
+	"spriteSourceSize": {"x":347,"y":1126,"w":161,"h":143},
 	"sourceSize": {"w":1640,"h":2360}
 },
-"confetti3.png":
+"confeti3.png":
 {
-	"frame": {"x":1,"y":1,"w":819,"h":883},
+	"frame": {"x":327,"y":1,"w":161,"h":143},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":382,"y":448,"w":819,"h":883},
+	"spriteSourceSize": {"x":347,"y":1126,"w":161,"h":143},
 	"sourceSize": {"w":1640,"h":2360}
 },
-"confetti4.png":
+"confeti4.png":
 {
-	"frame": {"x":1094,"y":840,"w":819,"h":883},
+	"frame": {"x":490,"y":1,"w":161,"h":143},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":382,"y":448,"w":819,"h":883},
+	"spriteSourceSize": {"x":347,"y":1126,"w":161,"h":143},
 	"sourceSize": {"w":1640,"h":2360}
 },
-"confetti5.png":
+"confeti5.png":
 {
-	"frame": {"x":1,"y":1725,"w":819,"h":883},
+	"frame": {"x":653,"y":1,"w":161,"h":143},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":382,"y":448,"w":819,"h":883},
+	"spriteSourceSize": {"x":347,"y":1126,"w":161,"h":143},
 	"sourceSize": {"w":1640,"h":2360}
 },
-"confetti6.png":
+"confeti6.png":
 {
-	"frame": {"x":822,"y":1725,"w":819,"h":883},
+	"frame": {"x":816,"y":1,"w":161,"h":143},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":382,"y":448,"w":819,"h":883},
+	"spriteSourceSize": {"x":347,"y":1126,"w":161,"h":143},
 	"sourceSize": {"w":1640,"h":2360}
 }},
 "meta": {
@@ -53,8 +53,8 @@
 	"version": "1.0",
 	"image": "confetti.png",
 	"format": "RGBA8888",
-	"size": {"w":1914,"h":2609},
+	"size": {"w":978,"h":145},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:97e355fa3b58537d583fe69dd7834857:6a1409e0f67d72c98f758a1b0b317857:ccbf4012fa8c0448f9f3ca62cd41a029$"
+	"smartupdate": "$TexturePacker:SmartUpdate:6d21323f80ba4774309527a7cbfdc6ef:7d652b8a6338bafbe9c0fbe9099ada51:ccbf4012fa8c0448f9f3ca62cd41a029$"
 }
 }

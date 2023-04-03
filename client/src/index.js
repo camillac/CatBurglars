@@ -18,8 +18,7 @@ class Game extends Phaser.Game {
         this.scene.add("FirstTask", FirstTask);
         this.scene.add("WinningScene", WinningScene);
 
-        // this.scene.start("MainScene"); WinningScene
-        // this.scene.start("FirstTask");
+        // this.scene.start("MainScene");
         this.scene.start("WinningScene");
 
     }

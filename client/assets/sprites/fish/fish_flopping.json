@@ -1,0 +1,44 @@
+{"frames": {
+
+"fish_flopping1.png":
+{
+	"frame": {"x":1,"y":1,"w":400,"h":449},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":56,"y":31,"w":400,"h":449},
+	"sourceSize": {"w":512,"h":512}
+},
+"fish_flopping2.png":
+{
+	"frame": {"x":403,"y":1,"w":400,"h":449},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":56,"y":31,"w":400,"h":449},
+	"sourceSize": {"w":512,"h":512}
+},
+"fish_flopping3.png":
+{
+	"frame": {"x":805,"y":1,"w":400,"h":449},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":56,"y":31,"w":400,"h":449},
+	"sourceSize": {"w":512,"h":512}
+},
+"fish_flopping4.png":
+{
+	"frame": {"x":1207,"y":1,"w":400,"h":449},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":56,"y":31,"w":400,"h":449},
+	"sourceSize": {"w":512,"h":512}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "fish_flopping.png",
+	"format": "RGBA8888",
+	"size": {"w":1608,"h":451},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:51b12e11efb93b223acf4c1cac3bbae9:4052b205284ca5fd1a447113f8d39267:c25de93153abcc1ab446db958631c1de$"
+}
+}
