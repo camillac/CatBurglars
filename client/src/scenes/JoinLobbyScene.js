@@ -1,13 +1,15 @@
-export default class PlayScene extends Phaser.Scene {
+export default class JoinLobbyScene extends Phaser.Scene {
     constructor() {
-        super("PlayScene");
+        super("JoinLobbyScene");
         this.state = {};
+        this.hasBeenSet = false;
     }
 
     preload() {
         this.load.script(
             "webfont",
-            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
+            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js",
+            this.load.html("codeform", "client/assets/text/codeform.html")
         );
 
         this.load.image(
@@ -19,6 +21,8 @@ export default class PlayScene extends Phaser.Scene {
     create() {
         var add = this.add;
         const scene = this;
+        scene.roomKey = "";
+        this.socket = io();
 
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
@@ -54,24 +58,11 @@ export default class PlayScene extends Phaser.Scene {
                     strokeThickness: 12,
                 });
 
-                // Create lobby button
-                const createButton = add
-                    .text(400, 325, "Create A Lobby", {
-                        fontFamily: "Chela One",
-                        fontSize: 50,
-                        color: "#FFFBF4",
-                        fontStyle: "normal",
-                        stroke: "#000000",
-                        strokeThickness: 12,
-                    })
-                    .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);
-
                 // Back button
                 const backButton = add
                     .text(50, 30, "Back", {
                         fontFamily: "Chela One",
-                        fontSize: 30,
+                        fontSize: 20,
                         color: "#FFFBF4",
                         fontStyle: "normal",
                         stroke: "#000000",
@@ -79,20 +70,6 @@ export default class PlayScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
-
-                // Join lobby button
-                const joinButton = add
-                    .text(400, 440, "Join A Lobby", {
-                        fontFamily: "Chela One",
-                        fontSize: 50,
-                        color: "#FFFBF4",
-                        fontStyle: "normal",
-                        stroke: "#000000",
-                        strokeThickness: 12,
-                    })
-                    .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);
-
                 scene.notValidText = scene.add
                     .text(400, 500, "", {
                         fill: "#ff0000",
@@ -103,10 +80,7 @@ export default class PlayScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
-
-                createButton.setInteractive();
                 backButton.setInteractive();
-                joinButton.setInteractive();
 
                 // Back button events
                 backButton.on("pointerover", () => {
@@ -122,50 +96,42 @@ export default class PlayScene extends Phaser.Scene {
                 backButton.on("pointerup", () => {
                     backButton.destroy();
 
-                    scene.scene.start("MainScene", {
+                    scene.scene.start("PlayScene", {
                         ...scene.state,
                         socket: scene.socket,
                     });
                 });
 
-                // Play button events
-                createButton.on("pointerover", () => {
-                    createButton.setStyle({
-                        color: "#FFEBB9",
+                // Join a room
+                scene.inputElement = scene.add
+                    .dom(400, 450)
+                    .createFromCache("codeform");
+                scene.inputElement.addListener("click");
+                scene.inputElement.on("click", function (event) {
+                    if (event.target.name === "enterRoom") {
+                        const name =
+                            scene.inputElement.getChildByName("name-form");
+                        console.log(name.value);
+                        const code =
+                            scene.inputElement.getChildByName("code-form");
+                        console.log(code.value);
+                        scene.socket.emit("isKeyValid", code.value, name.value);
+                    }
+                    scene.socket.on("keyNotValid", function () {
+                        scene.notValidText.setText("Invalid Room Key");
                     });
-                });
-                createButton.on("pointerout", () => {
-                    createButton.setStyle({
-                        color: "#FFFBF4",
-                    });
-                });
-                createButton.on("pointerup", () => {
-                    scene.scene.start("CreateLobbyScene", {
-                        ...scene.state,
-                        socket: scene.socket,
-                    });
-                });
-
-                // Join button events
-                joinButton.on("pointerover", () => {
-                    joinButton.setStyle({
-                        color: "#FFEBB9",
-                    });
-                });
-                joinButton.on("pointerout", () => {
-                    joinButton.setStyle({
-                        color: "#FFFBF4",
-                    });
-                });
-                joinButton.on("pointerup", () => {
-                    scene.scene.start("JoinLobbyScene", {
-                        ...scene.state,
-                        socket: scene.socket,
+                    scene.socket.on("keyIsValid", function (code, name) {
+                        scene.scene.start("LobbyScene", {
+                            ...scene.state,
+                            socket: scene.socket,
+                            roomKey: code,
+                            playerName: name,
+                        });
                     });
                 });
             },
         });
     }
 
-    update() {}
+    upload() {}
 }
