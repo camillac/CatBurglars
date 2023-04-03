@@ -91,12 +91,12 @@ export default class FirstTask extends Phaser.Scene {
             key_2.setScale(1).setPosition(300, 185);
             var key_3 = scene.add.sprite(200, 300, "key3Image");
             key_3.setScale(1).setPosition(300, 300);
-            // var key_4 = scene.add.sprite(100, 100, "key4Image");
-            // key_4.setScale(0.75).setPosition(500, 70);
-            // var key_5 = scene.add.sprite(100, 100, "key5Image");
-            // key_5.setScale(0.75).setPosition(500, 185);
-            // var key_6 = scene.add.sprite(100, 100, "key6Image");
-            // key_6.setScale(0.75).setPosition(500, 300);
+            var key_4 = scene.add.sprite(200, 300, "key4Image");
+            key_4.setScale(1).setPosition(400, 70);
+            var key_5 = scene.add.sprite(200, 300, "key5Image");
+            key_5.setScale(1).setPosition(400, 185);
+            var key_6 = scene.add.sprite(200, 300, "key6Image");
+            key_6.setScale(1).setPosition(400, 300);
             // console.log(key1, key2, key3);
             // console.log(this.roomKey)
             // scene.scene.start("FirstTask", {
