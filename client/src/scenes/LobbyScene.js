@@ -28,12 +28,13 @@ export default class LobbyScene extends Phaser.Scene {
         this.load.image("player2", "client/assets/sprites/player2.png");
         this.load.image("player3", "client/assets/sprites/player3.png");
         this.load.image("player4", "client/assets/sprites/player4.png");
+        // LobbyScene.stage.disableVisibilityChange = true;
     }
 
     create() {
         const scene = this;
 
-        var counter = 45;
+        var counter = 100;
         scene.socket.emit("joinRoom", this.roomKey, this.playerName);
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
@@ -235,7 +236,7 @@ export default class LobbyScene extends Phaser.Scene {
         startGame.on("pointerup", () => {
             if (scene.state.numPlayers == 4) {
                 scene.socket.emit("startGame", this.roomKey, this.socket.id);
-                // scene.socket.emit("startTimer", this.roomKey, counter);
+                scene.socket.emit("startTimer", this.roomKey, counter);
                 console.log("startGame", this.roomKey);
                 console.log("startTimer", counter);
                 scene.scene.start("FirstTask", {

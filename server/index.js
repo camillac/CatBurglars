@@ -5,7 +5,7 @@ const express = require("express");
 const app = express();
 const socketio = require("socket.io");
 module.exports = app;
-
+require('events').EventEmitter.defaultMaxListeners = 0
 // Create the express app
 const createApp = () => {
     app.use("/client", express.static(__dirname + "/../client"));

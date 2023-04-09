@@ -143,6 +143,14 @@ module.exports = (io) => {
                 console.log(counter);
                 io.to(roomKey).emit("counter", counter);
                 counter--;
+                io.on('decreaseCounter', function() {
+                    console.log("counter decreased");
+                    counter--; 
+                    counter--;
+                    counter--;
+                    counter--; 
+                    
+                });
                 if (counter === 0) {
                     console.log("Lost!");
                     io.to(roomKey).emit("lost", roomKey);

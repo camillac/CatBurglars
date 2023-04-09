@@ -29,7 +29,8 @@ export default class FirstTask extends Phaser.Scene {
         this.load.image("key5Image", "client/assets/sprites/key5.png");
         this.load.image("key6Image", "client/assets/sprites/key6.png");
         //load background
-
+        // this.stage.disableVisibilityChange = true;
+        this.scene.run("FirstTask");
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
@@ -104,6 +105,65 @@ export default class FirstTask extends Phaser.Scene {
             //     socket: scene.socket,
             //     roomKey: arg,
             // });
+            key_1.setInteractive();
+            key_2.setInteractive();
+            key_3.setInteractive();
+            key_4.setInteractive();
+            key_5.setInteractive();
+            key_6.setInteractive();
+            console.log(key1, key2, key3); 
+            console.log(key1 ==1 || key2 ==1 || key3 == 1); 
+            console.log(!(key1 ==1 || key2 ==1 || key3 == 1)); 
+        
+            console.log(key1 ==2 || key2 ==2 || key3 == 2); 
+            console.log(!(key1 ==2 || key2 ==2 || key3 == 2));
+            console.log(key1 ==3 || key2 ==3 || key3 == 3); 
+            console.log(key1 ==4 || key2 ==4 || key3 == 4); 
+            console.log(key1 ==5 || key2 ==5 || key3 == 5);
+            console.log(key1 ==6 || key2 ==6 || key3 == 6); 
+            key_1.on("pointerup", () => {
+                if(!(key1 ==1 || key2 ==1 || key3 == 1)){
+                    console.log("wrong key ")
+                    scene.socket.emit("decreaseCounter");
+                }
+                console.log("pressed key 1 "); 
+            });
+            key_2.on("pointerup", () => {
+                if(!(key1 ==2 || key2 ==2 || key3 == 2)){
+                    console.log("wrong key ")
+                    scene.socket.emit("decreaseCounter");
+                }
+                console.log("pressed key 2 "); 
+            });
+            key_3.on("pointerup", () => {
+                if(!(key1 ==3 || key2 ==3 || key3 == 3)){
+                    console.log("wrong key ")
+                    scene.socket.emit("decreaseCounter");
+                }
+                console.log("pressed key 3 "); 
+            });
+            key_4.on("pointerup", () => {
+                if(!(key1 ==4 || key2 ==4 || key3 == 4)){
+                    console.log("wrong key ")
+                    scene.socket.emit("decreaseCounter");
+                }
+                console.log("pressed key 4 "); 
+            });
+            key_5.on("pointerup", () => {
+                if(!(key1 ==5 || key2 ==5 || key3 == 5)){
+                    console.log("wrong key ")
+                    scene.socket.emit("decreaseCounter");
+                }
+                console.log("pressed key 5 "); 
+            });
+            key_6.on("pointerup", () => {
+                if(!(key1 ==6 || key2 ==6 || key3 == 6)){
+                    console.log("wrong key ")
+                    scene.socket.emit('decreaseCounter');
+                }
+                console.log("pressed key 6 "); 
+            });
+            
         });
         this.socket.on("displaySideTaskOne", function (arg) {
             console.log("displaySideTaskOne");
