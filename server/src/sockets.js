@@ -139,18 +139,14 @@ module.exports = (io) => {
         socket.on("startTimer", function (roomKey, counter) {
             console.log("startTimer");
             console.log(counter);
+            socket.on('decreaseCounter', function() {
+                console.log("counter decreased");
+                counter = counter - 5;
+            });
             var Countdown = setInterval(function () {
                 console.log(counter);
                 io.to(roomKey).emit("counter", counter);
                 counter--;
-                socket.on('decreaseCounter', function() {
-                    console.log("counter decreased");
-                    // counter--; 
-                    // counter--;
-                    // counter--;
-                    // counter--; 
-                    
-                });
                 if (counter === 0) {
                     console.log("Lost!");
                     io.to(roomKey).emit("lost", roomKey);
@@ -162,11 +158,6 @@ module.exports = (io) => {
         // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
-        socket.on('showWinScene', function(){
-            
-                console.log('win');
-            
-        })
 
         socket.on("startTaskOne", function (roomKey, mainPlayer, playerIdx) {
             console.log("taskOne");
