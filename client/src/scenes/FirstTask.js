@@ -48,6 +48,14 @@ export default class FirstTask extends Phaser.Scene {
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
 
+        var timer = scene.add
+            .text(750, 550, "", {
+                fontFamily: "Chela One",
+                fontSize: 40,
+                color: "black",
+                align: "center",
+            });
+
         var House = this.add
             .image(500, 300, "House")
             .setOrigin(0.5)
@@ -363,6 +371,7 @@ export default class FirstTask extends Phaser.Scene {
 
 
         });
+        
         this.socket.on("displaySideTaskOne", function (arg) {
             console.log("displaySideTaskOne");
             console.log(arg);
@@ -371,9 +380,9 @@ export default class FirstTask extends Phaser.Scene {
             keyImage.setScale(1).setPosition(300, 70);
             console.log(key);
         });
-
+        
         this.socket.on("counter", function (counter) {
-            console.log(counter);
+            timer.text = counter;
         });
 
         this.socket.on("lost", function (roomKey) {
