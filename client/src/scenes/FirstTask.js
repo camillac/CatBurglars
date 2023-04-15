@@ -83,19 +83,29 @@ export default class FirstTask extends Phaser.Scene {
         this.socket.on("displayMainTaskOne", function (arg) {
             console.log("displayMainTaskOne");
             console.log(arg);
+
+            scene.add.text(290, 50, "Choose the right keys!", {
+                fontFamily: "Chela One",
+                fontSize: 45,
+                color: "#FFFFFF",
+                fontStyle: "normal",
+                stroke: "#000000",
+                strokeThickness: 12,
+            });
+
             const { playerId, playerNum, key1, key2, key3 } = arg;
             var key_1 = scene.add.sprite(200, 300, "key1Image");
-            key_1.setScale(1).setPosition(300, 70);
+            key_1.setScale(3).setPosition(330, 250);
             var key_2 = scene.add.sprite(200, 300, "key2Image");
-            key_2.setScale(1).setPosition(300, 185);
+            key_2.setScale(3).setPosition(480, 250);
             var key_3 = scene.add.sprite(200, 300, "key3Image");
-            key_3.setScale(1).setPosition(300, 300);
+            key_3.setScale(3).setPosition(630, 250);
             var key_4 = scene.add.sprite(200, 300, "key4Image");
-            key_4.setScale(1).setPosition(400, 70);
+            key_4.setScale(3).setPosition(330, 450);
             var key_5 = scene.add.sprite(200, 300, "key5Image");
-            key_5.setScale(1).setPosition(400, 185);
+            key_5.setScale(3).setPosition(480, 450);
             var key_6 = scene.add.sprite(200, 300, "key6Image");
-            key_6.setScale(1).setPosition(400, 300);
+            key_6.setScale(3).setPosition(630, 450);
 
             key_1.setInteractive();
             key_2.setInteractive();
@@ -367,9 +377,18 @@ export default class FirstTask extends Phaser.Scene {
             console.log("displaySideTaskOne");
             console.log(arg);
             const { playerId, playerNum, key } = arg;
-            var keyImage = scene.add.sprite(200, 300, `key` + key + `Image`);
-            keyImage.setScale(1).setPosition(300, 70);
+            var keyImage = scene.add.sprite(250, 300, `key` + key + `Image`);
+            keyImage.setScale(5).setPosition(475, 350);
             console.log(key);
+
+            scene.add.text(320, 50, "Describe your key!", {
+                fontFamily: "Chela One",
+                fontSize: 45,
+                color: "#FFFFFF",
+                fontStyle: "normal",
+                stroke: "#000000",
+                strokeThickness: 12,
+            });
         });
 
         this.socket.on("counter", function (counter) {
