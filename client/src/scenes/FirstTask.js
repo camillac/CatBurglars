@@ -56,6 +56,7 @@ export default class FirstTask extends Phaser.Scene {
                 align: "center",
             });
 
+
         var House = this.add
             .image(500, 300, "House")
             .setOrigin(0.5)
@@ -92,7 +93,7 @@ export default class FirstTask extends Phaser.Scene {
             console.log("displayMainTaskOne");
             console.log(arg);
 
-            scene.add.text(290, 50, "Choose the right keys!", {
+            scene.add.text(290, 30, "Choose the right keys!", {
                 fontFamily: "Chela One",
                 fontSize: 45,
                 color: "#FFFFFF",
@@ -102,6 +103,8 @@ export default class FirstTask extends Phaser.Scene {
             });
 
             const { playerId, playerNum, key1, key2, key3 } = arg;
+
+            // position and scale sprites
             var key_1 = scene.add.sprite(200, 300, "key1Image");
             key_1.setScale(3).setPosition(330, 250);
             var key_2 = scene.add.sprite(200, 300, "key2Image");
@@ -132,12 +135,13 @@ export default class FirstTask extends Phaser.Scene {
 
             console.log(key1, key2, key3);
 
+            // key actions
             key_1.on("pointerup", () => {
                 if (!(key1 == 1 || key2 == 1 || key3 == 1)) {
                     console.log("wrong key ")
                     scene.socket.emit("decreaseCounter");
                     var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-                    incorrect.setScale(1).setPosition(500, 185);
+                    incorrect.setScale(1).setPosition(330, 250);
                     function incorr() {
                         incorrect.destroy();
                     }
@@ -153,7 +157,7 @@ export default class FirstTask extends Phaser.Scene {
                     }
                     this.alreadyClickedKey1++;
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
-                    correctImage.setScale(1).setPosition(500, 185);
+                    correctImage.setScale(1).setPosition(330, 250);
                     function corr() {
                         correctImage.destroy();
                     }
@@ -176,7 +180,7 @@ export default class FirstTask extends Phaser.Scene {
                     console.log("wrong key ")
                     scene.socket.emit("decreaseCounter");
                     var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-                    incorrect.setScale(1).setPosition(500, 185);
+                    incorrect.setScale(1).setPosition(480, 250);
                     function incorr() {
                         incorrect.destroy();
                     }
@@ -193,7 +197,7 @@ export default class FirstTask extends Phaser.Scene {
                     this.alreadyClickedKey2++;
                     // key_2.destroy(); 
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
-                    correctImage.setScale(1).setPosition(500, 185);
+                    correctImage.setScale(1).setPosition(480, 250);
                     console.log(this.correct);
                     function corr() {
                         correctImage.destroy();
@@ -216,7 +220,7 @@ export default class FirstTask extends Phaser.Scene {
                     console.log("wrong key ")
                     scene.socket.emit("decreaseCounter");
                     var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-                    incorrect.setScale(1).setPosition(500, 185);
+                    incorrect.setScale(1).setPosition(630, 250);
                     function incorr() {
                         incorrect.destroy();
                     }
@@ -234,7 +238,7 @@ export default class FirstTask extends Phaser.Scene {
                     // this.correct++; 
                     // key_3.destroy(); 
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
-                    correctImage.setScale(1).setPosition(500, 185);
+                    correctImage.setScale(1).setPosition(630, 250);
                     // correct.setScale(1).setPosition(500, 185);
                     function corr() {
                         correctImage.destroy();
@@ -259,7 +263,7 @@ export default class FirstTask extends Phaser.Scene {
                     console.log("wrong key ")
                     scene.socket.emit("decreaseCounter");
                     var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-                    incorrect.setScale(1).setPosition(500, 185);
+                    incorrect.setScale(1).setPosition(330, 450);
                     function incorr() {
                         incorrect.destroy();
                     }
@@ -277,7 +281,7 @@ export default class FirstTask extends Phaser.Scene {
                     // this.correct++; 
                     // key_4.destroy(); 
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
-                    correctImage.setScale(1).setPosition(500, 185);
+                    correctImage.setScale(1).setPosition(330, 450);
                     // correct.setScale(1).setPosition(500, 185);
                     function corr() {
                         correctImage.destroy();
@@ -300,7 +304,7 @@ export default class FirstTask extends Phaser.Scene {
                 if (!(key1 == 5 || key2 == 5 || key3 == 5)) {
                     console.log("wrong key ")
                     var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-                    incorrect.setScale(1).setPosition(500, 185);
+                    incorrect.setScale(1).setPosition(480, 450);
                     function incorr() {
                         incorrect.destroy();
                     }
@@ -319,7 +323,7 @@ export default class FirstTask extends Phaser.Scene {
                     // this.correct++; 
                     // key_5.destroy(); 
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
-                    correctImage.setScale(1).setPosition(500, 185);
+                    correctImage.setScale(1).setPosition(480, 450);
                     function corr() {
                         correctImage.destroy();
                     }
@@ -341,12 +345,12 @@ export default class FirstTask extends Phaser.Scene {
                 if (!(key1 == 6 || key2 == 6 || key3 == 6)) {
                     console.log("wrong key ")
                     var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-                    incorrect.setScale(1).setPosition(500, 185);
+                    incorrect.setScale(1).setPosition(630, 450);
                     function incorr() {
                         incorrect.destroy();
                     }
                     scene.time.addEvent({
-                        delay: 1000,
+                        delay: 200,
                         callback: incorr,
                         callbackScope: this,
                     });
@@ -360,7 +364,7 @@ export default class FirstTask extends Phaser.Scene {
                     // this.correct++; 
                     console.log(this.correct);
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
-                    correctImage.setScale(1).setPosition(500, 185);
+                    correctImage.setScale(1).setPosition(630, 450);
                     function corr() {
                         correctImage.destroy();
                     }
@@ -379,8 +383,53 @@ export default class FirstTask extends Phaser.Scene {
                 console.log("pressed key 6 ");
             });
 
+           // hover effect on keys
+            key_1.on("pointerover", () => {
+                key_1.setAlpha(0.75);
+            });
+            key_1.on("pointerout", () => {
+                key_1.setAlpha(1);
+            });
+        
+             key_2.on("pointerover", () => {
+                key_2.setAlpha(0.75);
+            });
+            key_2.on("pointerout", () => {
+                key_2.setAlpha(1);
+            });
+
+            key_3.on("pointerover", () => {
+                key_3.setAlpha(0.75);
+            });
+            key_3.on("pointerout", () => {
+                key_3.setAlpha(1);
+            });
+
+            key_4.on("pointerover", () => {
+                key_4.setAlpha(0.75);
+            });
+            key_4.on("pointerout", () => {
+                key_4.setAlpha(1);
+            });
+
+            key_5.on("pointerover", () => {
+                key_5.setAlpha(0.75);
+            });
+            key_5.on("pointerout", () => {
+                key_5.setAlpha(1);
+            });
+
+            key_6.on("pointerover", () => {
+                key_6.setAlpha(0.75);
+            });
+            key_6.on("pointerout", () => {
+                key_6.setAlpha(1);
+            });
 
         });
+
+
+
         
         this.socket.on("displaySideTaskOne", function (arg) {
             console.log("displaySideTaskOne");
