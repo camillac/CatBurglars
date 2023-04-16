@@ -107,7 +107,8 @@ export default class LobbyScene extends Phaser.Scene {
                 }
             });
         });
-
+        
+        //Players Circle
         scene.boxes = scene.add.graphics();
         scene.circle = scene.add.graphics();
 
