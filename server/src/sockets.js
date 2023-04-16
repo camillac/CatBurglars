@@ -189,6 +189,8 @@ module.exports = (io) => {
                 // io.to(roomKey).emit("hello");
                 if (roomInfo.players[playerId].playerNum == mainPlayer) {
                     console.log("mainPlater");
+                    const counter = 100; 
+                    io.to(roomInfo.players[playerId].playerId).emit("startTimerEX", {roomKey, counter});
                     io.to(roomInfo.players[playerId].playerId).emit("displayMainTaskOne", {playerId: playerId, playerNum: roomInfo.players[playerId].playerNum, key1: key1, key2:key2, key3:key3});
                 }
                 else if (roomInfo.players[playerId].playerNum == 2){
