@@ -48,13 +48,13 @@ export default class FirstTask extends Phaser.Scene {
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
 
-        var timer = scene.add
-            .text(750, 550, "", {
-                fontFamily: "Chela One",
-                fontSize: 40,
-                color: "black",
-                align: "center",
-            });
+        // var timer = scene.add
+        //     .text(750, 550, "", {
+        //         fontFamily: "Chela One",
+        //         fontSize: 40,
+        //         color: "black",
+        //         align: "center",
+        //     });
 
         var House = this.add
             .image(500, 300, "House")
@@ -70,6 +70,7 @@ export default class FirstTask extends Phaser.Scene {
                 House.destroy();
                 console.log(scene.socket.id);
                 console.log(this.start);
+                
                 if (scene.socket.id == this.start) {
                     console.log('hfiuehfius')
                     scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
@@ -86,6 +87,13 @@ export default class FirstTask extends Phaser.Scene {
         );
         this.socket.on("hello", () => {
             console.log("hello");
+        });
+
+        this.socket.on("startTimerEX", function (arg){
+            console.log(arg);
+            const {roomKey, counter} = arg; 
+            console.log(roomKey, counter);
+            scene.socket.emit("startTimer", roomKey, counter);
         });
 
         this.socket.on("displayMainTaskOne", function (arg) {
@@ -448,8 +456,15 @@ export default class FirstTask extends Phaser.Scene {
                 strokeThickness: 12,
             });
         });
-        
+        var timer = scene.add
+        .text(750, 550, "", {
+            fontFamily: "Chela One",
+            fontSize: 40,
+            color: "black",
+            align: "center",
+        });
         this.socket.on("counter", function (counter) {
+            console.log("got timers"); 
             timer.text = counter;
         });
 
