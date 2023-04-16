@@ -8,6 +8,8 @@ import LostScene from "./scenes/LostScene.js";
 import CreateLobbyScene from "./scenes/CreateLobbyScene.js";
 import JoinLobbyScene from "./scenes/JoinLobbyScene.js";
 import WinningScene from "./scenes/WinningScene.js";
+import IntroductionScene from "./scenes/IntroductionScene.js";
+import FirstTask_Instruction from "./scenes/FirstTask_Instruction.js";
 
 // Insert all of the scenes into the game
 class Game extends Phaser.Game {
@@ -22,6 +24,8 @@ class Game extends Phaser.Game {
         this.scene.add("CreateLobbyScene", CreateLobbyScene);
         this.scene.add("JoinLobbyScene", JoinLobbyScene);
         this.scene.add("WinningScene", WinningScene);
+        this.scene.add("IntroductionScene", IntroductionScene);
+        this.scene.add("FirstTask_Instruction", FirstTask_Instruction);
 
         this.scene.start("MainScene");
         // this.events.off("hidden", this.onHidden, this, true);

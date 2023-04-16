@@ -86,7 +86,7 @@ export default class LobbyScene extends Phaser.Scene {
             // const {roomKey, playerNum} =  arg;
             // console.log(playerNum);
             // console.log(this.roomKey)
-            scene.scene.start("FirstTask", {
+            scene.scene.start("IntroductionScene", {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: roomKey,
@@ -240,7 +240,7 @@ export default class LobbyScene extends Phaser.Scene {
                 scene.socket.emit("startTimer", this.roomKey, counter);
                 console.log("startGame", this.roomKey);
                 console.log("startTimer", counter);
-                scene.scene.start("FirstTask", {
+                scene.scene.start("IntroductionScene", {
                     ...scene.state,
                     socket: scene.socket,
                     roomKey: this.roomKey,
