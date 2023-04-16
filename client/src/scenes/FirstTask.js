@@ -13,6 +13,8 @@ export default class FirstTask extends Phaser.Scene {
         console.log(this.socket.id);
         this.players = data.players;
         this.start = data.start
+        console.log(this.start); 
+        console.log(this.data)
     }
     preload() {
         //load cats/players
@@ -56,28 +58,28 @@ export default class FirstTask extends Phaser.Scene {
         //         align: "center",
         //     });
 
-        var House = this.add
-            .image(500, 300, "House")
-            .setOrigin(0.5)
-            .setScale(0.2);
-        scene.tweens.add({
-            targets: House,
-            scaleX: 2,
-            scaleY: 2,
-            ease: "Cubic.easeIn",
-            duration: 4000,
-            onComplete: () => {
-                House.destroy();
-                console.log(scene.socket.id);
-                console.log(this.start);
+        // var House = this.add
+        //     .image(500, 300, "House")
+        //     .setOrigin(0.5)
+        //     .setScale(0.2);
+        // scene.tweens.add({
+        //     targets: House,
+        //     scaleX: 2,
+        //     scaleY: 2,
+        //     ease: "Cubic.easeIn",
+        //     duration: 4000,
+        //     onComplete: () => {
+        //         House.destroy();
+        //         console.log(scene.socket.id);
+        //         console.log(this.start);
                 
                 if (scene.socket.id == this.start) {
                     console.log('hfiuehfius')
                     scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
 
                 }
-            },
-        });
+            // },
+        // });
         const sidebar = new Sidebar(
             scene,
             this.game.config.width,
