@@ -119,7 +119,7 @@ export default class FirstTask extends Phaser.Scene {
             this.alreadyClickedKey3 = false;
             this.alreadyClickedKey4 = false;
             this.alreadyClickedKey5 = false;
-            this.alreadyClickedKe6 = false;
+            this.alreadyClickedKey6 = false;
 
             console.log(key1, key2, key3);
 
