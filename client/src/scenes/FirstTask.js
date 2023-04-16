@@ -56,7 +56,6 @@ export default class FirstTask extends Phaser.Scene {
                 align: "center",
             });
 
-
         var House = this.add
             .image(500, 300, "House")
             .setOrigin(0.5)
