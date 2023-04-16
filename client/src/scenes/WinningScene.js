@@ -63,20 +63,20 @@ export default class WinningScene extends Phaser.Scene {
                     strokeThickness: 12,
                 });
                 // Back button
-            const backButton = scene.add.rectangle(50, 50, 140, 40, 0xffebb9, 1);
+            const backButton = scene.add.rectangle(50, 50, 350, 40, 0xffebb9, 1);
             backButton.setInteractive();
             backButton.on('pointerdown', () => {
-                scene.scene.start('Lobby');
+                scene.scene.start('MainScene');
             });
 
             // Back button label
-            const backButtonLabel = add.text(10, 33, "< BACK", {
+            const backButtonLabel = add.text(10, 33, "Return To Home", {
                 fontFamily: "Martian Mono",
-                fontSize: 24,
+                fontSize: 20,
                 color: "#ffffff",
                 fontStyle: "normal",
                 stroke: "#000000",
-                strokeThickness: 4,
+                strokeThickness: 8,
             });
             },
 
