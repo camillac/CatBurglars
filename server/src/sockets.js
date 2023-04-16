@@ -143,6 +143,7 @@ module.exports = (io) => {
                 console.log("counter decreased");
                 counter = counter - 5;
             });
+            
             var Countdown = setInterval(function () {
                 console.log(counter);
                 io.to(roomKey).emit("counter", counter);
@@ -153,6 +154,13 @@ module.exports = (io) => {
                     clearInterval(Countdown);
                 }
             }, 1000);
+
+            // stop the counter so it doesnt keep going after game ends
+            socket.on('showWinScene', function() {
+                console.log("counter destroyed");
+                io.to(roomKey).emit("win", roomKey);
+                clearInterval(Countdown);
+            });
         });
 
         // ************************************* END OF LOBBY SCENE SOCKETS **********************************************

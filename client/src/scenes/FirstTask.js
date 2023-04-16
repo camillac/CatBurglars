@@ -126,12 +126,12 @@ export default class FirstTask extends Phaser.Scene {
             key_6.setInteractive();
 
             this.correct = 0;
-            this.alreadyClickedKey1 = 0;
-            this.alreadyClickedKey2 = 0;
-            this.alreadyClickedKey3 = 0;
-            this.alreadyClickedKey4 = 0;
-            this.alreadyClickedKey5 = 0;
-            this.alreadyClickedKe6 = 0;
+            this.alreadyClickedKey1 = false;
+            this.alreadyClickedKey2 = false;
+            this.alreadyClickedKey3 = false;
+            this.alreadyClickedKey4 = false;
+            this.alreadyClickedKey5 = false;
+            this.alreadyClickedKe6 = false;
 
             console.log(key1, key2, key3);
 
@@ -154,8 +154,9 @@ export default class FirstTask extends Phaser.Scene {
                 else {
                     if (!(this.alreadyClickedKey1)) {
                         this.correct++;
+                        this.alreadyClickedKey1 = true;
                     }
-                    this.alreadyClickedKey1++;
+                    
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
                     correctImage.setScale(1).setPosition(330, 250);
                     function corr() {
@@ -169,8 +170,8 @@ export default class FirstTask extends Phaser.Scene {
                     // key_1.destroy(); 
                     console.log(this.correct);
                     if (this.correct === 3) {
-                        console.log('hfhiuhf');
-                        scene.socket.emit('showWinScene');
+                        // console.log('hfhiuhf');
+                        scene.socket.emit("showWinScene");
                     }
                 }
                 console.log("pressed key 1 ");
@@ -193,8 +194,9 @@ export default class FirstTask extends Phaser.Scene {
                 else {
                     if (!(this.alreadyClickedKey2)) {
                         this.correct++;
+                        this.alreadyClickedKey2 = true;
                     }
-                    this.alreadyClickedKey2++;
+                    
                     // key_2.destroy(); 
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
                     correctImage.setScale(1).setPosition(480, 250);
@@ -233,8 +235,9 @@ export default class FirstTask extends Phaser.Scene {
                 else {
                     if (!(this.alreadyClickedKey3)) {
                         this.correct++;
+                        this.alreadyClickedKey3 = true;
                     }
-                    this.alreadyClickedKey3++;
+                    
                     // this.correct++; 
                     // key_3.destroy(); 
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
@@ -252,7 +255,6 @@ export default class FirstTask extends Phaser.Scene {
                     if (this.correct === 3) {
                         console.log('hfhiuhf');
                         scene.socket.emit('showWinScene');
-
                     }
                 }
                 console.log("pressed key 3 ");
@@ -276,8 +278,9 @@ export default class FirstTask extends Phaser.Scene {
                 else {
                     if (!(this.alreadyClickedKey4)) {
                         this.correct++;
+                        this.alreadyClickedKey4 = true;
                     }
-                    this.alreadyClickedKey4++;
+                    
                     // this.correct++; 
                     // key_4.destroy(); 
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
@@ -295,7 +298,6 @@ export default class FirstTask extends Phaser.Scene {
                     if (this.correct === 3) {
                         console.log('hfhiuhf');
                         scene.socket.emit('showWinScene');
-
                     }
                 }
                 console.log("pressed key 4 ");
@@ -318,8 +320,9 @@ export default class FirstTask extends Phaser.Scene {
                 else {
                     if (!(this.alreadyClickedKey5)) {
                         this.correct++;
+                        this.alreadyClickedKey5 = true;
                     }
-                    this.alreadyClickedKey5++;
+                    
                     // this.correct++; 
                     // key_5.destroy(); 
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
@@ -336,7 +339,6 @@ export default class FirstTask extends Phaser.Scene {
                     if (this.correct === 3) {
                         console.log('hfhiuhf');
                         scene.socket.emit('showWinScene');
-
                     }
                 }
                 console.log("pressed key 5 ");
@@ -358,9 +360,9 @@ export default class FirstTask extends Phaser.Scene {
                 }
                 else {
                     if (!(this.alreadyClickedKey6)) {
+                        this.alreadyClickedKey6 = true;
                         this.correct++;
                     }
-                    this.alreadyClickedKey6++;
                     // this.correct++; 
                     console.log(this.correct);
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
@@ -377,7 +379,6 @@ export default class FirstTask extends Phaser.Scene {
                     if (this.correct === 3) {
                         console.log('hfhiuhf');
                         scene.socket.emit('showWinScene');
-
                     }
                 }
                 console.log("pressed key 6 ");
@@ -452,6 +453,15 @@ export default class FirstTask extends Phaser.Scene {
         this.socket.on("counter", function (counter) {
             timer.text = counter;
         });
+
+        this.socket.on('win', function(roomKey) {
+            console.log("Won!");
+            scene.scene.start("WinningScene", {
+                ...scene.state,
+                socket: scene.socket,
+                roomKey: scene.roomKey,
+            })
+        })
 
         this.socket.on("lost", function (roomKey) {
             console.log("Lost!");
