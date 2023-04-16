@@ -10,9 +10,10 @@ export default class FirstTask extends Phaser.Scene {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
         this.playerNum = data.playerNum;
+        this.playerName = data.playerName;
         console.log(this.socket.id);
         this.players = data.players;
-        this.start = data.start
+        this.start = data.start;
     }
     preload() {
         //load cats/players
@@ -30,7 +31,10 @@ export default class FirstTask extends Phaser.Scene {
         this.load.image("key6Image", "client/assets/sprites/key6.png");
         this.load.image("correctImage", "client/assets/sprites/correct.png");
 
-        this.load.image("incorrectImage", "client/assets/sprites/incorrect.png");
+        this.load.image(
+            "incorrectImage",
+            "client/assets/sprites/incorrect.png"
+        );
 
         //load background
         // this.stage.disableVisibilityChange = true;
@@ -70,11 +74,15 @@ export default class FirstTask extends Phaser.Scene {
                 House.destroy();
                 console.log(scene.socket.id);
                 console.log(this.start);
-                
-                if (scene.socket.id == this.start) {
-                    console.log('hfiuehfius')
-                    scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
 
+                if (scene.socket.id == this.start) {
+                    console.log("hfiuehfius");
+                    scene.socket.emit(
+                        "startTaskOne",
+                        this.roomKey,
+                        1,
+                        scene.socket.id
+                    );
                 }
             },
         });
@@ -89,9 +97,20 @@ export default class FirstTask extends Phaser.Scene {
             console.log("hello");
         });
 
-        this.socket.on("startTimerEX", function (arg){
+        // DISCONNECT
+        this.socket.on("backToLobby", function (arg) {
+            console.log("LOBBYSCENE");
+            scene.scene.start("LobbyScene", {
+                ...scene.state,
+                socket: scene.socket,
+                roomKey: roomKey,
+                playerName: this.playerName,
+            });
+        });
+
+        this.socket.on("startTimerEX", function (arg) {
             console.log(arg);
-            const {roomKey, counter} = arg; 
+            const { roomKey, counter } = arg;
             console.log(roomKey, counter);
             scene.socket.emit("startTimer", roomKey, counter);
         });
@@ -145,9 +164,13 @@ export default class FirstTask extends Phaser.Scene {
             // key actions
             key_1.on("pointerup", () => {
                 if (!(key1 == 1 || key2 == 1 || key3 == 1)) {
-                    console.log("wrong key ")
+                    console.log("wrong key ");
                     scene.socket.emit("decreaseCounter");
-                    var incorrect = scene.add.sprite(200, 300, "incorrectImage");
+                    var incorrect = scene.add.sprite(
+                        200,
+                        300,
+                        "incorrectImage"
+                    );
                     incorrect.setScale(1).setPosition(330, 250);
                     function incorr() {
                         incorrect.destroy();
@@ -157,14 +180,17 @@ export default class FirstTask extends Phaser.Scene {
                         callback: incorr,
                         callbackScope: this,
                     });
-                }
-                else {
-                    if (!(this.alreadyClickedKey1)) {
+                } else {
+                    if (!this.alreadyClickedKey1) {
                         this.correct++;
                         this.alreadyClickedKey1 = true;
                     }
-                    
-                    var correctImage = scene.add.sprite(200, 300, "correctImage");
+
+                    var correctImage = scene.add.sprite(
+                        200,
+                        300,
+                        "correctImage"
+                    );
                     correctImage.setScale(1).setPosition(330, 250);
                     function corr() {
                         correctImage.destroy();
@@ -174,7 +200,7 @@ export default class FirstTask extends Phaser.Scene {
                         callback: corr,
                         callbackScope: this,
                     });
-                    // key_1.destroy(); 
+                    // key_1.destroy();
                     console.log(this.correct);
                     if (this.correct === 3) {
                         // console.log('hfhiuhf');
@@ -185,9 +211,13 @@ export default class FirstTask extends Phaser.Scene {
             });
             key_2.on("pointerup", () => {
                 if (!(key1 == 2 || key2 == 2 || key3 == 2)) {
-                    console.log("wrong key ")
+                    console.log("wrong key ");
                     scene.socket.emit("decreaseCounter");
-                    var incorrect = scene.add.sprite(200, 300, "incorrectImage");
+                    var incorrect = scene.add.sprite(
+                        200,
+                        300,
+                        "incorrectImage"
+                    );
                     incorrect.setScale(1).setPosition(480, 250);
                     function incorr() {
                         incorrect.destroy();
@@ -197,15 +227,18 @@ export default class FirstTask extends Phaser.Scene {
                         callback: incorr,
                         callbackScope: this,
                     });
-                }
-                else {
-                    if (!(this.alreadyClickedKey2)) {
+                } else {
+                    if (!this.alreadyClickedKey2) {
                         this.correct++;
                         this.alreadyClickedKey2 = true;
                     }
-                    
-                    // key_2.destroy(); 
-                    var correctImage = scene.add.sprite(200, 300, "correctImage");
+
+                    // key_2.destroy();
+                    var correctImage = scene.add.sprite(
+                        200,
+                        300,
+                        "correctImage"
+                    );
                     correctImage.setScale(1).setPosition(480, 250);
                     console.log(this.correct);
                     function corr() {
@@ -217,18 +250,21 @@ export default class FirstTask extends Phaser.Scene {
                         callbackScope: this,
                     });
                     if (this.correct === 3) {
-                        console.log('hfhiuhf');
-                        scene.socket.emit('showWinScene');
-
+                        console.log("hfhiuhf");
+                        scene.socket.emit("showWinScene");
                     }
                 }
                 console.log("pressed key 2 ");
             });
             key_3.on("pointerup", () => {
                 if (!(key1 == 3 || key2 == 3 || key3 == 3)) {
-                    console.log("wrong key ")
+                    console.log("wrong key ");
                     scene.socket.emit("decreaseCounter");
-                    var incorrect = scene.add.sprite(200, 300, "incorrectImage");
+                    var incorrect = scene.add.sprite(
+                        200,
+                        300,
+                        "incorrectImage"
+                    );
                     incorrect.setScale(1).setPosition(630, 250);
                     function incorr() {
                         incorrect.destroy();
@@ -238,16 +274,19 @@ export default class FirstTask extends Phaser.Scene {
                         callback: incorr,
                         callbackScope: this,
                     });
-                }
-                else {
-                    if (!(this.alreadyClickedKey3)) {
+                } else {
+                    if (!this.alreadyClickedKey3) {
                         this.correct++;
                         this.alreadyClickedKey3 = true;
                     }
-                    
-                    // this.correct++; 
-                    // key_3.destroy(); 
-                    var correctImage = scene.add.sprite(200, 300, "correctImage");
+
+                    // this.correct++;
+                    // key_3.destroy();
+                    var correctImage = scene.add.sprite(
+                        200,
+                        300,
+                        "correctImage"
+                    );
                     correctImage.setScale(1).setPosition(630, 250);
                     // correct.setScale(1).setPosition(500, 185);
                     function corr() {
@@ -260,18 +299,21 @@ export default class FirstTask extends Phaser.Scene {
                     });
                     console.log(this.correct);
                     if (this.correct === 3) {
-                        console.log('hfhiuhf');
-                        scene.socket.emit('showWinScene');
+                        console.log("hfhiuhf");
+                        scene.socket.emit("showWinScene");
                     }
                 }
                 console.log("pressed key 3 ");
             });
             key_4.on("pointerup", () => {
-
                 if (!(key1 == 4 || key2 == 4 || key3 == 4)) {
-                    console.log("wrong key ")
+                    console.log("wrong key ");
                     scene.socket.emit("decreaseCounter");
-                    var incorrect = scene.add.sprite(200, 300, "incorrectImage");
+                    var incorrect = scene.add.sprite(
+                        200,
+                        300,
+                        "incorrectImage"
+                    );
                     incorrect.setScale(1).setPosition(330, 450);
                     function incorr() {
                         incorrect.destroy();
@@ -281,16 +323,19 @@ export default class FirstTask extends Phaser.Scene {
                         callback: incorr,
                         callbackScope: this,
                     });
-                }
-                else {
-                    if (!(this.alreadyClickedKey4)) {
+                } else {
+                    if (!this.alreadyClickedKey4) {
                         this.correct++;
                         this.alreadyClickedKey4 = true;
                     }
-                    
-                    // this.correct++; 
-                    // key_4.destroy(); 
-                    var correctImage = scene.add.sprite(200, 300, "correctImage");
+
+                    // this.correct++;
+                    // key_4.destroy();
+                    var correctImage = scene.add.sprite(
+                        200,
+                        300,
+                        "correctImage"
+                    );
                     correctImage.setScale(1).setPosition(330, 450);
                     // correct.setScale(1).setPosition(500, 185);
                     function corr() {
@@ -303,16 +348,20 @@ export default class FirstTask extends Phaser.Scene {
                     });
                     console.log(this.correct);
                     if (this.correct === 3) {
-                        console.log('hfhiuhf');
-                        scene.socket.emit('showWinScene');
+                        console.log("hfhiuhf");
+                        scene.socket.emit("showWinScene");
                     }
                 }
                 console.log("pressed key 4 ");
             });
             key_5.on("pointerup", () => {
                 if (!(key1 == 5 || key2 == 5 || key3 == 5)) {
-                    console.log("wrong key ")
-                    var incorrect = scene.add.sprite(200, 300, "incorrectImage");
+                    console.log("wrong key ");
+                    var incorrect = scene.add.sprite(
+                        200,
+                        300,
+                        "incorrectImage"
+                    );
                     incorrect.setScale(1).setPosition(480, 450);
                     function incorr() {
                         incorrect.destroy();
@@ -323,16 +372,19 @@ export default class FirstTask extends Phaser.Scene {
                         callbackScope: this,
                     });
                     scene.socket.emit("decreaseCounter");
-                }
-                else {
-                    if (!(this.alreadyClickedKey5)) {
+                } else {
+                    if (!this.alreadyClickedKey5) {
                         this.correct++;
                         this.alreadyClickedKey5 = true;
                     }
-                    
-                    // this.correct++; 
-                    // key_5.destroy(); 
-                    var correctImage = scene.add.sprite(200, 300, "correctImage");
+
+                    // this.correct++;
+                    // key_5.destroy();
+                    var correctImage = scene.add.sprite(
+                        200,
+                        300,
+                        "correctImage"
+                    );
                     correctImage.setScale(1).setPosition(480, 450);
                     function corr() {
                         correctImage.destroy();
@@ -344,16 +396,20 @@ export default class FirstTask extends Phaser.Scene {
                     });
                     console.log(this.correct);
                     if (this.correct === 3) {
-                        console.log('hfhiuhf');
-                        scene.socket.emit('showWinScene');
+                        console.log("hfhiuhf");
+                        scene.socket.emit("showWinScene");
                     }
                 }
                 console.log("pressed key 5 ");
             });
             key_6.on("pointerup", () => {
                 if (!(key1 == 6 || key2 == 6 || key3 == 6)) {
-                    console.log("wrong key ")
-                    var incorrect = scene.add.sprite(200, 300, "incorrectImage");
+                    console.log("wrong key ");
+                    var incorrect = scene.add.sprite(
+                        200,
+                        300,
+                        "incorrectImage"
+                    );
                     incorrect.setScale(1).setPosition(630, 450);
                     function incorr() {
                         incorrect.destroy();
@@ -363,16 +419,19 @@ export default class FirstTask extends Phaser.Scene {
                         callback: incorr,
                         callbackScope: this,
                     });
-                    scene.socket.emit('decreaseCounter');
-                }
-                else {
-                    if (!(this.alreadyClickedKey6)) {
+                    scene.socket.emit("decreaseCounter");
+                } else {
+                    if (!this.alreadyClickedKey6) {
                         this.alreadyClickedKey6 = true;
                         this.correct++;
                     }
-                    // this.correct++; 
+                    // this.correct++;
                     console.log(this.correct);
-                    var correctImage = scene.add.sprite(200, 300, "correctImage");
+                    var correctImage = scene.add.sprite(
+                        200,
+                        300,
+                        "correctImage"
+                    );
                     correctImage.setScale(1).setPosition(630, 450);
                     function corr() {
                         correctImage.destroy();
@@ -382,24 +441,24 @@ export default class FirstTask extends Phaser.Scene {
                         callback: corr,
                         callbackScope: this,
                     });
-                    // key_6.destroy(); 
+                    // key_6.destroy();
                     if (this.correct === 3) {
-                        console.log('hfhiuhf');
-                        scene.socket.emit('showWinScene');
+                        console.log("hfhiuhf");
+                        scene.socket.emit("showWinScene");
                     }
                 }
                 console.log("pressed key 6 ");
             });
 
-           // hover effect on keys
+            // hover effect on keys
             key_1.on("pointerover", () => {
                 key_1.setAlpha(0.75);
             });
             key_1.on("pointerout", () => {
                 key_1.setAlpha(1);
             });
-        
-             key_2.on("pointerover", () => {
+
+            key_2.on("pointerover", () => {
                 key_2.setAlpha(0.75);
             });
             key_2.on("pointerout", () => {
@@ -433,12 +492,8 @@ export default class FirstTask extends Phaser.Scene {
             key_6.on("pointerout", () => {
                 key_6.setAlpha(1);
             });
-
         });
 
-
-
-        
         this.socket.on("displaySideTaskOne", function (arg) {
             console.log("displaySideTaskOne");
             console.log(arg);
@@ -456,26 +511,25 @@ export default class FirstTask extends Phaser.Scene {
                 strokeThickness: 12,
             });
         });
-        var timer = scene.add
-        .text(750, 550, "", {
+        var timer = scene.add.text(750, 550, "", {
             fontFamily: "Chela One",
             fontSize: 40,
             color: "black",
             align: "center",
         });
         this.socket.on("counter", function (counter) {
-            console.log("got timers"); 
+            console.log("got timers");
             timer.text = counter;
         });
 
-        this.socket.on('win', function(roomKey) {
+        this.socket.on("win", function (roomKey) {
             console.log("Won!");
             scene.scene.start("WinningScene", {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: scene.roomKey,
-            })
-        })
+            });
+        });
 
         this.socket.on("lost", function (roomKey) {
             console.log("Lost!");
@@ -488,5 +542,14 @@ export default class FirstTask extends Phaser.Scene {
     }
 
     update() {
+        // this.socket.on("disconnected", function (arg) {
+        //     console.log("LOBBYSCENE");
+        //     scene.scene.start("LobbyScene", {
+        //         ...scene.state,
+        //         socket: scene.socket,
+        //         roomKey: roomKey,
+        //         playerName: this.playerName,
+        //     });
+        // });
     }
 }

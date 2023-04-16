@@ -20,6 +20,7 @@ module.exports = (io) => {
                 roomKey: key,
                 players: {},
                 numPlayers: 0,
+                inGame: false,
             };
             console.log("ROOM CREATED - ROOM KEY: " + key);
             socket.emit("roomCreated", key, name);
@@ -31,20 +32,25 @@ module.exports = (io) => {
             socket.join(roomKey);
             // console.log("test" + roomKey);
             const roomInfo = gameRooms[roomKey];
-            // console.log("roomInfo", roomInfo);
-            roomInfo.players[socket.id] = {
-                playerId: socket.id,
-                playerNum: 0,
-                playerName: playerName,
-            };
 
-            roomInfo.players[socket.id].playerNum = Object.keys(
-                roomInfo.players
-            ).length;
+            if (Object.keys(gameRooms[roomKey]).includes(socket.id)) {
+            } else {
+                roomInfo.players[socket.id] = {
+                    playerId: socket.id,
+                    playerNum: 0,
+                    playerName: playerName,
+                };
 
-            // Update number of players
-            roomInfo.numPlayers = Object.keys(roomInfo.players).length;
-            console.log("JOIN ROOM ");
+                roomInfo.players[socket.id].playerNum = Object.keys(
+                    roomInfo.players
+                ).length;
+
+                // Update number of players
+                roomInfo.numPlayers = Object.keys(roomInfo.players).length;
+                console.log("JOIN ROOM ");
+                // }
+            }
+
             // Set initial state
             socket.emit("setState", roomInfo);
 
@@ -111,12 +117,18 @@ module.exports = (io) => {
                 // Update numPlayers
                 roomInfo.numPlayers = Object.keys(roomInfo.players).length;
 
-                // Emit a message to all players to remove this player
-                io.to(roomKey).emit("disconnected", {
-                    playerId: socket.id,
-                    numPlayers: roomInfo.numPlayers,
-                    roomInfo: roomInfo,
-                });
+                roomInfo.inGame
+                    ? // Emit a message to all players to remove this player
+                      io.to(roomKey).emit("backToLobby", {
+                          playerId: socket.id,
+                          numPlayers: roomInfo.numPlayers,
+                          roomInfo: roomInfo,
+                      })
+                    : io.to(roomKey).emit("disconnected", {
+                          playerId: socket.id,
+                          numPlayers: roomInfo.numPlayers,
+                          roomInfo: roomInfo,
+                      });
 
                 console.log("Room Info AFTER Removing Player");
                 console.log(roomInfo);
@@ -124,14 +136,20 @@ module.exports = (io) => {
         });
 
         socket.on("isKeyValid", function (code, name) {
-            Object.keys(gameRooms).includes(code)
-                ? socket.emit("keyIsValid", code, name)
-                : socket.emit("keyNotValid");
+            console.log(gameRooms[code].numPlayers);
+            if (gameRooms[code].numPlayers >= 4) {
+                socket.emit("roomIsFull");
+            } else {
+                Object.keys(gameRooms).includes(code)
+                    ? socket.emit("keyIsValid", code, name)
+                    : socket.emit("keyNotValid");
+            }
         });
 
         // RECEIVES STARTGAME EMIT FROM ONE PLAYER, EMIT STARTGAME TO ALL PLAYERS IN THE ROOM
         socket.on("startGame", function (roomKey, start) {
             console.log("start game");
+            gameRooms[roomKey].inGame = true;
             // const {roomkey, startId} = arg;
             socket
                 .to(roomKey)

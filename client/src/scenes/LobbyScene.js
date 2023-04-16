@@ -90,7 +90,8 @@ export default class LobbyScene extends Phaser.Scene {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: roomKey,
-                start: start
+                start: start,
+                playerName: this.playerName,
                 // playerNum: playerNum
             });
         });
@@ -107,7 +108,7 @@ export default class LobbyScene extends Phaser.Scene {
                 }
             });
         });
-        
+
         //Players Circle
         scene.boxes = scene.add.graphics();
         scene.circle = scene.add.graphics();
@@ -244,7 +245,8 @@ export default class LobbyScene extends Phaser.Scene {
                     ...scene.state,
                     socket: scene.socket,
                     roomKey: this.roomKey,
-                    start: this.socket.id
+                    start: this.socket.id,
+                    playerName: this.playerName,
                 });
             } else {
                 console.log("Not Enough Players!");
