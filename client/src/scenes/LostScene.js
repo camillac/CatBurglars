@@ -60,11 +60,25 @@ export default class LostScene extends Phaser.Scene {
                 });
 
                 // Back to lobby button
+                const Lost = add
+                    .text(400, 325, "Unfortunately your team has lost the game. \nYou can try again by starting over!", {
+                        fontFamily: "Chela One",
+                        fontSize: 45,
+                        color: "#FFFBF4",
+                        fontStyle: "normal",
+                        stroke: "#000000",
+                        strokeThickness: 12,
+                    })
+                    .setOrigin(0.5)
+                    .setPadding(10, 10, 10, 10);
+
+                // backtolobbyButton.setInteractive();
+                // Back to lobby button
                 const backtolobbyButton = add
-                    .text(400, 325, "Back to Homepage", {
+                    .text(400, 525, "Back to Homepage", {
                         fontFamily: "Chela One",
                         fontSize: 50,
-                        color: "#FFFBF4",
+                        color: "#FFEBB9",
                         fontStyle: "normal",
                         stroke: "#000000",
                         strokeThickness: 12,
@@ -77,12 +91,13 @@ export default class LostScene extends Phaser.Scene {
                 // Play button events
                 backtolobbyButton.on("pointerover", () => {
                     backtolobbyButton.setStyle({
-                        color: "#FFEBB9",
+                        // color: "#FFEBB9",
+                        color: "#FFFBF4"
                     });
                 });
                 backtolobbyButton.on("pointerout", () => {
                     backtolobbyButton.setStyle({
-                        color: "#FFFBF4",
+                        color: "#FFEBB9",
                     });
                 });
                 backtolobbyButton.on("pointerup", () => {
