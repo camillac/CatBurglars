@@ -10,7 +10,6 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         this.playerNum = data.playerNum;
         console.log(this.socket.id);
         this.players = data.players;
-        this.start = data.start;
         this.playerInfo = data.playerInfo; 
     }
 

@@ -97,8 +97,16 @@ export default class FirstTask extends Phaser.Scene {
             console.log(roomKey, counter);
             scene.socket.emit("startTimer", roomKey, counter);
         });
-
+        scene.waiting = scene.add.text(290, 30, "Waiting for other players.. ", {
+            fontFamily: "Chela One",
+            fontSize: 45,
+            color: "#FFFFFF",
+            fontStyle: "normal",
+            stroke: "#000000",
+            strokeThickness: 12,
+        });
         this.socket.on("displayMainTaskOne", function (arg) {
+            scene.waiting.destroy();  
             console.log("displayMainTaskOne");
             console.log(arg);
 
@@ -442,6 +450,7 @@ export default class FirstTask extends Phaser.Scene {
 
         
         this.socket.on("displaySideTaskOne", function (arg) {
+            scene.waiting.destroy();  
             console.log("displaySideTaskOne");
             console.log(arg);
             const { playerId, playerNum, key } = arg;

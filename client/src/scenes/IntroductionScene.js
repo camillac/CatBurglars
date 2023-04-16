@@ -10,7 +10,6 @@ export default class IntroductionScene extends Phaser.Scene {
         this.playerNum = data.playerNum;
         console.log(this.socket.id);
         this.players = data.players;
-        this.start = data.start; 
         this.playerInfo = data.playerInfo; 
     }
     preload() {
@@ -114,7 +113,6 @@ export default class IntroductionScene extends Phaser.Scene {
                     ...scene.state,
                     socket: scene.socket,
                     roomKey: this.roomKey,
-                    start: this.start, 
                     playerInfo: this.playerInfo
                 });
             },
