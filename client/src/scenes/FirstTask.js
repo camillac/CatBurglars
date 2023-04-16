@@ -10,11 +10,8 @@ export default class FirstTask extends Phaser.Scene {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
         this.playerNum = data.playerNum;
-        console.log(this.socket.id);
         this.players = data.players;
         this.start = data.start
-        console.log(this.start); 
-        console.log(this.data)
     }
     preload() {
         //load cats/players
@@ -35,7 +32,6 @@ export default class FirstTask extends Phaser.Scene {
         this.load.image("incorrectImage", "client/assets/sprites/incorrect.png");
 
         //load background
-        // this.stage.disableVisibilityChange = true;
         this.scene.run("FirstTask");
         this.load.image(
             "background",
@@ -50,36 +46,11 @@ export default class FirstTask extends Phaser.Scene {
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
 
-        // var timer = scene.add
-        //     .text(750, 550, "", {
-        //         fontFamily: "Chela One",
-        //         fontSize: 40,
-        //         color: "black",
-        //         align: "center",
-        //     });
+        if (scene.socket.id == this.start) {
+            console.log('hfiuehfius')
+            scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
+        }
 
-        // var House = this.add
-        //     .image(500, 300, "House")
-        //     .setOrigin(0.5)
-        //     .setScale(0.2);
-        // scene.tweens.add({
-        //     targets: House,
-        //     scaleX: 2,
-        //     scaleY: 2,
-        //     ease: "Cubic.easeIn",
-        //     duration: 4000,
-        //     onComplete: () => {
-        //         House.destroy();
-        //         console.log(scene.socket.id);
-        //         console.log(this.start);
-                
-                if (scene.socket.id == this.start) {
-                    console.log('hfiuehfius')
-                    scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
-
-                }
-            // },
-        // });
         const sidebar = new Sidebar(
             scene,
             this.game.config.width,
@@ -91,9 +62,9 @@ export default class FirstTask extends Phaser.Scene {
             console.log("hello");
         });
 
-        this.socket.on("startTimerEX", function (arg){
+        this.socket.on("startTimerEX", function (arg) {
             console.log(arg);
-            const {roomKey, counter} = arg; 
+            const { roomKey, counter } = arg;
             console.log(roomKey, counter);
             scene.socket.emit("startTimer", roomKey, counter);
         });
@@ -106,7 +77,7 @@ export default class FirstTask extends Phaser.Scene {
             strokeThickness: 12,
         });
         this.socket.on("displayMainTaskOne", function (arg) {
-            scene.waiting.destroy();  
+            scene.waiting.destroy();
             console.log("displayMainTaskOne");
             console.log(arg);
 
@@ -173,7 +144,7 @@ export default class FirstTask extends Phaser.Scene {
                         this.correct++;
                         this.alreadyClickedKey1 = true;
                     }
-                    
+
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
                     correctImage.setScale(1).setPosition(330, 250);
                     function corr() {
@@ -213,7 +184,7 @@ export default class FirstTask extends Phaser.Scene {
                         this.correct++;
                         this.alreadyClickedKey2 = true;
                     }
-                    
+
                     // key_2.destroy(); 
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
                     correctImage.setScale(1).setPosition(480, 250);
@@ -254,12 +225,8 @@ export default class FirstTask extends Phaser.Scene {
                         this.correct++;
                         this.alreadyClickedKey3 = true;
                     }
-                    
-                    // this.correct++; 
-                    // key_3.destroy(); 
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
                     correctImage.setScale(1).setPosition(630, 250);
-                    // correct.setScale(1).setPosition(500, 185);
                     function corr() {
                         correctImage.destroy();
                     }
@@ -297,12 +264,8 @@ export default class FirstTask extends Phaser.Scene {
                         this.correct++;
                         this.alreadyClickedKey4 = true;
                     }
-                    
-                    // this.correct++; 
-                    // key_4.destroy(); 
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
                     correctImage.setScale(1).setPosition(330, 450);
-                    // correct.setScale(1).setPosition(500, 185);
                     function corr() {
                         correctImage.destroy();
                     }
@@ -339,9 +302,6 @@ export default class FirstTask extends Phaser.Scene {
                         this.correct++;
                         this.alreadyClickedKey5 = true;
                     }
-                    
-                    // this.correct++; 
-                    // key_5.destroy(); 
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
                     correctImage.setScale(1).setPosition(480, 450);
                     function corr() {
@@ -380,7 +340,6 @@ export default class FirstTask extends Phaser.Scene {
                         this.alreadyClickedKey6 = true;
                         this.correct++;
                     }
-                    // this.correct++; 
                     console.log(this.correct);
                     var correctImage = scene.add.sprite(200, 300, "correctImage");
                     correctImage.setScale(1).setPosition(630, 450);
@@ -392,7 +351,6 @@ export default class FirstTask extends Phaser.Scene {
                         callback: corr,
                         callbackScope: this,
                     });
-                    // key_6.destroy(); 
                     if (this.correct === 3) {
                         console.log('hfhiuhf');
                         scene.socket.emit('showWinScene');
@@ -401,15 +359,15 @@ export default class FirstTask extends Phaser.Scene {
                 console.log("pressed key 6 ");
             });
 
-           // hover effect on keys
+            // hover effect on keys
             key_1.on("pointerover", () => {
                 key_1.setAlpha(0.75);
             });
             key_1.on("pointerout", () => {
                 key_1.setAlpha(1);
             });
-        
-             key_2.on("pointerover", () => {
+
+            key_2.on("pointerover", () => {
                 key_2.setAlpha(0.75);
             });
             key_2.on("pointerout", () => {
@@ -448,9 +406,9 @@ export default class FirstTask extends Phaser.Scene {
 
 
 
-        
+
         this.socket.on("displaySideTaskOne", function (arg) {
-            scene.waiting.destroy();  
+            scene.waiting.destroy();
             console.log("displaySideTaskOne");
             console.log(arg);
             const { playerId, playerNum, key } = arg;
@@ -468,18 +426,18 @@ export default class FirstTask extends Phaser.Scene {
             });
         });
         var timer = scene.add
-        .text(750, 550, "", {
-            fontFamily: "Chela One",
-            fontSize: 40,
-            color: "black",
-            align: "center",
-        });
+            .text(750, 550, "", {
+                fontFamily: "Chela One",
+                fontSize: 40,
+                color: "black",
+                align: "center",
+            });
         this.socket.on("counter", function (counter) {
-            console.log("got timers"); 
+            console.log("got timers");
             timer.text = counter;
         });
 
-        this.socket.on('win', function(roomKey) {
+        this.socket.on('win', function (roomKey) {
             console.log("Won!");
             scene.scene.start("WinningScene", {
                 ...scene.state,
