@@ -93,17 +93,6 @@ export default class PlayScene extends Phaser.Scene {
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
 
-                scene.notValidText = scene.add
-                    .text(400, 500, "", {
-                        fill: "#ff0000",
-                        fontSize: "35px",
-                        fontFamily: "Chela One",
-                        fontStyle: "normal",
-                        strokeThickness: 12,
-                    })
-                    .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);
-
                 createButton.setInteractive();
                 backButton.setInteractive();
                 joinButton.setInteractive();
@@ -167,5 +156,5 @@ export default class PlayScene extends Phaser.Scene {
         });
     }
 
-    update() {}
+    update() { }
 }
