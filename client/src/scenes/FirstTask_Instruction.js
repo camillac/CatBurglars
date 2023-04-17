@@ -123,7 +123,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                     )
                     .setOrigin(0.5);
             } else {
-                this.cameras.main.fadeOut(7000, 0, 0, 0);
+                this.cameras.main.fadeOut(5000, 0, 0, 0);
                 this.cameras.main.once(
                     Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
                     (cam, effect) => {

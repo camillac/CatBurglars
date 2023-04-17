@@ -74,7 +74,7 @@ export default class IntroductionScene extends Phaser.Scene {
 
         
         ///---------------LEAF ANIMATION-----------------------------
-        var image3 = this.add.image(800, 200, 'Leaf_1')
+       /*var image3 = this.add.image(800, 200, 'Leaf_1')
                     .setScale(0.5);
         this.tweens.add({
             targets: image3,
@@ -89,7 +89,7 @@ export default class IntroductionScene extends Phaser.Scene {
             ease: 'Power1',
             yoyo: true,
             repeat: -1
-        });
+        });*/
     
         //----------------------- House with Zoom In effect-----------------------
         var House = this.add
