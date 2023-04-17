@@ -119,8 +119,8 @@ export default class FirstTask extends Phaser.Scene {
             scene.alreadyClickedKey4 = false;
             scene.alreadyClickedKey5 = false;
             scene.alreadyClickedKey6 = false;
-            scene.alreadyClickedKeys = [];
-            
+            scene.alreadyClickedKeys = []; 
+            // scene.physics.resume()
 
             console.log(key1, key2, key3);
 
@@ -266,14 +266,44 @@ export default class FirstTask extends Phaser.Scene {
             });
         }
         else {
-            scene.alreadyClickedKeys.getChildren().forEach(function (curr) {
-                if(curr == currentKey){
-                    scene.correct++;
-                    scene.alreadyClickedKeys.add(currentKey); 
-                    // thing = true;
-                    console.log(scene.alreadyClickedKeys);
+            // console.log(scene.alreadyClickedKeys.getChildren())
+            
+            if(scene.alreadyClickedKeys.length == 0){
+                scene.correct++; 
+                scene.alreadyClickedKeys.push(currentKey); 
+            }
+            console.log(scene.alreadyClickedKeys); 
+            var hasNot = true; 
+            scene.alreadyClickedKeys.forEach(element => {
+                console.log(element);
+                if(element == currentKey){
+                    console.log("fheiufe");
+                    hasNot = false; 
                 }
+                // else{
+                //     scene.correct++;
+                //     scene.alreadyClickedKeys.push(currentKey); 
+                // }
             });
+            if(hasNot){
+                scene.correct++;
+                scene.alreadyClickedKeys.push(currentKey); 
+            }
+            // if(scene.alreadyClickedKeys.getChildren() == []){
+            //     console.log("empyt"); 
+            //     scene.correct++;
+            //     scene.alreadyClickedKeys.add(currentKey); 
+
+            // }
+            // scene.alreadyClickedKeys.getChildren().forEach(function (curr) {
+            //     console.log(curr);
+            //     if(!(curr == currentKey)){
+            //         scene.correct++;
+            //         scene.alreadyClickedKeys.add(currentKey); 
+            //         // thing = true;
+            //         console.log(scene.alreadyClickedKeys);
+            //     }
+            // });
             // if (!(scene.alreadyClickedKeys.contains(currentKey))) {
             //     // console.log(thing);
             //     scene.correct++;
