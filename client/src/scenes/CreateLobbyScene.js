@@ -2,7 +2,6 @@ export default class CreateLobbyScene extends Phaser.Scene {
     constructor() {
         super("CreateLobbyScene");
         this.state = {};
-        this.hasBeenSet = false;
     }
 
     preload() {
