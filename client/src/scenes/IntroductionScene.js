@@ -2,15 +2,11 @@ export default class IntroductionScene extends Phaser.Scene {
     constructor() {
         super("IntroductionScene");
         this.state = {};
-        this.hasBeenSet = false;
     }
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
-        this.playerNum = data.playerNum;
-        console.log(this.socket.id);
-        this.players = data.players;
-        this.playerInfo = data.playerInfo; 
+        this.playerInfo = data.playerInfo;
     }
     preload() {
         this.load.image("House", "client/assets/sprites/House_1.png"); //Need to Update this
@@ -22,8 +18,8 @@ export default class IntroductionScene extends Phaser.Scene {
             "Clouds_small",
             "client/assets/sprites/clouds-white-small.png"
         );
-        this.load.image("Leaf_1","client/assets/sprites/Leaf.png" );
-        this.load.image("Leaf_2","client/assets/sprites/leaf2.png");
+        this.load.image("Leaf_1", "client/assets/sprites/Leaf.png");
+        this.load.image("Leaf_2", "client/assets/sprites/leaf2.png");
         this.load.image("Grass", "client/assets/sprites/grass.png");
         //load background
         this.load.image(
@@ -57,7 +53,7 @@ export default class IntroductionScene extends Phaser.Scene {
             tilePositionX: { from: 0, to: 180 },
             ease: "linear",
             duration: 8000,
-            repeat: -1, 
+            repeat: -1,
             yoyo: (true, 2000),
         });
         scene.tweens.add({
@@ -72,25 +68,6 @@ export default class IntroductionScene extends Phaser.Scene {
         var Grass = this.add.sprite(300, 450, "Grass");
         Grass.setScale(1.5);
 
-        
-        ///---------------LEAF ANIMATION-----------------------------
-       /*var image3 = this.add.image(800, 200, 'Leaf_1')
-                    .setScale(0.5);
-        this.tweens.add({
-            targets: image3,
-            scaleX: 0.5,
-            scaleY:0.5,
-            props: {
-                x: { value: 70, flipX: true },
-                y: { value: 250 },
-            },
-           
-            duration: 3000,
-            ease: 'Power1',
-            yoyo: true,
-            repeat: -1
-        });*/
-    
         //----------------------- House with Zoom In effect-----------------------
         var House = this.add
             .image(450, 300, "House")
