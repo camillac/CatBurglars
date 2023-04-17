@@ -13,11 +13,6 @@ export default class IntroductionScene extends Phaser.Scene {
         this.playerInfo = data.playerInfo; 
     }
     preload() {
-        //load cats/players
-        // this.load.image('Player_1','client/assets/sprites/player1.png');
-        // this.load.image('Player_2','client/assets/sprites/player2.png');
-        // this.load.image('Player_3','client/assets/sprites/player3.png');
-        // this.load.image('Player_4','client/assets/sprites/player4.png');
         this.load.image("House", "client/assets/sprites/House_1.png"); //Need to Update this
         this.load.image("Sky", "client/assets/sprites/Sky.png");
         this.load.image("settings", "client/assets/sprites/settings_icon.png");
@@ -117,18 +112,6 @@ export default class IntroductionScene extends Phaser.Scene {
                 });
             },
         });
-        
-
-        
-        // // Add the setting wheel button
-        // const settingsBtn = this.add
-        //     .image(57, 550, "settings")
-        //     .setInteractive();
-        // settingsBtn.setScale(0.75);
-        // settingsBtn.on("pointerup", () => {
-        //     // Open the settings popup
-        //     this.showSettingsPopup();
-        // });
     }
 
     upload() {
@@ -136,24 +119,4 @@ export default class IntroductionScene extends Phaser.Scene {
         Clouds_bg1.tilePositionX += 0.9;
         Clouds_bg2.tilePositionX += 0.25;
     }
-    // showSettingsPopup() {
-    //     // Create and display the settings popup
-    //     const popup = this.add.container(
-    //         this.game.config.width / 2,
-    //         this.game.config.height / 2
-    //     );
-    //     const background = this.add.graphics();
-    //     background.fillStyle(0xffffff, 1);
-    //     background.fillRect(-150, -150, 300, 300);
-    //     const closeButton = this.add
-    //         .text(130, -130, "X", { fontSize: "24px", color: "#000000" })
-    //         .setInteractive();
-    //     closeButton.on("pointerup", () => {
-    //         // Close the popup
-    //         popup.destroy();
-    //     });
-    //     popup.add(background);
-    //     popup.add(closeButton);
-    //     // Pop Up Seeings
-    // }
 }

@@ -47,7 +47,7 @@ export default class FirstTask extends Phaser.Scene {
         background.setScale(2.0);
 
         if (scene.socket.id == this.start) {
-            console.log('hfiuehfius')
+            console.log('THIS IS CHECKING IF ITS THE CORRECT START KEY')
             scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
         }
 
@@ -155,10 +155,8 @@ export default class FirstTask extends Phaser.Scene {
                         callback: corr,
                         callbackScope: this,
                     });
-                    // key_1.destroy(); 
                     console.log(this.correct);
                     if (this.correct === 3) {
-                        // console.log('hfhiuhf');
                         scene.socket.emit("showWinScene");
                     }
                 }

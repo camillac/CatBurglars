@@ -28,7 +28,6 @@ export default class LobbyScene extends Phaser.Scene {
         this.load.image("player2", "client/assets/sprites/player2.png");
         this.load.image("player3", "client/assets/sprites/player3.png");
         this.load.image("player4", "client/assets/sprites/player4.png");
-        // LobbyScene.stage.disableVisibilityChange = true;
     }
 
     create() {
@@ -46,7 +45,6 @@ export default class LobbyScene extends Phaser.Scene {
 
         // JOINED ROOM - SET STATE
         this.socket.on("setState", function (state) {
-            // console.log("udheihduehiude");
             const { roomKey, players, numPlayers } = state;
             scene.physics.resume();
 
@@ -54,12 +52,10 @@ export default class LobbyScene extends Phaser.Scene {
             scene.state.roomKey = roomKey;
             scene.state.players = players;
             scene.state.numPlayers = numPlayers;
-            // scene.state.currentPlayer = scene.socket.id;
         });
 
         // PLAYERS
         this.socket.on("currentPlayers", function (arg) {
-            // console.log("currentPlayers");
             const { players, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
             Object.keys(players).forEach(function (id) {
@@ -83,17 +79,12 @@ export default class LobbyScene extends Phaser.Scene {
         this.socket.on("startRoom", function (arg) {
             console.log("gameStarted");
             const { roomKey, start } = arg;
-            // const {roomKey, playerNum} =  arg;
-            // console.log(playerNum);
-            // console.log(this.roomKey)
             scene.scene.start("IntroductionScene", {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: roomKey,
-                start: start, 
+                start: start,
                 playerInfo: scene.state.players,
-                // players: this.pl
-                // playerNum: playerNum
             });
         });
 
@@ -101,15 +92,13 @@ export default class LobbyScene extends Phaser.Scene {
         this.socket.on("disconnected", function (arg) {
             const { playerId, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
-            // scene.currentPlayer.setScale(0.3)
-            // .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
                 if (playerId === otherPlayer.playerId) {
                     otherPlayer.destroy();
                 }
             });
         });
-        
+
         //Players Circle
         scene.boxes = scene.add.graphics();
         scene.circle = scene.add.graphics();
@@ -239,14 +228,13 @@ export default class LobbyScene extends Phaser.Scene {
         startGame.on("pointerup", () => {
             if (scene.state.numPlayers == 4) {
                 scene.socket.emit("startGame", this.roomKey, this.socket.id);
-                // scene.socket.emit("startTimer", this.roomKey, counter);
                 console.log("startGame", this.roomKey);
                 console.log("startTimer", counter);
                 scene.scene.start("IntroductionScene", {
                     ...scene.state,
                     socket: scene.socket,
                     roomKey: this.roomKey,
-                    start: this.socket.id, 
+                    start: this.socket.id,
                     playerInfo: scene.state.players,
                 });
             } else {
@@ -292,9 +280,7 @@ export default class LobbyScene extends Phaser.Scene {
             const { playerId, numPlayers, roomInfo } = arg;
             scene.numPlayers = numPlayers;
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-                // if (playerId === otherPlayer.playerId) {
                 otherPlayer.destroy();
-                // }
             });
             scene.currentPlayer.getChildren().forEach(function (curr) {
                 curr.destroy();
