@@ -4,13 +4,10 @@ export default class FirstTask extends Phaser.Scene {
     constructor() {
         super("FirstTask");
         this.state = {};
-        this.hasBeenSet = false;
     }
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
-        this.playerNum = data.playerNum;
-        this.players = data.players;
         this.start = data.start
     }
     preload() {
@@ -45,10 +42,10 @@ export default class FirstTask extends Phaser.Scene {
         background.setScale(2.0);
 
         if (scene.socket.id == this.start) {
-            console.log('THIS IS CHECKING IF ITS THE CORRECT START KEY')
             scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
         }
 
+        // Sidebar Set Up
         const sidebar = new Sidebar(
             scene,
             this.game.config.width,
