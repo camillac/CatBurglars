@@ -226,7 +226,7 @@ export default class LobbyScene extends Phaser.Scene {
 
         // Start Game button events
         startGame.on("pointerup", () => {
-            if (scene.state.numPlayers == 4) {
+            if (scene.state.numPlayers == 2) {
                 scene.socket.emit("startGame", this.roomKey, this.socket.id);
                 console.log("startGame", this.roomKey);
                 console.log("startTimer", counter);
