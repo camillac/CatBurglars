@@ -114,6 +114,8 @@ module.exports = (io) => {
                 roomInfo.numPlayers = Object.keys(roomInfo.players).length;
 
                 if (roomInfo.inGame) {
+                    clearInterval(Countdown);
+
                     // Emit a message to all players to remove this player
                     let key = codeGenerator();
                     while (Object.keys(gameRooms).includes(key)) {
@@ -125,10 +127,9 @@ module.exports = (io) => {
                         numPlayers: 0,
                         inGame: false,
                     };
+
                     console.log("ROOM CREATED - ROOM KEY: " + key);
-                    io.to(roomKey).emit("backToLobby", {
-                        roomKey: key,
-                    });
+                    io.to(roomKey).emit(stopTimer);
                 } else {
                     io.to(roomKey).emit("disconnected", {
                         playerId: socket.id,
@@ -187,6 +188,13 @@ module.exports = (io) => {
                 console.log("counter destroyed");
                 io.to(roomKey).emit("win", roomKey);
                 clearInterval(Countdown);
+            });
+
+            socket.on("timerStopped", function () {
+                clearInterval(Countdown);
+                io.to(roomKey).emit("backToLobby", {
+                    roomKey: key,
+                });
             });
         });
 
