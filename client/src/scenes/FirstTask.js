@@ -27,7 +27,6 @@ export default class FirstTask extends Phaser.Scene {
         this.load.image("key5Image", "client/assets/sprites/key5.png");
         this.load.image("key6Image", "client/assets/sprites/key6.png");
         this.load.image("correctImage", "client/assets/sprites/correct.png");
-
         this.load.image("incorrectImage", "client/assets/sprites/incorrect.png");
 
         //load background
@@ -57,16 +56,16 @@ export default class FirstTask extends Phaser.Scene {
             scene.players,
             scene.socket
         );
-        this.socket.on("hello", () => {
-            console.log("hello");
-        });
 
+        //start the Timer for eveybody 
         this.socket.on("startTimerEX", function (arg) {
             console.log(arg);
             const { roomKey, counter } = arg;
             console.log(roomKey, counter);
             scene.socket.emit("startTimer", roomKey, counter);
         });
+
+        // wait for other players until everybody syncs
         scene.waiting = scene.add.text(290, 30, "Waiting for other players.. ", {
             fontFamily: "Chela One",
             fontSize: 45,
@@ -75,11 +74,10 @@ export default class FirstTask extends Phaser.Scene {
             stroke: "#000000",
             strokeThickness: 12,
         });
+        // Main Player Display
         this.socket.on("displayMainTaskOne", function (arg) {
             scene.waiting.destroy();
             console.log("displayMainTaskOne");
-            console.log(arg);
-
             scene.add.text(290, 30, "Choose the right keys!", {
                 fontFamily: "Chela One",
                 fontSize: 45,
@@ -113,41 +111,33 @@ export default class FirstTask extends Phaser.Scene {
             key_6.setInteractive();
 
             scene.correct = 0;
-            scene.alreadyClickedKey1 = false;
-            scene.alreadyClickedKey2 = false;
-            scene.alreadyClickedKey3 = false;
-            scene.alreadyClickedKey4 = false;
-            scene.alreadyClickedKey5 = false;
-            scene.alreadyClickedKey6 = false;
-            scene.alreadyClickedKeys = []; 
-            // scene.physics.resume()
-
+            scene.alreadyClickedKeys = [];
             console.log(key1, key2, key3);
 
             // key actions
             key_1.on("pointerup", () => {
-                scene.isCorrectKey(scene, 1, key1, key2, key3, scene.alreadyClickedKey1, 330, 250, this.correct); 
+                scene.isCorrectKey(scene, 1, key1, key2, key3, 330, 250);
                 console.log("pressed key 1 ");
             });
             key_2.on("pointerup", () => {
-                scene.isCorrectKey(scene, 2, key1, key2, key3, scene.alreadyClickedKey2, 480, 250, this.correct); 
+                scene.isCorrectKey(scene, 2, key1, key2, key3, 480, 250);
                 console.log("pressed key 2 ");
             });
             key_3.on("pointerup", () => {
-                scene.isCorrectKey(scene, 3, key1, key2, key3, scene.alreadyClickedKey3, 630, 250, this.correct); 
+                scene.isCorrectKey(scene, 3, key1, key2, key3, 630, 250);
                 console.log("pressed key 3 ");
             });
             key_4.on("pointerup", () => {
-                scene.isCorrectKey(scene, 4, key1, key2, key3, scene.alreadyClickedKey4, 330, 450, this.correct); 
+                scene.isCorrectKey(scene, 4, key1, key2, key3, 330, 450);
 
                 console.log("pressed key 4 ");
             });
             key_5.on("pointerup", () => {
-                scene.isCorrectKey(scene, 5, key1, key2, key3, scene.alreadyClickedKey5, 480, 450, this.correct); 
+                scene.isCorrectKey(scene, 5, key1, key2, key3, 480, 450);
                 console.log("pressed key 5 ");
             });
             key_6.on("pointerup", () => {
-                scene.isCorrectKey(scene, 6, key1, key2, key3, scene.alreadyClickedKey6, 630, 450, this.correct); 
+                scene.isCorrectKey(scene, 6, key1, key2, key3, 630, 450);
                 console.log("pressed key 6 ");
             });
 
@@ -196,9 +186,7 @@ export default class FirstTask extends Phaser.Scene {
 
         });
 
-
-
-
+        // Side Task Display 
         this.socket.on("displaySideTaskOne", function (arg) {
             scene.waiting.destroy();
             console.log("displaySideTaskOne");
@@ -217,6 +205,8 @@ export default class FirstTask extends Phaser.Scene {
                 strokeThickness: 12,
             });
         });
+
+        // timer text connected with socket 
         var timer = scene.add
             .text(750, 550, "", {
                 fontFamily: "Chela One",
@@ -229,6 +219,7 @@ export default class FirstTask extends Phaser.Scene {
             timer.text = counter;
         });
 
+        // win condition 
         this.socket.on('win', function (roomKey) {
             console.log("Won!");
             scene.scene.start("WinningScene", {
@@ -238,6 +229,7 @@ export default class FirstTask extends Phaser.Scene {
             })
         })
 
+        // lost condition 
         this.socket.on("lost", function (roomKey) {
             console.log("Lost!");
             scene.scene.start("LostScene", {
@@ -250,7 +242,9 @@ export default class FirstTask extends Phaser.Scene {
 
     update() {
     }
-    isCorrectKey(scene, currentKey, key1, key2, key3, thing, posX, posY, correct) {
+
+    // Check if the Key selected is correct/incorrect
+    isCorrectKey(scene, currentKey, key1, key2, key3, posX, posY) {
         if (!(key1 == currentKey || key2 == currentKey || key3 == currentKey)) {
             console.log("wrong key ")
             scene.socket.emit("decreaseCounter");
@@ -266,51 +260,22 @@ export default class FirstTask extends Phaser.Scene {
             });
         }
         else {
-            // console.log(scene.alreadyClickedKeys.getChildren())
-            
-            if(scene.alreadyClickedKeys.length == 0){
-                scene.correct++; 
-                scene.alreadyClickedKeys.push(currentKey); 
+            console.log(scene.alreadyClickedKeys);
+            if (scene.alreadyClickedKeys.length == 0) {
+                scene.correct++;
+                scene.alreadyClickedKeys.push(currentKey);
             }
-            console.log(scene.alreadyClickedKeys); 
-            var hasNot = true; 
+            var hasNot = true;
             scene.alreadyClickedKeys.forEach(element => {
                 console.log(element);
-                if(element == currentKey){
-                    console.log("fheiufe");
-                    hasNot = false; 
+                if (element == currentKey) {
+                    hasNot = false;
                 }
-                // else{
-                //     scene.correct++;
-                //     scene.alreadyClickedKeys.push(currentKey); 
-                // }
             });
-            if(hasNot){
+            if (hasNot) {
                 scene.correct++;
-                scene.alreadyClickedKeys.push(currentKey); 
+                scene.alreadyClickedKeys.push(currentKey);
             }
-            // if(scene.alreadyClickedKeys.getChildren() == []){
-            //     console.log("empyt"); 
-            //     scene.correct++;
-            //     scene.alreadyClickedKeys.add(currentKey); 
-
-            // }
-            // scene.alreadyClickedKeys.getChildren().forEach(function (curr) {
-            //     console.log(curr);
-            //     if(!(curr == currentKey)){
-            //         scene.correct++;
-            //         scene.alreadyClickedKeys.add(currentKey); 
-            //         // thing = true;
-            //         console.log(scene.alreadyClickedKeys);
-            //     }
-            // });
-            // if (!(scene.alreadyClickedKeys.contains(currentKey))) {
-            //     // console.log(thing);
-            //     scene.correct++;
-            //     scene.alreadyClickedKeys.add(currentKey); 
-            //     // thing = true;
-            //     console.log(scene.alreadyClickedKeys);
-            // }
 
             var correctImage = scene.add.sprite(200, 300, "correctImage");
             correctImage.setScale(1).setPosition(posX, posY);
