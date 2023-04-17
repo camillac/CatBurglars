@@ -100,6 +100,8 @@ export default class FirstTask extends Phaser.Scene {
         // DISCONNECT
         this.socket.on("backToLobby", function (arg) {
             console.log("LOBBYSCENE");
+            const { roomKey } = arg;
+
             scene.scene.start("LobbyScene", {
                 ...scene.state,
                 socket: scene.socket,

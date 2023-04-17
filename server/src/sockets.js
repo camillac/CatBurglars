@@ -33,23 +33,19 @@ module.exports = (io) => {
             // console.log("test" + roomKey);
             const roomInfo = gameRooms[roomKey];
 
-            if (Object.keys(gameRooms[roomKey]).includes(socket.id)) {
-            } else {
-                roomInfo.players[socket.id] = {
-                    playerId: socket.id,
-                    playerNum: 0,
-                    playerName: playerName,
-                };
+            roomInfo.players[socket.id] = {
+                playerId: socket.id,
+                playerNum: 0,
+                playerName: playerName,
+            };
 
-                roomInfo.players[socket.id].playerNum = Object.keys(
-                    roomInfo.players
-                ).length;
+            roomInfo.players[socket.id].playerNum = Object.keys(
+                roomInfo.players
+            ).length;
 
-                // Update number of players
-                roomInfo.numPlayers = Object.keys(roomInfo.players).length;
-                console.log("JOIN ROOM ");
-                // }
-            }
+            // Update number of players
+            roomInfo.numPlayers = Object.keys(roomInfo.players).length;
+            console.log("JOIN ROOM ");
 
             // Set initial state
             socket.emit("setState", roomInfo);
@@ -117,18 +113,29 @@ module.exports = (io) => {
                 // Update numPlayers
                 roomInfo.numPlayers = Object.keys(roomInfo.players).length;
 
-                roomInfo.inGame
-                    ? // Emit a message to all players to remove this player
-                      io.to(roomKey).emit("backToLobby", {
-                          playerId: socket.id,
-                          numPlayers: roomInfo.numPlayers,
-                          roomInfo: roomInfo,
-                      })
-                    : io.to(roomKey).emit("disconnected", {
-                          playerId: socket.id,
-                          numPlayers: roomInfo.numPlayers,
-                          roomInfo: roomInfo,
-                      });
+                if (roomInfo.inGame) {
+                    // Emit a message to all players to remove this player
+                    let key = codeGenerator();
+                    while (Object.keys(gameRooms).includes(key)) {
+                        key = codeGenerator();
+                    }
+                    gameRooms[key] = {
+                        roomKey: key,
+                        players: {},
+                        numPlayers: 0,
+                        inGame: false,
+                    };
+                    console.log("ROOM CREATED - ROOM KEY: " + key);
+                    io.to(roomKey).emit("backToLobby", {
+                        roomKey: key,
+                    });
+                } else {
+                    io.to(roomKey).emit("disconnected", {
+                        playerId: socket.id,
+                        numPlayers: roomInfo.numPlayers,
+                        roomInfo: roomInfo,
+                    });
+                }
 
                 console.log("Room Info AFTER Removing Player");
                 console.log(roomInfo);
