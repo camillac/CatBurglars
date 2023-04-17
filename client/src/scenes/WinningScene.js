@@ -62,7 +62,8 @@ export default class WinningScene extends Phaser.Scene {
                     stroke: "#000000",
                     strokeThickness: 12,
                 });
-                // Back button
+
+            // Back button
             const backButton = scene.add.rectangle(50, 50, 350, 40, 0xffebb9, 1);
             backButton.setInteractive();
             backButton.on('pointerdown', () => {
@@ -81,6 +82,7 @@ export default class WinningScene extends Phaser.Scene {
             },
 
         });
+        // confetti
         const confetti = this.add.particles('confetti');
         confetti.createEmitter({
             frame: ['confeti1.png', 'confeti2.png', 'confeti3.png', 'confeti4.png', 'confeti5.png', 'confeti6.png'],
@@ -126,14 +128,14 @@ export default class WinningScene extends Phaser.Scene {
             fish.play("flopping");
 
             // Add bouncing animation using tweens
-        this.tweens.add({
-            targets: fish,
-            y: position.y - 20,
-            duration: 1000,
-            ease: "Sine.easeInOut",
-            yoyo: true,
-            repeat: -1,
-        });
+            this.tweens.add({
+                targets: fish,
+                y: position.y - 20,
+                duration: 1000,
+                ease: "Sine.easeInOut",
+                yoyo: true,
+                repeat: -1,
+            });
         }
 
 
