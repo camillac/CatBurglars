@@ -19,7 +19,6 @@ export default class FirstTask extends Phaser.Scene {
         this.load.image("Player_2", "client/assets/sprites/player2.png");
         this.load.image("Player_3", "client/assets/sprites/player3.png");
         this.load.image("Player_4", "client/assets/sprites/player4.png");
-        this.load.image("House", "client/assets/sprites/log-cabin.png"); //Need to Update this
         this.load.image("settings", "client/assets/sprites/settings_icon.png");
         this.load.image("key1Image", "client/assets/sprites/key1.png");
         this.load.image("key2Image", "client/assets/sprites/key2.png");
@@ -449,7 +448,7 @@ export default class FirstTask extends Phaser.Scene {
             scene.scene.start("LostScene", {
                 ...scene.state,
                 socket: scene.socket,
-                roomKey: scene.roomKey,
+                roomKey: this.roomKey,
             });
         });
     }

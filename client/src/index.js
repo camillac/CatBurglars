@@ -16,6 +16,8 @@ class Game extends Phaser.Game {
     constructor() {
         super(config);
         this.scene.add("MainScene", MainScene);
+        this.scene.add("FirstTask_Instruction", FirstTask_Instruction);
+        this.scene.add("IntroductionScene", IntroductionScene);
         this.scene.add("FirstTask", FirstTask);
         this.scene.add("HowtoPlayScene", HowtoPlayScene);
         this.scene.add("LobbyScene", LobbyScene);
