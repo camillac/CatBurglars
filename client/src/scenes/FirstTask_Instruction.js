@@ -141,7 +141,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
 
             function otherPlayerInstruction(
                 playerNum,
-                playerOneUsername = "Player_1_Username"
+                playerOneUsername = "Player 1"
             ) {
                 //Fade out after the Instruction
                 // playerOneUsername is not used for now, will implement when we merge with the username branch
