@@ -71,6 +71,7 @@ export default class FirstTask extends Phaser.Scene {
             stroke: "#000000",
             strokeThickness: 12,
         });
+
         // Main Player Display
         this.socket.on("displayMainTaskOne", function (arg) {
             scene.waiting.destroy();
@@ -242,11 +243,13 @@ export default class FirstTask extends Phaser.Scene {
 
     // Check if the Key selected is correct/incorrect
     isCorrectKey(scene, currentKey, key1, key2, key3, posX, posY) {
+        // if the key is incorrect
         if (!(key1 == currentKey || key2 == currentKey || key3 == currentKey)) {
             console.log("wrong key ")
             scene.socket.emit("decreaseCounter");
             var incorrect = scene.add.sprite(200, 300, "incorrectImage");
             incorrect.setScale(1).setPosition(posX, posY);
+            // destroy the incorrect image
             function incorr() {
                 incorrect.destroy();
             }
@@ -257,14 +260,13 @@ export default class FirstTask extends Phaser.Scene {
             });
         }
         else {
-            console.log(scene.alreadyClickedKeys);
+            // the key is correct
             if (scene.alreadyClickedKeys.length == 0) {
                 scene.correct++;
                 scene.alreadyClickedKeys.push(currentKey);
             }
-            var hasNot = true;
+            var hasNot = true; // check if the key has not been clicked
             scene.alreadyClickedKeys.forEach(element => {
-                console.log(element);
                 if (element == currentKey) {
                     hasNot = false;
                 }
@@ -276,6 +278,7 @@ export default class FirstTask extends Phaser.Scene {
 
             var correctImage = scene.add.sprite(200, 300, "correctImage");
             correctImage.setScale(1).setPosition(posX, posY);
+            // destory the correct image 
             function corr() {
                 correctImage.destroy();
             }
@@ -285,6 +288,7 @@ export default class FirstTask extends Phaser.Scene {
                 callbackScope: this,
             });
             console.log(scene.correct);
+            // All 3 correct keys are pressed 
             if (scene.correct === 3) {
                 scene.socket.emit("showWinScene");
             }
