@@ -27,7 +27,6 @@ export default class FirstTask extends Phaser.Scene {
         this.load.image("key5Image", "client/assets/sprites/key5.png");
         this.load.image("key6Image", "client/assets/sprites/key6.png");
         this.load.image("correctImage", "client/assets/sprites/correct.png");
-
         this.load.image("incorrectImage", "client/assets/sprites/incorrect.png");
 
         //load background
@@ -57,16 +56,16 @@ export default class FirstTask extends Phaser.Scene {
             scene.players,
             scene.socket
         );
-        this.socket.on("hello", () => {
-            console.log("hello");
-        });
 
+        //start the Timer for eveybody 
         this.socket.on("startTimerEX", function (arg) {
             console.log(arg);
             const { roomKey, counter } = arg;
             console.log(roomKey, counter);
             scene.socket.emit("startTimer", roomKey, counter);
         });
+
+        // wait for other players until everybody syncs
         scene.waiting = scene.add.text(290, 30, "Waiting for other players.. ", {
             fontFamily: "Chela One",
             fontSize: 45,
@@ -75,11 +74,10 @@ export default class FirstTask extends Phaser.Scene {
             stroke: "#000000",
             strokeThickness: 12,
         });
+        // Main Player Display
         this.socket.on("displayMainTaskOne", function (arg) {
             scene.waiting.destroy();
             console.log("displayMainTaskOne");
-            console.log(arg);
-
             scene.add.text(290, 30, "Choose the right keys!", {
                 fontFamily: "Chela One",
                 fontSize: 45,
@@ -112,247 +110,34 @@ export default class FirstTask extends Phaser.Scene {
             key_5.setInteractive();
             key_6.setInteractive();
 
-            this.correct = 0;
-            this.alreadyClickedKey1 = false;
-            this.alreadyClickedKey2 = false;
-            this.alreadyClickedKey3 = false;
-            this.alreadyClickedKey4 = false;
-            this.alreadyClickedKey5 = false;
-            this.alreadyClickedKey6 = false;
-
+            scene.correct = 0;
+            scene.alreadyClickedKeys = [];
             console.log(key1, key2, key3);
 
             // key actions
             key_1.on("pointerup", () => {
-                if (!(key1 == 1 || key2 == 1 || key3 == 1)) {
-                    console.log("wrong key ")
-                    scene.socket.emit("decreaseCounter");
-                    var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-                    incorrect.setScale(1).setPosition(330, 250);
-                    function incorr() {
-                        incorrect.destroy();
-                    }
-                    scene.time.addEvent({
-                        delay: 200,
-                        callback: incorr,
-                        callbackScope: this,
-                    });
-                }
-                else {
-                    if (!(this.alreadyClickedKey1)) {
-                        this.correct++;
-                        this.alreadyClickedKey1 = true;
-                    }
-
-                    var correctImage = scene.add.sprite(200, 300, "correctImage");
-                    correctImage.setScale(1).setPosition(330, 250);
-                    function corr() {
-                        correctImage.destroy();
-                    }
-                    scene.time.addEvent({
-                        delay: 200,
-                        callback: corr,
-                        callbackScope: this,
-                    });
-                    console.log(this.correct);
-                    if (this.correct === 3) {
-                        scene.socket.emit("showWinScene");
-                    }
-                }
+                scene.isCorrectKey(scene, 1, key1, key2, key3, 330, 250);
                 console.log("pressed key 1 ");
             });
             key_2.on("pointerup", () => {
-                if (!(key1 == 2 || key2 == 2 || key3 == 2)) {
-                    console.log("wrong key ")
-                    scene.socket.emit("decreaseCounter");
-                    var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-                    incorrect.setScale(1).setPosition(480, 250);
-                    function incorr() {
-                        incorrect.destroy();
-                    }
-                    scene.time.addEvent({
-                        delay: 200,
-                        callback: incorr,
-                        callbackScope: this,
-                    });
-                }
-                else {
-                    if (!(this.alreadyClickedKey2)) {
-                        this.correct++;
-                        this.alreadyClickedKey2 = true;
-                    }
-
-                    // key_2.destroy(); 
-                    var correctImage = scene.add.sprite(200, 300, "correctImage");
-                    correctImage.setScale(1).setPosition(480, 250);
-                    console.log(this.correct);
-                    function corr() {
-                        correctImage.destroy();
-                    }
-                    scene.time.addEvent({
-                        delay: 200,
-                        callback: corr,
-                        callbackScope: this,
-                    });
-                    if (this.correct === 3) {
-                        console.log('hfhiuhf');
-                        scene.socket.emit('showWinScene');
-
-                    }
-                }
+                scene.isCorrectKey(scene, 2, key1, key2, key3, 480, 250);
                 console.log("pressed key 2 ");
             });
             key_3.on("pointerup", () => {
-                if (!(key1 == 3 || key2 == 3 || key3 == 3)) {
-                    console.log("wrong key ")
-                    scene.socket.emit("decreaseCounter");
-                    var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-                    incorrect.setScale(1).setPosition(630, 250);
-                    function incorr() {
-                        incorrect.destroy();
-                    }
-                    scene.time.addEvent({
-                        delay: 200,
-                        callback: incorr,
-                        callbackScope: this,
-                    });
-                }
-                else {
-                    if (!(this.alreadyClickedKey3)) {
-                        this.correct++;
-                        this.alreadyClickedKey3 = true;
-                    }
-                    var correctImage = scene.add.sprite(200, 300, "correctImage");
-                    correctImage.setScale(1).setPosition(630, 250);
-                    function corr() {
-                        correctImage.destroy();
-                    }
-                    scene.time.addEvent({
-                        delay: 200,
-                        callback: corr,
-                        callbackScope: this,
-                    });
-                    console.log(this.correct);
-                    if (this.correct === 3) {
-                        console.log('hfhiuhf');
-                        scene.socket.emit('showWinScene');
-                    }
-                }
+                scene.isCorrectKey(scene, 3, key1, key2, key3, 630, 250);
                 console.log("pressed key 3 ");
             });
             key_4.on("pointerup", () => {
+                scene.isCorrectKey(scene, 4, key1, key2, key3, 330, 450);
 
-                if (!(key1 == 4 || key2 == 4 || key3 == 4)) {
-                    console.log("wrong key ")
-                    scene.socket.emit("decreaseCounter");
-                    var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-                    incorrect.setScale(1).setPosition(330, 450);
-                    function incorr() {
-                        incorrect.destroy();
-                    }
-                    scene.time.addEvent({
-                        delay: 200,
-                        callback: incorr,
-                        callbackScope: this,
-                    });
-                }
-                else {
-                    if (!(this.alreadyClickedKey4)) {
-                        this.correct++;
-                        this.alreadyClickedKey4 = true;
-                    }
-                    var correctImage = scene.add.sprite(200, 300, "correctImage");
-                    correctImage.setScale(1).setPosition(330, 450);
-                    function corr() {
-                        correctImage.destroy();
-                    }
-                    scene.time.addEvent({
-                        delay: 200,
-                        callback: corr,
-                        callbackScope: this,
-                    });
-                    console.log(this.correct);
-                    if (this.correct === 3) {
-                        console.log('hfhiuhf');
-                        scene.socket.emit('showWinScene');
-                    }
-                }
                 console.log("pressed key 4 ");
             });
             key_5.on("pointerup", () => {
-                if (!(key1 == 5 || key2 == 5 || key3 == 5)) {
-                    console.log("wrong key ")
-                    var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-                    incorrect.setScale(1).setPosition(480, 450);
-                    function incorr() {
-                        incorrect.destroy();
-                    }
-                    scene.time.addEvent({
-                        delay: 200,
-                        callback: incorr,
-                        callbackScope: this,
-                    });
-                    scene.socket.emit("decreaseCounter");
-                }
-                else {
-                    if (!(this.alreadyClickedKey5)) {
-                        this.correct++;
-                        this.alreadyClickedKey5 = true;
-                    }
-                    var correctImage = scene.add.sprite(200, 300, "correctImage");
-                    correctImage.setScale(1).setPosition(480, 450);
-                    function corr() {
-                        correctImage.destroy();
-                    }
-                    scene.time.addEvent({
-                        delay: 200,
-                        callback: corr,
-                        callbackScope: this,
-                    });
-                    console.log(this.correct);
-                    if (this.correct === 3) {
-                        console.log('hfhiuhf');
-                        scene.socket.emit('showWinScene');
-                    }
-                }
+                scene.isCorrectKey(scene, 5, key1, key2, key3, 480, 450);
                 console.log("pressed key 5 ");
             });
             key_6.on("pointerup", () => {
-                if (!(key1 == 6 || key2 == 6 || key3 == 6)) {
-                    console.log("wrong key ")
-                    var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-                    incorrect.setScale(1).setPosition(630, 450);
-                    function incorr() {
-                        incorrect.destroy();
-                    }
-                    scene.time.addEvent({
-                        delay: 200,
-                        callback: incorr,
-                        callbackScope: this,
-                    });
-                    scene.socket.emit('decreaseCounter');
-                }
-                else {
-                    if (!(this.alreadyClickedKey6)) {
-                        this.alreadyClickedKey6 = true;
-                        this.correct++;
-                    }
-                    console.log(this.correct);
-                    var correctImage = scene.add.sprite(200, 300, "correctImage");
-                    correctImage.setScale(1).setPosition(630, 450);
-                    function corr() {
-                        correctImage.destroy();
-                    }
-                    scene.time.addEvent({
-                        delay: 200,
-                        callback: corr,
-                        callbackScope: this,
-                    });
-                    if (this.correct === 3) {
-                        console.log('hfhiuhf');
-                        scene.socket.emit('showWinScene');
-                    }
-                }
+                scene.isCorrectKey(scene, 6, key1, key2, key3, 630, 450);
                 console.log("pressed key 6 ");
             });
 
@@ -401,9 +186,7 @@ export default class FirstTask extends Phaser.Scene {
 
         });
 
-
-
-
+        // Side Task Display 
         this.socket.on("displaySideTaskOne", function (arg) {
             scene.waiting.destroy();
             console.log("displaySideTaskOne");
@@ -422,6 +205,8 @@ export default class FirstTask extends Phaser.Scene {
                 strokeThickness: 12,
             });
         });
+
+        // timer text connected with socket 
         var timer = scene.add
             .text(750, 550, "", {
                 fontFamily: "Chela One",
@@ -434,6 +219,7 @@ export default class FirstTask extends Phaser.Scene {
             timer.text = counter;
         });
 
+        // win condition 
         this.socket.on('win', function (roomKey) {
             console.log("Won!");
             scene.scene.start("WinningScene", {
@@ -443,6 +229,7 @@ export default class FirstTask extends Phaser.Scene {
             })
         })
 
+        // lost condition 
         this.socket.on("lost", function (roomKey) {
             console.log("Lost!");
             scene.scene.start("LostScene", {
@@ -454,5 +241,56 @@ export default class FirstTask extends Phaser.Scene {
     }
 
     update() {
+    }
+
+    // Check if the Key selected is correct/incorrect
+    isCorrectKey(scene, currentKey, key1, key2, key3, posX, posY) {
+        if (!(key1 == currentKey || key2 == currentKey || key3 == currentKey)) {
+            console.log("wrong key ")
+            scene.socket.emit("decreaseCounter");
+            var incorrect = scene.add.sprite(200, 300, "incorrectImage");
+            incorrect.setScale(1).setPosition(posX, posY);
+            function incorr() {
+                incorrect.destroy();
+            }
+            scene.time.addEvent({
+                delay: 200,
+                callback: incorr,
+                callbackScope: this,
+            });
+        }
+        else {
+            console.log(scene.alreadyClickedKeys);
+            if (scene.alreadyClickedKeys.length == 0) {
+                scene.correct++;
+                scene.alreadyClickedKeys.push(currentKey);
+            }
+            var hasNot = true;
+            scene.alreadyClickedKeys.forEach(element => {
+                console.log(element);
+                if (element == currentKey) {
+                    hasNot = false;
+                }
+            });
+            if (hasNot) {
+                scene.correct++;
+                scene.alreadyClickedKeys.push(currentKey);
+            }
+
+            var correctImage = scene.add.sprite(200, 300, "correctImage");
+            correctImage.setScale(1).setPosition(posX, posY);
+            function corr() {
+                correctImage.destroy();
+            }
+            scene.time.addEvent({
+                delay: 200,
+                callback: corr,
+                callbackScope: this,
+            });
+            console.log(scene.correct);
+            if (scene.correct === 3) {
+                scene.socket.emit("showWinScene");
+            }
+        }
     }
 }
