@@ -4,14 +4,14 @@ export default class CreateLobbyScene extends Phaser.Scene {
         this.state = {};
         this.hasBeenSet = false;
     }
-    
+
     preload() {
         this.load.script(
             "webfont",
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js",
             this.load.html("nameform", "client/assets/text/nameform.html")
         );
-        
+
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
@@ -32,7 +32,7 @@ export default class CreateLobbyScene extends Phaser.Scene {
                 families: ["Chela One"],
             },
             active: function () {
-                
+
                 // Title
                 add.text(125, 110, "Cat", {
                     fontFamily: "Chela One",
@@ -58,7 +58,7 @@ export default class CreateLobbyScene extends Phaser.Scene {
                     stroke: "#000000",
                     strokeThickness: 12,
                 });
-                
+
                 // Back button
                 const backButton = add
                     .text(50, 30, "Back", {
@@ -71,17 +71,8 @@ export default class CreateLobbyScene extends Phaser.Scene {
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
-                scene.notValidText = scene.add.text(400, 500, "", {
-                    fill: "#ff0000",
-                    fontSize: "35px",
-                    fontFamily: "Chela One",
-                    fontStyle: "normal",
-                    strokeThickness: 12,
-                    })
-                    .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);;
-                
-                    backButton.setInteractive();
+
+                backButton.setInteractive();
 
                 // Back button events
                 backButton.on("pointerover", () => {
@@ -96,7 +87,7 @@ export default class CreateLobbyScene extends Phaser.Scene {
                 });
                 backButton.on("pointerup", () => {
                     backButton.destroy();
-        
+
                     scene.scene.start("PlayScene", {
                         ...scene.state,
                         socket: scene.socket,
@@ -125,5 +116,5 @@ export default class CreateLobbyScene extends Phaser.Scene {
         });
     }
 
-    upload() {}
+    upload() { }
 }
