@@ -99,7 +99,6 @@ export default class CreateLobbyScene extends Phaser.Scene {
                 scene.inputElement.on("click", function (event) {
                     if (event.target.name === "createRoom") {
                         const name = scene.inputElement.getChildByName("name-form");
-                        console.log(name.value);
                         scene.socket.emit("getRoomCode", name.value);
                         scene.socket.on("roomCreated", function (roomKey, name) {
                             scene.scene.start("LobbyScene", {

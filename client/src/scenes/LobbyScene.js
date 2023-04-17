@@ -5,7 +5,6 @@ export default class LobbyScene extends Phaser.Scene {
     }
 
     init(data) {
-        console.log(data);
         this.socket = data.socket;
         this.roomKey = data.roomKey;
         this.playerName = data.playerName;
@@ -126,8 +125,6 @@ export default class LobbyScene extends Phaser.Scene {
 
         key.on("pointerup", () => {
             navigator.clipboard.writeText(this.roomKey);
-            console.log("Room Key Copied To Clipboard");
-
             scene.copiedRoomKey = scene.add
                 .text(390, 325, "Room Key Copied To Clipboard!", {
                     fontFamily: "Chela One",

@@ -100,7 +100,6 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                 this.cameras.main.once(
                     Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
                     (cam, effect) => {
-                        console.log(scene.socket.id);
                         scene.scene.start("FirstTask", {
                             ...scene.state,
                             socket: scene.socket,
