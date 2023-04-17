@@ -2,7 +2,6 @@ export default class JoinLobbyScene extends Phaser.Scene {
     constructor() {
         super("JoinLobbyScene");
         this.state = {};
-        this.hasBeenSet = false;
     }
 
     preload() {
@@ -133,5 +132,5 @@ export default class JoinLobbyScene extends Phaser.Scene {
         });
     }
 
-    upload() {}
+    upload() { }
 }
