@@ -9,6 +9,7 @@ class Sidebar extends Phaser.GameObjects.Container {
 
     this.scene.add.existing(this);
 
+    // Rectangle background for sidebar
     const menu = this.scene.add.graphics();
     menu.fillStyle(0xf6f0e3, 1);
     menu.fillRect(0, 0, this.width / 5, this.height);

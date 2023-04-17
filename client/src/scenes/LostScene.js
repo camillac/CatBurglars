@@ -6,7 +6,6 @@ export default class LostScene extends Phaser.Scene {
 
     init(data) {
         this.socket = data.socket;
-        this.roomKey = data.roomKey;
     }
 
     preload() {
@@ -72,7 +71,6 @@ export default class LostScene extends Phaser.Scene {
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
 
-                // backtolobbyButton.setInteractive();
                 // Back to lobby button
                 const backtolobbyButton = add
                     .text(400, 525, "Back to Homepage", {
