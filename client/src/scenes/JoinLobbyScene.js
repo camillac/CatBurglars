@@ -71,7 +71,7 @@ export default class JoinLobbyScene extends Phaser.Scene {
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
                 scene.notValidText = scene.add
-                    .text(400, 500, "", {
+                    .text(400, 300, "", {
                         fill: "#ff0000",
                         fontSize: "35px",
                         fontFamily: "Chela One",

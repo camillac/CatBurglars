@@ -130,32 +130,46 @@ module.exports = (io) => {
         });
 
         // RECEIVES STARTGAME EMIT FROM ONE PLAYER, EMIT STARTGAME TO ALL PLAYERS IN THE ROOM
-        socket.on("startGame", function (roomKey) {
+        socket.on("startGame", function (roomKey, start) {
             console.log("start game");
             // const {roomkey, startId} = arg;
-            socket.to(roomKey).emit("startRoom", { roomKey: roomKey });
+            socket
+                .to(roomKey)
+                .emit("startRoom", { roomKey: roomKey, start: start });
         });
 
         socket.on("startTimer", function (roomKey, counter) {
             console.log("startTimer");
             console.log(counter);
+            socket.on("decreaseCounter", function () {
+                console.log("counter decreased");
+                counter = counter - 5;
+            });
+
             var Countdown = setInterval(function () {
                 console.log(counter);
                 io.to(roomKey).emit("counter", counter);
                 counter--;
-                if (counter === 0) {
+                if (counter <= 0) {
                     console.log("Lost!");
                     io.to(roomKey).emit("lost", roomKey);
                     clearInterval(Countdown);
                 }
             }, 1000);
+
+            // stop the counter so it doesnt keep going after game ends
+            socket.on("showWinScene", function () {
+                console.log("counter destroyed");
+                io.to(roomKey).emit("win", roomKey);
+                clearInterval(Countdown);
+            });
         });
 
         // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
 
-        socket.on("startTaskOne", function (roomKey, mainPlayer, playerId) {
+        socket.on("startTaskOne", function (roomKey, mainPlayer, playerIdx) {
             console.log("taskOne");
             let arr = [1, 2, 3, 4, 5, 6];
             shuffleArray(arr);
@@ -169,37 +183,92 @@ module.exports = (io) => {
             console.log("num: ", mainPlayer);
             // console.log(roomInfo);
             // console.log(roomKey);
-            if (roomInfo.players[playerId].playerNum == mainPlayer) {
-                console.log("mainPlater");
-                io.to(playerId).emit("displayMainTaskOne", {
-                    playerId: playerId,
-                    playerNum: roomInfo.players[playerId].playerNum,
-                    key1: key1,
-                    key2: key2,
-                    key3: key3,
-                });
-            } else if (roomInfo.players[playerId].playerNum == 2) {
-                console.log("plater 2");
-                io.to(playerId).emit("displaySideTaskOne", {
-                    playerId: playerId,
-                    playerNum: roomInfo.players[playerId].playerNum,
-                    key: key1,
-                });
-            } else if (roomInfo.players[playerId].playerNum == 3) {
-                console.log("plater 3");
-                io.to(playerId).emit("displaySideTaskOne", {
-                    playerId: playerId,
-                    playerNum: roomInfo.players[playerId].playerNum,
-                    key: key2,
-                });
-            } else {
-                console.log("plater 4");
-                io.to(playerId).emit("displaySideTaskOne", {
-                    playerId: playerId,
-                    playerNum: roomInfo.players[playerId].playerNum,
-                    key: key3,
-                });
+            io.to(roomKey).emit("hello");
+            for (playerId in roomInfo.players) {
+                console.log(playerId);
+                console.log(roomInfo.players[playerId].playerId);
+                // io.to(roomKey).to(playerId).emit("hello");
+                // io.to(roomKey).emit("hello");
+                if (roomInfo.players[playerId].playerNum == mainPlayer) {
+                    console.log("mainPlayer");
+                    const counter = 30;
+                    io.to(roomInfo.players[playerId].playerId).emit(
+                        "startTimerEX",
+                        { roomKey, counter }
+                    );
+                    io.to(roomInfo.players[playerId].playerId).emit(
+                        "displayMainTaskOne",
+                        {
+                            playerId: playerId,
+                            playerNum: roomInfo.players[playerId].playerNum,
+                            key1: key1,
+                            key2: key2,
+                            key3: key3,
+                        }
+                    );
+                } else if (roomInfo.players[playerId].playerNum == 2) {
+                    console.log("plater 2");
+                    io.to(roomInfo.players[playerId].playerId).emit(
+                        "displaySideTaskOne",
+                        {
+                            playerId: playerId,
+                            playerNum: roomInfo.players[playerId].playerNum,
+                            key: key1,
+                        }
+                    );
+                } else if (roomInfo.players[playerId].playerNum == 3) {
+                    console.log("plater 3");
+                    io.to(roomInfo.players[playerId].playerId).emit(
+                        "displaySideTaskOne",
+                        {
+                            playerId: playerId,
+                            playerNum: roomInfo.players[playerId].playerNum,
+                            key: key2,
+                        }
+                    );
+                } else {
+                    console.log("plater 4");
+                    io.to(roomInfo.players[playerId].playerId).emit(
+                        "displaySideTaskOne",
+                        {
+                            playerId: playerId,
+                            playerNum: roomInfo.players[playerId].playerNum,
+                            key: key3,
+                        }
+                    );
+                }
             }
+            // if (roomInfo.players[playerId].playerNum == mainPlayer) {
+            //     console.log("mainPlater");
+            //     io.to(playerId).emit("displayMainTaskOne", {
+            //         playerId: playerId,
+            //         playerNum: roomInfo.players[playerId].playerNum,
+            //         key1: key1,
+            //         key2: key2,
+            //         key3: key3,
+            //     });
+            // } else if (roomInfo.players[playerId].playerNum == 2) {
+            //     console.log("plater 2");
+            //     io.to(playerId).emit("displaySideTaskOne", {
+            //         playerId: playerId,
+            //         playerNum: roomInfo.players[playerId].playerNum,
+            //         key: key1,
+            //     });
+            // } else if (roomInfo.players[playerId].playerNum == 3) {
+            //     console.log("plater 3");
+            //     io.to(playerId).emit("displaySideTaskOne", {
+            //         playerId: playerId,
+            //         playerNum: roomInfo.players[playerId].playerNum,
+            //         key: key2,
+            //     });
+            // } else {
+            //     console.log("plater 4");
+            //     io.to(playerId).emit("displaySideTaskOne", {
+            //         playerId: playerId,
+            //         playerNum: roomInfo.players[playerId].playerNum,
+            //         key: key3,
+            //     });
+            // }
         });
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************

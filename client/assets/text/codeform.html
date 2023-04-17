@@ -5,19 +5,27 @@
         align-items: center;
     } --> */
 
-    input {
-        height: 50px;
-    }
- 
     .input-box {
+        height: 50px;
+        width: 250px;
         border: 2px solid black;
-        font-family: Martian Mono;
-        font-size: 20px;
+        font-family: Chela One;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .input-box2{
+        height: 50px;
+        width: 250px;
+        border: 2px solid black;
+        font-family: Chela One;
+        font-size: 30px;
+        text-align: center;
     }
  
      button {
-       height: 55px;
-        width: 335px;
+        height: 55px;
+        width: 250px;
         font-family: Chela One;
         font-size: 45px;
         color: #FFFBF4;
@@ -26,11 +34,14 @@
         -webkit-text-stroke-color: black;
         background-color: #C1A87D;
     }
+    input[type=text]:focus {
+        background-color:#f6dfb8;
+    }
  </style>
  
  <asp:panel class = "container">
     <input type="text" id="name-form-id" name="name-form" placeholder="Enter Username" class="input-box" /><br>
-    <input type="text" id="code-form-id" name="code-form" placeholder="Enter Room Key" class="input-box" /><br>
+    <br> <input type="text" id="code-form-id" name="code-form" placeholder="Enter Room Key" class="input-box2" /><br>
     <br><button type="button" style="margin:0px auto; display:block;" id="enterRoom-id" name="enterRoom" onclick= "myFunction()" >Join a Room</button>
         <script>
             var enter = document.getElementById("Code-form-id"); 

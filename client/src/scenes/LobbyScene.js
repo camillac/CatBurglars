@@ -33,7 +33,7 @@ export default class LobbyScene extends Phaser.Scene {
     create() {
         const scene = this;
 
-        var counter = 15;
+        var counter = 100;
         scene.socket.emit("joinRoom", this.roomKey, this.playerName);
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
@@ -45,7 +45,6 @@ export default class LobbyScene extends Phaser.Scene {
 
         // JOINED ROOM - SET STATE
         this.socket.on("setState", function (state) {
-            // console.log("udheihduehiude");
             const { roomKey, players, numPlayers } = state;
             scene.physics.resume();
 
@@ -53,12 +52,10 @@ export default class LobbyScene extends Phaser.Scene {
             scene.state.roomKey = roomKey;
             scene.state.players = players;
             scene.state.numPlayers = numPlayers;
-            // scene.state.currentPlayer = scene.socket.id;
         });
 
         // PLAYERS
         this.socket.on("currentPlayers", function (arg) {
-            // console.log("currentPlayers");
             const { players, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
             Object.keys(players).forEach(function (id) {
@@ -81,14 +78,13 @@ export default class LobbyScene extends Phaser.Scene {
         // Other Player Started Game
         this.socket.on("startRoom", function (arg) {
             console.log("gameStarted");
-            const { roomKey } = arg;
-            // const {roomKey, playerNum} =  arg;
-            // console.log(playerNum);
-            // console.log(this.roomKey)
+            const { roomKey, start } = arg;
             scene.scene.start("IntroductionScene", {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: roomKey,
+                start: start,
+                playerInfo: scene.state.players,
             });
         });
 
@@ -96,8 +92,6 @@ export default class LobbyScene extends Phaser.Scene {
         this.socket.on("disconnected", function (arg) {
             const { playerId, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
-            // scene.currentPlayer.setScale(0.3)
-            // .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
                 if (playerId === otherPlayer.playerId) {
                     otherPlayer.destroy();
@@ -105,6 +99,7 @@ export default class LobbyScene extends Phaser.Scene {
             });
         });
 
+        //Players Circle
         scene.boxes = scene.add.graphics();
         scene.circle = scene.add.graphics();
 
@@ -232,14 +227,15 @@ export default class LobbyScene extends Phaser.Scene {
         // Start Game button events
         startGame.on("pointerup", () => {
             if (scene.state.numPlayers == 4) {
-                scene.socket.emit("startGame", this.roomKey);
-                scene.socket.emit("startTimer", this.roomKey, counter);
+                scene.socket.emit("startGame", this.roomKey, this.socket.id);
                 console.log("startGame", this.roomKey);
                 console.log("startTimer", counter);
                 scene.scene.start("IntroductionScene", {
                     ...scene.state,
                     socket: scene.socket,
                     roomKey: this.roomKey,
+                    start: this.socket.id,
+                    playerInfo: scene.state.players,
                 });
             } else {
                 console.log("Not Enough Players!");
@@ -284,9 +280,7 @@ export default class LobbyScene extends Phaser.Scene {
             const { playerId, numPlayers, roomInfo } = arg;
             scene.numPlayers = numPlayers;
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-                // if (playerId === otherPlayer.playerId) {
                 otherPlayer.destroy();
-                // }
             });
             scene.currentPlayer.getChildren().forEach(function (curr) {
                 curr.destroy();

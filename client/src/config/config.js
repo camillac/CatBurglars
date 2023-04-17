@@ -4,6 +4,7 @@ export default {
     width: 800,
     height: 600,
     backgroundColor: "#FCFBF4",
+    disableVisibilityChange : true,
     render: {
         pixelArt: true,
     },
@@ -21,5 +22,9 @@ export default {
     dom: {
         createContainer: true,
     },
+    // stage: {
+    //     disableVisibilityChange : true,
+    // },
+    autoFocus: true,
     scene: [],
 };

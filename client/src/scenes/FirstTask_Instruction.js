@@ -6,12 +6,11 @@ export default class FirstTask_Instruction extends Phaser.Scene {
     }
     init(data) {
         this.socket = data.socket;
-        this.data = data;
         this.roomKey = data.roomKey;
         this.playerNum = data.playerNum;
-
-        // console.log(this.socket.id);
+        console.log(this.socket.id);
         this.players = data.players;
+        this.playerInfo = data.playerInfo; 
     }
 
     preload() {
@@ -28,7 +27,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         background.setScale(2);
         //background.setScale(1);
         // const scroll = this.add.image(400,300,"Scroll");
-        var sky = this.add.image(400, 300, "Sky");
+        var sky = this.add.image(400, 350, "Sky");
         sky.setScale(4.0);
 
         var Clouds_bg1 = this.add.tileSprite(
@@ -96,15 +95,17 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         });
 
         function playerInstruction() {
-            if (this.playerNum === 1) {
-                this.cameras.main.fadeOut(7000, 0, 0, 0);
+            if (this.playerInfo[scene.socket.id].playerNum === 1) {
+                this.cameras.main.fadeOut(5000, 0, 0, 0);
                 this.cameras.main.once(
                     Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
                     (cam, effect) => {
+                        console.log(scene.socket.id);
                         scene.scene.start("FirstTask", {
                             ...scene.state,
                             socket: scene.socket,
                             roomKey: this.roomKey,
+                            start: scene.socket.id
                         });
                     }
                 );
@@ -130,11 +131,12 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                             ...scene.state,
                             socket: scene.socket,
                             roomKey: this.roomKey,
+                            start: ""
                         });
                     }
                 );
 
-                otherPlayerInstruction(this.playerNum);
+                otherPlayerInstruction(this.playerInfo[scene.socket.id].playerNum);
             }
 
             function otherPlayerInstruction(
