@@ -524,6 +524,10 @@ export default class FirstTask extends Phaser.Scene {
             timer.text = counter;
         });
 
+        this.socket.on("endGame", function (newKey) {
+            scene.socket.emit("stopTimer", newKey);
+        });
+
         this.socket.on("win", function (roomKey) {
             console.log("Won!");
             scene.scene.start("WinningScene", {
