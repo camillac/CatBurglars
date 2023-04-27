@@ -22,6 +22,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         // background 
         const background = this.add.image(400, 300, "Background");
         background.setScale(2);
+        
         var sky = this.add.image(400, 350, "Sky");
         sky.setScale(4.0);
 
@@ -51,7 +52,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         });
 
         //Fade in Effect for the Instruction
-        this.cameras.main.fadeIn(5000, 0, 0, 0, instructions);
+        this.cameras.main.fadeIn(1000, 0, 0, 0, instructions);
         var instructions = scene.add
             .text(
                 400,
@@ -76,89 +77,62 @@ export default class FirstTask_Instruction extends Phaser.Scene {
 
         // destroy instructions when finished 
 
-        function destroyInstructions() {
-            instructions.destroy();
-        }
-
-        this.time.addEvent({
-            delay: 6000,
-            callback: destroyInstructions,
-            callbackScope: this,
-        });
-        this.time.addEvent({
-            delay: 6000,
-            callback: playerInstruction,
-            callbackScope: this,
-        });
-
         // Showing player instructions 
 
-        function playerInstruction() {
-            // if you are player 1 
-            if (this.playerInfo[scene.socket.id].playerNum === 1) {
-                this.cameras.main.fadeOut(5000, 0, 0, 0);
-                this.cameras.main.once(
-                    Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
-                    (cam, effect) => {
-                        scene.scene.start("FirstTask", {
-                            ...scene.state,
-                            socket: scene.socket,
-                            roomKey: this.roomKey,
-                            start: scene.socket.id
-                        });
+        this.socket.on("displayT1P1Instructions", function() {
+            instructions.destroy();
+            scene.cameras.main.fadeOut(5000, 0, 0, 0);
+            var playerInfo = scene.add
+                .text(
+                    400,
+                    300,
+                    `You are Player 1.\nCommunicate with your team\nto figure out the correct\nthree keys in the\ncorrect order!`,
+                    {
+                        fontFamily: "Chela One",
+                        fontSize: 60,
+                        color: "#000000",
+                        align: "center",
                     }
-                );
-                var playerInfo = scene.add
-                    .text(
-                        400,
-                        300,
-                        `You are Player 1.\nCommunicate with your team\nto figure out the correct\nthree keys in the\ncorrect order!`,
-                        {
-                            fontFamily: "Chela One",
-                            fontSize: 60,
-                            color: "#000000",
-                            align: "center",
-                        }
-                    )
-                    .setOrigin(0.5);
-            } else {
-                this.cameras.main.fadeOut(5000, 0, 0, 0);
-                this.cameras.main.once(
-                    Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
-                    (cam, effect) => {
-                        scene.scene.start("FirstTask", {
-                            ...scene.state,
-                            socket: scene.socket,
-                            roomKey: this.roomKey,
-                            start: ""
-                        });
+                )
+            .setOrigin(0.5);
+            scene.socket.on("renderTaskOne", function(roomKey) {
+                scene.scene.start("FirstTask", {
+                    ...scene.state,
+                    socket: scene.socket,
+                    roomKey: roomKey,
+                    start: scene.socket.id
+                });
+            });
+        });
+
+        this.socket.on("displayT1POInstructions", function(playerNum) {
+            instructions.destroy();
+            const playerOneUsername = "Player 1";
+            scene.cameras.main.fadeOut(7000, 0, 0, 0);
+            var playerInfo = scene.add
+                .text(
+                    400,
+                    300,
+                    `You are Player ${playerNum}.\nDescribe your key to\n${playerOneUsername}\nand pay attention to which\nnumber your key is!`,
+                    {
+                        fontFamily: "Chela One",
+                        fontSize: 60,
+                        color: "#000000",
+                        align: "center",
                     }
-                );
+                )
+            .setOrigin(0.5);
+            scene.socket.on("renderTaskOne", function(roomKey) {
+                scene.scene.start("FirstTask", {
+                    ...scene.state,
+                    socket: scene.socket,
+                    roomKey: roomKey,
+                    start: ""
+                });
+            });
+        });
 
-                otherPlayerInstruction(this.playerInfo[scene.socket.id].playerNum);
-            }
-
-            function otherPlayerInstruction(
-                playerNum,
-                playerOneUsername = "Player 1"
-            ) {
-                //Fade out after the Instruction
-                // playerOneUsername is not used for now, will implement when we merge with the username branch
-                var playerInfo = scene.add
-                    .text(
-                        400,
-                        300,
-                        `You are Player ${playerNum}.\nDescribe your key to\n${playerOneUsername}\nand pay attention to which\nnumber your key is!`,
-                        {
-                            fontFamily: "Chela One",
-                            fontSize: 60,
-                            color: "#000000",
-                            align: "center",
-                        }
-                    )
-                    .setOrigin(0.5);
-            }
         }
-    }
+    
     update() { }
 }

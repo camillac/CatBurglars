@@ -60,19 +60,8 @@ export default class FirstTask extends Phaser.Scene {
             scene.socket.emit("startTimer", roomKey, counter);
         });
 
-        // wait for other players until everybody syncs
-        scene.waiting = scene.add.text(290, 30, "Waiting for other players.. ", {
-            fontFamily: "Chela One",
-            fontSize: 45,
-            color: "#FFFFFF",
-            fontStyle: "normal",
-            stroke: "#000000",
-            strokeThickness: 12,
-        });
-
         // Main Player Display
         this.socket.on("displayMainTaskOne", function (arg) {
-            scene.waiting.destroy();
             console.log("displayMainTaskOne");
             scene.add.text(290, 30, "Choose the right keys!", {
                 fontFamily: "Chela One",
@@ -184,7 +173,6 @@ export default class FirstTask extends Phaser.Scene {
 
         // Side Task Display 
         this.socket.on("displaySideTaskOne", function (arg) {
-            scene.waiting.destroy();
             console.log("displaySideTaskOne");
             const { playerId, playerNum, key } = arg;
             var keyImage = scene.add.sprite(250, 300, `key` + key + `Image`);

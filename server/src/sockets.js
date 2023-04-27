@@ -129,9 +129,37 @@ module.exports = (io) => {
 
         // RECEIVES STARTGAME EMIT FROM ONE PLAYER, EMIT STARTGAME TO ALL PLAYERS IN THE ROOM
         socket.on("startGame", function (roomKey, start) {
+            var time = 0;
             socket
                 .to(roomKey)
                 .emit("startRoom", { roomKey: roomKey, start: start });
+            
+            const roomInfo = gameRooms[roomKey];
+            var Timer = setInterval(function () {
+                if (time == 0) {
+                    io.to(roomKey).emit("renderClouds");
+                }
+                if (time == 2) {
+                    io.to(roomKey).emit("renderHouse");
+                }
+                if (time == 5) {
+                    io.to(roomKey).emit("renderInstructions", roomKey);
+                }
+                if (time == 9) {
+                    for (playerId in roomInfo.players) {
+                        if (roomInfo.players[playerId].playerNum == 1) {
+                            io.to(roomInfo.players[playerId].playerId).emit("displayT1P1Instructions");
+                        } else if (roomInfo.players[playerId].playerNum > 1) {
+                            io.to(roomInfo.players[playerId].playerId).emit("displayT1POInstructions", roomInfo.players[playerId].playerNum);
+                        }
+                    }
+                }
+                if (time == 13) {
+                    io.to(roomKey).emit("renderTaskOne", roomKey);
+                    clearInterval(Timer);
+                }
+                time++;
+        }, 1000);
         });
 
         socket.on("startTimer", function (roomKey, counter) {
@@ -168,7 +196,7 @@ module.exports = (io) => {
             const key2 = arr[1];
             const key3 = arr[2];
             console.log(key1, key2, key3);
-            const roomInfo = gameRooms[roomKey];;
+            const roomInfo = gameRooms[roomKey];
             for (playerId in roomInfo.players) {
                 if (roomInfo.players[playerId].playerNum == mainPlayer) {
                     const counter = 30;

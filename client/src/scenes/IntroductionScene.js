@@ -32,63 +32,72 @@ export default class IntroductionScene extends Phaser.Scene {
         //-------------------------- Add Background-----------------------------
 
         const scene = this;
-        this.cameras.main.fadeIn(1000, 0, 0, 0);
+        this.cameras.main.fadeIn(2000, 0, 0, 0);
+
+        
 
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
         var sky = this.add.image(400, 300, "Sky");
         sky.setScale(4.0);
 
-        //---------------------------- Moving Clouds--------------------------------
-        var Clouds_bg1 = this.add.tileSprite(
-            400,
-            100,
-            800,
-            600,
-            "Clouds_small"
-        );
-        var Clouds_bg2 = this.add.tileSprite(400, 100, 800, 600, "big_clouds");
-        scene.tweens.add({
-            targets: Clouds_bg1,
-            tilePositionX: { from: 0, to: 180 },
-            ease: "linear",
-            duration: 8000,
-            repeat: -1,
-            yoyo: (true, 2000),
-        });
-        scene.tweens.add({
-            targets: Clouds_bg2,
-            tilePositionX: { from: 0, to: 180 },
-            ease: "linear",
-            duration: 8000,
-            repeat: -1, //Infinity Times
-            yoyo: false,
-        });
-        //-------------------------Add Grass-----------------------
-        var Grass = this.add.sprite(300, 450, "Grass");
-        Grass.setScale(1.5);
+        this.socket.on("renderClouds", function() {
+            //-------------------------Add Grass-----------------------
+            var Grass = scene.add.sprite(300, 450, "Grass");
+            Grass.setScale(1.5);
 
-        //----------------------- House with Zoom In effect-----------------------
-        var House = this.add
-            .image(450, 300, "House")
-            .setOrigin(0.5)
-            .setScale(0.5);
-        this.tweens.add({
-            targets: House,
-            scaleX: 4,
-            scaleY: 4,
-            ease: "Cubic.easeIn",
-            duration: 4000,
-            onComplete: () => {
+            //---------------------------- Moving Clouds--------------------------------
+            var Clouds_bg1 = scene.add.tileSprite(
+                400,
+                100,
+                800,
+                600,
+                "Clouds_small"
+            );
+            var Clouds_bg2 = scene.add.tileSprite(400, 100, 800, 600, "big_clouds");
+            scene.tweens.add({
+                targets: Clouds_bg1,
+                tilePositionX: { from: 0, to: 180 },
+                ease: "linear",
+                duration: 8000,
+                repeat: -1,
+                yoyo: (true, 2000),
+            });
+            scene.tweens.add({
+                targets: Clouds_bg2,
+                tilePositionX: { from: 0, to: 180 },
+                ease: "linear",
+                duration: 8000,
+                repeat: -1, //Infinity Times
+                yoyo: false,
+            });
+        });
+
+        this.socket.on("renderHouse", function() {
+            //----------------------- House with Zoom In effect-----------------------
+            var House = scene.add
+                .image(450, 300, "House")
+                .setOrigin(0.5)
+                .setScale(0.5);
+            scene.tweens.add({
+                targets: House,
+                scaleX: 4,
+                scaleY: 4,
+                ease: "Cubic.easeIn",
+                duration: 4000
+            });
+            scene.socket.on("renderInstructions", function(roomKey) {
                 House.destroy();
                 scene.scene.start("FirstTask_Instruction", {
                     ...scene.state,
                     socket: scene.socket,
-                    roomKey: this.roomKey,
-                    playerInfo: this.playerInfo
+                    roomKey: roomKey,
+                    playerInfo: scene.playerInfo
                 });
-            },
+            });
         });
+
+        
     }
 
     upload() {
