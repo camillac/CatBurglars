@@ -71,7 +71,7 @@ export default class PlayScene extends Phaser.Scene {
                 const backButton = add
                     .text(50, 30, "Back", {
                         fontFamily: "Chela One",
-                        fontSize: 20,
+                        fontSize: 30,
                         color: "#FFFBF4",
                         fontStyle: "normal",
                         stroke: "#000000",
@@ -88,17 +88,6 @@ export default class PlayScene extends Phaser.Scene {
                         color: "#FFFBF4",
                         fontStyle: "normal",
                         stroke: "#000000",
-                        strokeThickness: 12,
-                    })
-                    .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);
-
-                scene.notValidText = scene.add
-                    .text(400, 500, "", {
-                        fill: "#ff0000",
-                        fontSize: "35px",
-                        fontFamily: "Chela One",
-                        fontStyle: "normal",
                         strokeThickness: 12,
                     })
                     .setOrigin(0.5)
@@ -167,5 +156,5 @@ export default class PlayScene extends Phaser.Scene {
         });
     }
 
-    update() {}
+    update() { }
 }

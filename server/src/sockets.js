@@ -28,9 +28,7 @@ module.exports = (io) => {
 
         // JOIN A ROOM
         socket.on("joinRoom", (roomKey, playerName) => {
-            console.log(socket.id);
             socket.join(roomKey);
-            // console.log("test" + roomKey);
             const roomInfo = gameRooms[roomKey];
 
             if (!roomInfo.players[socket.id]) {
@@ -167,15 +165,11 @@ module.exports = (io) => {
         });
 
         socket.on("startTimer", function (roomKey, counter) {
-            console.log("startTimer");
-            console.log(counter);
             socket.on("decreaseCounter", function () {
-                console.log("counter decreased");
                 counter = counter - 5;
             });
 
             var Countdown = setInterval(function () {
-                console.log(counter);
                 io.to(roomKey).emit("counter", counter);
                 counter--;
                 if (counter <= 0) {
@@ -205,27 +199,15 @@ module.exports = (io) => {
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
 
         socket.on("startTaskOne", function (roomKey, mainPlayer, playerIdx) {
-            console.log("taskOne");
             let arr = [1, 2, 3, 4, 5, 6];
             shuffleArray(arr);
-            console.log(arr);
             const key1 = arr[0];
             const key2 = arr[1];
             const key3 = arr[2];
             console.log(key1, key2, key3);
             const roomInfo = gameRooms[roomKey];
-            console.log(roomInfo.players);
-            console.log("num: ", mainPlayer);
-            // console.log(roomInfo);
-            // console.log(roomKey);
-            io.to(roomKey).emit("hello");
             for (playerId in roomInfo.players) {
-                console.log(playerId);
-                console.log(roomInfo.players[playerId].playerId);
-                // io.to(roomKey).to(playerId).emit("hello");
-                // io.to(roomKey).emit("hello");
                 if (roomInfo.players[playerId].playerNum == mainPlayer) {
-                    console.log("mainPlayer");
                     const counter = 30;
                     io.to(roomInfo.players[playerId].playerId).emit(
                         "startTimerEX",
@@ -242,7 +224,6 @@ module.exports = (io) => {
                         }
                     );
                 } else if (roomInfo.players[playerId].playerNum == 2) {
-                    console.log("plater 2");
                     io.to(roomInfo.players[playerId].playerId).emit(
                         "displaySideTaskOne",
                         {
@@ -252,7 +233,6 @@ module.exports = (io) => {
                         }
                     );
                 } else if (roomInfo.players[playerId].playerNum == 3) {
-                    console.log("plater 3");
                     io.to(roomInfo.players[playerId].playerId).emit(
                         "displaySideTaskOne",
                         {
@@ -262,7 +242,6 @@ module.exports = (io) => {
                         }
                     );
                 } else {
-                    console.log("plater 4");
                     io.to(roomInfo.players[playerId].playerId).emit(
                         "displaySideTaskOne",
                         {
@@ -273,37 +252,6 @@ module.exports = (io) => {
                     );
                 }
             }
-            // if (roomInfo.players[playerId].playerNum == mainPlayer) {
-            //     console.log("mainPlater");
-            //     io.to(playerId).emit("displayMainTaskOne", {
-            //         playerId: playerId,
-            //         playerNum: roomInfo.players[playerId].playerNum,
-            //         key1: key1,
-            //         key2: key2,
-            //         key3: key3,
-            //     });
-            // } else if (roomInfo.players[playerId].playerNum == 2) {
-            //     console.log("plater 2");
-            //     io.to(playerId).emit("displaySideTaskOne", {
-            //         playerId: playerId,
-            //         playerNum: roomInfo.players[playerId].playerNum,
-            //         key: key1,
-            //     });
-            // } else if (roomInfo.players[playerId].playerNum == 3) {
-            //     console.log("plater 3");
-            //     io.to(playerId).emit("displaySideTaskOne", {
-            //         playerId: playerId,
-            //         playerNum: roomInfo.players[playerId].playerNum,
-            //         key: key2,
-            //     });
-            // } else {
-            //     console.log("plater 4");
-            //     io.to(playerId).emit("displaySideTaskOne", {
-            //         playerId: playerId,
-            //         playerNum: roomInfo.players[playerId].playerNum,
-            //         key: key3,
-            //     });
-            // }
         });
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************

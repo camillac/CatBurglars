@@ -2,7 +2,6 @@ export default class JoinLobbyScene extends Phaser.Scene {
     constructor() {
         super("JoinLobbyScene");
         this.state = {};
-        this.hasBeenSet = false;
     }
 
     preload() {
@@ -111,10 +110,8 @@ export default class JoinLobbyScene extends Phaser.Scene {
                     if (event.target.name === "enterRoom") {
                         const name =
                             scene.inputElement.getChildByName("name-form");
-                        console.log(name.value);
                         const code =
                             scene.inputElement.getChildByName("code-form");
-                        console.log(code.value);
                         scene.socket.emit("isKeyValid", code.value, name.value);
                     }
                     scene.socket.on("keyNotValid", function () {
@@ -136,5 +133,5 @@ export default class JoinLobbyScene extends Phaser.Scene {
         });
     }
 
-    upload() {}
+    upload() { }
 }
