@@ -2,11 +2,9 @@ export default class LobbyScene extends Phaser.Scene {
     constructor() {
         super({ LobbyScene });
         this.state = {};
-        this.hasBeenSet = false;
     }
 
     init(data) {
-        console.log(data);
         this.socket = data.socket;
         this.roomKey = data.roomKey;
         this.playerName = data.playerName;
@@ -32,12 +30,13 @@ export default class LobbyScene extends Phaser.Scene {
 
     create() {
         const scene = this;
-
-        var counter = 100;
+        console.log(this.roomKey,this.playerName);
         scene.socket.emit("joinRoom", this.roomKey, this.playerName);
+        // set background
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
 
+        //set Variables
         console.log("Room Key " + this.roomKey);
         this.currentPlayer = this.physics.add.group();
         this.otherPlayers = this.physics.add.group();
@@ -69,7 +68,6 @@ export default class LobbyScene extends Phaser.Scene {
 
         // NEW PLAYER
         this.socket.on("newPlayer", function (arg) {
-            console.log("newPlayer");
             const { playerInfo, numPlayers } = arg;
             scene.addOtherPlayers(scene, playerInfo);
             scene.state.numPlayers = numPlayers;
@@ -83,7 +81,6 @@ export default class LobbyScene extends Phaser.Scene {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: roomKey,
-                start: start,
                 playerInfo: scene.state.players,
             });
         });
@@ -102,66 +99,6 @@ export default class LobbyScene extends Phaser.Scene {
         //Players Circle
         scene.boxes = scene.add.graphics();
         scene.circle = scene.add.graphics();
-
-        // Creates box for the lobby and start page
-        scene.boxes.fillStyle(0xbeb2a8, 1);
-        scene.boxes.fillRect(275, 380, 250, 110);
-        scene.lobbyText = scene.add
-            .text(400, 410, "Lobby Code:", {
-                fontFamily: "Chela One",
-                color: "#FFFBF4",
-                fontSize: "40px",
-            })
-            .setOrigin(0.5);
-
-        // room key and copy key functions
-        var key = scene.add
-            .text(400, 460, this.roomKey, {
-                fontFamily: "Martian Mono",
-                color: "#FFFBF4",
-                fontSize: "40px",
-                fontWeight: "bold",
-            })
-            .setOrigin(0.5);
-
-        key.setInteractive();
-        key.on("pointerup", () => {
-            navigator.clipboard.writeText(this.roomKey);
-            console.log("Room Key Copied To Clipboard");
-
-            scene.copiedRoomKey = scene.add
-                .text(390, 325, "Room Key Copied To Clipboard!", {
-                    fontFamily: "Chela One",
-                    fontSize: 35,
-                    color: "#FFFFFF",
-                    fontStyle: "normal",
-                    stroke: "#000000",
-                    strokeThickness: 12,
-                })
-                .setOrigin(0.5)
-                .setPadding(0.0, 0.0, 0);
-
-            function copiedKey() {
-                scene.copiedRoomKey.destroy();
-            }
-
-            this.time.addEvent({
-                delay: 2000,
-                callback: copiedKey,
-                callbackScope: this,
-            });
-        });
-
-        key.on("pointerover", () => {
-            key.setStyle({
-                color: "#FFEBB9",
-            });
-        });
-        key.on("pointerout", () => {
-            key.setStyle({
-                color: "#FFFBF4",
-            });
-        });
 
         // Creates 4 circles for the players.
 
@@ -229,33 +166,57 @@ export default class LobbyScene extends Phaser.Scene {
             if (scene.state.numPlayers == 4) {
                 scene.socket.emit("startGame", this.roomKey, this.socket.id);
                 console.log("startGame", this.roomKey);
-                console.log("startTimer", counter);
                 scene.scene.start("IntroductionScene", {
                     ...scene.state,
                     socket: scene.socket,
                     roomKey: this.roomKey,
-                    start: this.socket.id,
                     playerInfo: scene.state.players,
                 });
-            } else {
-                console.log("Not Enough Players!");
+            }
+            else if (scene.state.numPlayers < 4) {
                 scene.notEnoughPlayers = scene.add
-                    .text(400, 325, "Not Enough Players!", {
+                    .text(390, 325, "Not Enough Players!", {
                         fontFamily: "Chela One",
                         fontSize: 35,
-                        color: "#FF0000",
+                        color: "#FFFFFF",
                         fontStyle: "normal",
                         stroke: "#000000",
                         strokeThickness: 12,
                     })
                     .setOrigin(0.5)
                     .setPadding(0.0, 0.0, 0);
-                function notEnough() {
+
+                function notEnoughPlayers() {
                     scene.notEnoughPlayers.destroy();
                 }
+
                 this.time.addEvent({
-                    delay: 1000,
-                    callback: notEnough,
+                    delay: 2000,
+                    callback: notEnoughPlayers,
+                    callbackScope: this,
+                });
+            }
+
+            else if (scene.state.numPlayers > 4) {
+                scene.tooManyPlayers = scene.add
+                    .text(390, 325, "Too Many Players!", {
+                        fontFamily: "Chela One",
+                        fontSize: 35,
+                        color: "#FFFFFF",
+                        fontStyle: "normal",
+                        stroke: "#000000",
+                        strokeThickness: 12,
+                    })
+                    .setOrigin(0.5)
+                    .setPadding(0.0, 0.0, 0);
+
+                function tooManyPlayers() {
+                    scene.tooManyPlayers.destroy();
+                }
+
+                this.time.addEvent({
+                    delay: 2000,
+                    callback: tooManyPlayers,
                     callbackScope: this,
                 });
             }
@@ -277,8 +238,10 @@ export default class LobbyScene extends Phaser.Scene {
     update() {
         const scene = this;
         this.socket.on("disconnected", function (arg) {
-            const { playerId, numPlayers, roomInfo } = arg;
+            const { numPlayers, roomInfo } = arg;
             scene.numPlayers = numPlayers;
+            console.log("numPlayers", numPlayers);
+            // destroy all players before adding the updated ones
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
                 otherPlayer.destroy();
             });
@@ -288,7 +251,7 @@ export default class LobbyScene extends Phaser.Scene {
             scene.playerNames.getChildren().forEach(function (curr) {
                 curr.destroy();
             });
-
+            // redo circles
             scene.circle.fillStyle(0xe8ded1, 1);
             scene.circle.fillCircle(125, 200, 50);
 
@@ -304,6 +267,7 @@ export default class LobbyScene extends Phaser.Scene {
             scene.circle.fillStyle(0xe8ded1, 1);
             scene.circle.fillCircle(650, 200, 50);
 
+            //add all current players
             const players = roomInfo.players;
             Object.keys(players).forEach(function (id) {
                 if (players[id].playerId === scene.socket.id) {
@@ -314,6 +278,9 @@ export default class LobbyScene extends Phaser.Scene {
             });
         });
     } // end of update()
+
+    //-------------------------- Add Players Functions -----------------------------
+
 
     addPlayer(scene, playerInfo) {
         scene.joined = true;

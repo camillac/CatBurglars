@@ -2,15 +2,11 @@ export default class FirstTask_Instruction extends Phaser.Scene {
     constructor() {
         super("FirstTask_Instruction");
         this.state = {};
-        this.hasBeenSet = false;
     }
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
-        this.playerNum = data.playerNum;
-        console.log(this.socket.id);
-        this.players = data.players;
-        this.playerInfo = data.playerInfo; 
+        this.playerInfo = data.playerInfo;
     }
 
     preload() {
@@ -23,10 +19,9 @@ export default class FirstTask_Instruction extends Phaser.Scene {
 
     create() {
         const scene = this;
+        // background
         const background = this.add.image(400, 300, "Background");
         background.setScale(2);
-        //background.setScale(1);
-        // const scroll = this.add.image(400,300,"Scroll");
         var sky = this.add.image(400, 350, "Sky");
         sky.setScale(4.0);
 
@@ -54,9 +49,9 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             repeat: -1, //Infinity Times
             yoyo: false,
         });
+
         //Fade in Effect for the Instruction
         this.cameras.main.fadeIn(5000, 0, 0, 0, instructions);
-
         var instructions = scene.add
             .text(
                 400,
@@ -79,6 +74,8 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         // });
         // });
 
+        // destroy instructions when finished
+
         function destroyInstructions() {
             instructions.destroy();
         }
@@ -94,13 +91,15 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             callbackScope: this,
         });
 
+        // Showing player instructions
+
         function playerInstruction() {
+            // if you are player 1
             if (this.playerInfo[scene.socket.id].playerNum === 1) {
                 this.cameras.main.fadeOut(5000, 0, 0, 0);
                 this.cameras.main.once(
                     Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
-                    (cam, effect) => {
-                        console.log(scene.socket.id);
+                    () => {
                         scene.scene.start("FirstTask", {
                             ...scene.state,
                             socket: scene.socket,
@@ -161,5 +160,5 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             }
         }
     }
-    update() {}
+    update() { }
 }
