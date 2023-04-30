@@ -28,14 +28,6 @@ class Game extends Phaser.Game {
         this.scene.add("WinningScene", WinningScene);
 
         this.scene.start("MainScene");
-        // this.events.off("hidden", this.onHidden, this, true);
-        // this.events.off("visible", this.onVisible, this, true);
-        this.events.on('hidden',function(){
-            console.log('hidden');
-            this.scene.resume(); 
-        },this);
-        // this.stage.disableVisibilityChange = true;
-       
     }
 }
 

@@ -22,9 +22,6 @@ export default {
     dom: {
         createContainer: true,
     },
-    // stage: {
-    //     disableVisibilityChange : true,
-    // },
     autoFocus: true,
     scene: [],
 };

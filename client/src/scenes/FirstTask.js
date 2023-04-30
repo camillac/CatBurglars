@@ -44,6 +44,7 @@ export default class FirstTask extends Phaser.Scene {
         if (scene.socket.id == this.start) {
             scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
         }
+
         // Sidebar Set Up
         let sidebar = new Sidebar(
             scene,
