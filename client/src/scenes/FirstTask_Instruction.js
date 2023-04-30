@@ -6,6 +6,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
+        this.playerName = data.playerName;
         this.playerInfo = data.playerInfo;
     }
 
@@ -19,7 +20,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
 
     create() {
         const scene = this;
-        // background 
+        // background
         const background = this.add.image(400, 300, "Background");
         background.setScale(2);
         var sky = this.add.image(400, 350, "Sky");
@@ -74,7 +75,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         // });
         // });
 
-        // destroy instructions when finished 
+        // destroy instructions when finished
 
         function destroyInstructions() {
             instructions.destroy();
@@ -91,10 +92,10 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             callbackScope: this,
         });
 
-        // Showing player instructions 
+        // Showing player instructions
 
         function playerInstruction() {
-            // if you are player 1 
+            // if you are player 1
             if (this.playerInfo[scene.socket.id].playerNum === 1) {
                 this.cameras.main.fadeOut(5000, 0, 0, 0);
                 this.cameras.main.once(
@@ -104,7 +105,8 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                             ...scene.state,
                             socket: scene.socket,
                             roomKey: this.roomKey,
-                            start: scene.socket.id
+                            playerName: this.playerName,
+                            start: scene.socket.id,
                         });
                     }
                 );
@@ -130,12 +132,15 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                             ...scene.state,
                             socket: scene.socket,
                             roomKey: this.roomKey,
-                            start: ""
+                            playerName: this.playerName,
+                            start: "",
                         });
                     }
                 );
 
-                otherPlayerInstruction(this.playerInfo[scene.socket.id].playerNum);
+                otherPlayerInstruction(
+                    this.playerInfo[scene.socket.id].playerNum
+                );
             }
 
             function otherPlayerInstruction(
@@ -160,5 +165,5 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             }
         }
     }
-    update() { }
+    update() {}
 }

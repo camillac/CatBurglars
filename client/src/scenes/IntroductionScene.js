@@ -6,6 +6,8 @@ export default class IntroductionScene extends Phaser.Scene {
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
+        this.playerName = data.playerName;
+        console.log("hello" + this.playerName);
         this.playerInfo = data.playerInfo;
     }
     preload() {
@@ -85,7 +87,8 @@ export default class IntroductionScene extends Phaser.Scene {
                     ...scene.state,
                     socket: scene.socket,
                     roomKey: this.roomKey,
-                    playerInfo: this.playerInfo
+                    playerName: this.playerName,
+                    playerInfo: this.playerInfo,
                 });
             },
         });

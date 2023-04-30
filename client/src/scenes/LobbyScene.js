@@ -32,11 +32,11 @@ export default class LobbyScene extends Phaser.Scene {
         const scene = this;
 
         scene.socket.emit("joinRoom", this.roomKey, this.playerName);
-        // set background 
+        // set background
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
 
-        //set Variables 
+        //set Variables
         console.log("Room Key " + this.roomKey);
         this.currentPlayer = this.physics.add.group();
         this.otherPlayers = this.physics.add.group();
@@ -81,6 +81,7 @@ export default class LobbyScene extends Phaser.Scene {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: roomKey,
+                playerName: this.playerName,
                 playerInfo: scene.state.players,
             });
         });
@@ -229,6 +230,7 @@ export default class LobbyScene extends Phaser.Scene {
                     ...scene.state,
                     socket: scene.socket,
                     roomKey: this.roomKey,
+                    playerName: this.playerName,
                     playerInfo: scene.state.players,
                 });
             } else {
@@ -284,7 +286,7 @@ export default class LobbyScene extends Phaser.Scene {
                 curr.destroy();
             });
 
-            // redo circles 
+            // redo circles
             scene.circle.fillStyle(0xe8ded1, 1);
             scene.circle.fillCircle(125, 200, 50);
 
@@ -300,7 +302,7 @@ export default class LobbyScene extends Phaser.Scene {
             scene.circle.fillStyle(0xe8ded1, 1);
             scene.circle.fillCircle(650, 200, 50);
 
-            //add all current players 
+            //add all current players
             const players = roomInfo.players;
             Object.keys(players).forEach(function (id) {
                 if (players[id].playerId === scene.socket.id) {
@@ -313,7 +315,6 @@ export default class LobbyScene extends Phaser.Scene {
     } // end of update()
 
     //-------------------------- Add Players Functions -----------------------------
-
 
     addPlayer(scene, playerInfo) {
         scene.joined = true;
