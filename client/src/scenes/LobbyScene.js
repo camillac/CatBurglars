@@ -84,6 +84,7 @@ export default class LobbyScene extends Phaser.Scene {
                 roomKey: roomKey,
                 playerName: this.playerName,
                 playerInfo: scene.state.players,
+                hostPlayer: scene.state.hostPlayer
             });
         });
 
@@ -224,7 +225,7 @@ export default class LobbyScene extends Phaser.Scene {
 
         // Start Game button events
         startGame.on("pointerup", () => {
-            // if (scene.state.numPlayers == 4) {
+            if (scene.state.numPlayers == 4) {
                 scene.socket.emit("startGame", this.roomKey, this.socket.id);
                 console.log("startGame", this.roomKey);
                 scene.scene.start("IntroductionScene", {
@@ -233,30 +234,30 @@ export default class LobbyScene extends Phaser.Scene {
                     roomKey: this.roomKey,
                     playerName: this.playerName,
                     playerInfo: scene.state.players,
-                    hostPlyaer: scene.state.hostPlayer
+                    hostPlayer: scene.state.hostPlayer
                 });
-            // } else {
-            //     console.log("Not Enough Players!");
-            //     scene.notEnoughPlayers = scene.add
-            //         .text(400, 325, "Not Enough Players!", {
-            //             fontFamily: "Chela One",
-            //             fontSize: 35,
-            //             color: "#FF0000",
-            //             fontStyle: "normal",
-            //             stroke: "#000000",
-            //             strokeThickness: 12,
-            //         })
-            //         .setOrigin(0.5)
-            //         .setPadding(0.0, 0.0, 0);
-            //     function notEnough() {
-            //         scene.notEnoughPlayers.destroy();
-            //     }
-            //     this.time.addEvent({
-            //         delay: 1000,
-            //         callback: notEnough,
-            //         callbackScope: this,
-            //     });
-            // }
+            } else {
+                console.log("Not Enough Players!");
+                scene.notEnoughPlayers = scene.add
+                    .text(400, 325, "Not Enough Players!", {
+                        fontFamily: "Chela One",
+                        fontSize: 35,
+                        color: "#FF0000",
+                        fontStyle: "normal",
+                        stroke: "#000000",
+                        strokeThickness: 12,
+                    })
+                    .setOrigin(0.5)
+                    .setPadding(0.0, 0.0, 0);
+                function notEnough() {
+                    scene.notEnoughPlayers.destroy();
+                }
+                this.time.addEvent({
+                    delay: 1000,
+                    callback: notEnough,
+                    callbackScope: this,
+                });
+            }
         });
 
         startGame.on("pointerover", () => {

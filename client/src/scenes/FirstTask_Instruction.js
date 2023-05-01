@@ -140,7 +140,6 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                 playerNum
             ) {
                 //Fade out after the Instruction
-                // playerOneUsername is not used for now, will implement when we merge with the username branch
                 var playerInfo = scene.add
                     .text(
                         400,
