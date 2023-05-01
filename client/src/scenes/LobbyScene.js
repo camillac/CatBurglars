@@ -88,16 +88,6 @@ export default class LobbyScene extends Phaser.Scene {
             });
         });
 
-        // DISCONNECT
-        this.socket.on("disconnected", function (arg) {
-            const { playerId, numPlayers } = arg;
-            scene.state.numPlayers = numPlayers;
-            scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-                if (playerId === otherPlayer.playerId) {
-                    otherPlayer.destroy();
-                }
-            });
-        });
 
         //Players Circle
         scene.boxes = scene.add.graphics();
@@ -271,54 +261,12 @@ export default class LobbyScene extends Phaser.Scene {
                 color: "#FFFBF4",
             });
         });
+        // DISCONNECT
+        this.socket.on("disconnected",  (arg) => {
+            this.scene.restart(); // restart current scene
+        });
     }
 
-    update() {
-        const scene = this;
-        this.socket.on("disconnected", function (arg) {
-            const { playerId, numPlayers, roomInfo, hostPlayer } = arg;
-            
-            scene.numPlayers = numPlayers;
-            scene.hostPlayer = hostPlayer;
-
-            // destroy all players before adding the updated ones
-            scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-                otherPlayer.destroy();
-            });
-            scene.currentPlayer.getChildren().forEach(function (curr) {
-                curr.destroy();
-            });
-            scene.playerNames.getChildren().forEach(function (curr) {
-                curr.destroy();
-            });
-
-            // redo circles
-            scene.circle.fillStyle(0xe8ded1, 1);
-            scene.circle.fillCircle(125, 200, 50);
-
-            // Player 2
-            scene.circle.fillStyle(0xe8ded1, 1);
-            scene.circle.fillCircle(300, 200, 50);
-
-            // Player 3
-            scene.circle.fillStyle(0xe8ded1, 1);
-            scene.circle.fillCircle(475, 200, 50);
-
-            // Player 4
-            scene.circle.fillStyle(0xe8ded1, 1);
-            scene.circle.fillCircle(650, 200, 50);
-
-            //add all current players
-            const players = roomInfo.players;
-            Object.keys(players).forEach(function (id) {
-                if (players[id].playerId === scene.socket.id) {
-                    scene.addPlayer(scene, players[id]);
-                } else {
-                    scene.addOtherPlayers(scene, players[id]);
-                }
-            });
-        });
-    } // end of update()
 
     //-------------------------- Add Players Functions -----------------------------
 
