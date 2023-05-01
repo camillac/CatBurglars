@@ -7,6 +7,7 @@ export default class IntroductionScene extends Phaser.Scene {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
         this.playerInfo = data.playerInfo;
+        this.hostPlayer = data.hostPlayer;
     }
     preload() {
         this.load.image("House", "client/assets/sprites/House_1.png"); //Need to Update this
@@ -85,7 +86,8 @@ export default class IntroductionScene extends Phaser.Scene {
                     ...scene.state,
                     socket: scene.socket,
                     roomKey: this.roomKey,
-                    playerInfo: this.playerInfo
+                    playerInfo: this.playerInfo,
+                    hostPlayer: this.hostPlayer
                 });
             },
         });

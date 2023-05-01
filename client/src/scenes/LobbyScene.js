@@ -44,13 +44,14 @@ export default class LobbyScene extends Phaser.Scene {
 
         // JOINED ROOM - SET STATE
         this.socket.on("setState", function (state) {
-            const { roomKey, players, numPlayers } = state;
+            const { roomKey, players, numPlayers, hostPlayer } = state;
             scene.physics.resume();
 
             // STATE
             scene.state.roomKey = roomKey;
             scene.state.players = players;
             scene.state.numPlayers = numPlayers;
+            scene.state.hostPlayer = hostPlayer;
         });
 
         // PLAYERS
@@ -222,7 +223,7 @@ export default class LobbyScene extends Phaser.Scene {
 
         // Start Game button events
         startGame.on("pointerup", () => {
-            if (scene.state.numPlayers == 4) {
+            // if (scene.state.numPlayers == 4) {
                 scene.socket.emit("startGame", this.roomKey, this.socket.id);
                 console.log("startGame", this.roomKey);
                 scene.scene.start("IntroductionScene", {
@@ -230,29 +231,30 @@ export default class LobbyScene extends Phaser.Scene {
                     socket: scene.socket,
                     roomKey: this.roomKey,
                     playerInfo: scene.state.players,
+                    hostPlyaer: scene.state.hostPlayer
                 });
-            } else {
-                console.log("Not Enough Players!");
-                scene.notEnoughPlayers = scene.add
-                    .text(400, 325, "Not Enough Players!", {
-                        fontFamily: "Chela One",
-                        fontSize: 35,
-                        color: "#FF0000",
-                        fontStyle: "normal",
-                        stroke: "#000000",
-                        strokeThickness: 12,
-                    })
-                    .setOrigin(0.5)
-                    .setPadding(0.0, 0.0, 0);
-                function notEnough() {
-                    scene.notEnoughPlayers.destroy();
-                }
-                this.time.addEvent({
-                    delay: 1000,
-                    callback: notEnough,
-                    callbackScope: this,
-                });
-            }
+            // } else {
+            //     console.log("Not Enough Players!");
+            //     scene.notEnoughPlayers = scene.add
+            //         .text(400, 325, "Not Enough Players!", {
+            //             fontFamily: "Chela One",
+            //             fontSize: 35,
+            //             color: "#FF0000",
+            //             fontStyle: "normal",
+            //             stroke: "#000000",
+            //             strokeThickness: 12,
+            //         })
+            //         .setOrigin(0.5)
+            //         .setPadding(0.0, 0.0, 0);
+            //     function notEnough() {
+            //         scene.notEnoughPlayers.destroy();
+            //     }
+            //     this.time.addEvent({
+            //         delay: 1000,
+            //         callback: notEnough,
+            //         callbackScope: this,
+            //     });
+            // }
         });
 
         startGame.on("pointerover", () => {
@@ -271,8 +273,11 @@ export default class LobbyScene extends Phaser.Scene {
     update() {
         const scene = this;
         this.socket.on("disconnected", function (arg) {
-            const { playerId, numPlayers, roomInfo } = arg;
+            const { playerId, numPlayers, roomInfo, hostPlayer } = arg;
+            
             scene.numPlayers = numPlayers;
+            scene.hostPlayer = hostPlayer;
+
             // destroy all players before adding the updated ones
             scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
                 otherPlayer.destroy();

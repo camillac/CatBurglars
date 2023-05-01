@@ -20,6 +20,7 @@ module.exports = (io) => {
                 roomKey: key,
                 players: {},
                 numPlayers: 0,
+                hostPlayer: "",
             };
             console.log("ROOM CREATED - ROOM KEY: " + key);
             socket.emit("roomCreated", key, name);
@@ -39,9 +40,13 @@ module.exports = (io) => {
                 roomInfo.players
             ).length;
 
+            if (roomInfo.players[socket.id].playerNum === 1) {
+                roomInfo.hostPlayer = roomInfo.players[socket.id].playerName;
+            }
+
             // Update number of players
             roomInfo.numPlayers = Object.keys(roomInfo.players).length;
-            console.log("JOIN ROOM ");
+            console.log("JOIN ROOM");
 
             // Set initial state
             socket.emit("setState", roomInfo);
@@ -100,6 +105,11 @@ module.exports = (io) => {
                     if (roomInfo.players[playerId].playerNum > deletedNum) {
                         roomInfo.players[playerId].playerNum =
                             roomInfo.players[playerId].playerNum - 1;
+
+                        // if host disconnected, reset hostPlayer name
+                        if (roomInfo.players[playerId].playerNum === 1) {
+                            roomInfo.hostPlayer = roomInfo.players[playerId].playerName;
+                        }
                     }
                 }
 
@@ -114,10 +124,12 @@ module.exports = (io) => {
                     playerId: socket.id,
                     numPlayers: roomInfo.numPlayers,
                     roomInfo: roomInfo,
+                    hostPlayer: roomInfo.hostPlayer
                 });
 
                 console.log("Room Info AFTER Removing Player");
                 console.log(roomInfo);
+                console.log("HOST PLAYER: ", roomInfo.hostPlayer);
             }
         });
 

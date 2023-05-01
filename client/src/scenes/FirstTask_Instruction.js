@@ -4,9 +4,11 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         this.state = {};
     }
     init(data) {
+        this.data = data;
         this.socket = data.socket;
         this.roomKey = data.roomKey;
         this.playerInfo = data.playerInfo;
+        this.hostPlayer = data.hostPlayer;
     }
 
     preload() {
@@ -66,16 +68,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             )
             .setOrigin(0.5);
 
-        // i commented this out just b/c we need to factor in the second instruction scene before the fade
-        // this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, (cam, effect) =>
-        // {  this.cameras.main.fadeOut(10000,0,0,0);
-        // this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-        //     this.scene.start('FirstTask');
-        // });
-        // });
-
         // destroy instructions when finished 
-
         function destroyInstructions() {
             instructions.destroy();
         }
@@ -112,7 +105,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                     .text(
                         400,
                         300,
-                        `You are Player 1.\nCommunicate with your team\nto figure out the correct\nthree keys in the\ncorrect order!`,
+                        `You are Player 1.\nCommunicate with your team\nto figure out the correct\nthree keys!`,
                         {
                             fontFamily: "Chela One",
                             fontSize: 60,
@@ -139,8 +132,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             }
 
             function otherPlayerInstruction(
-                playerNum,
-                playerOneUsername = "Player 1"
+                playerNum
             ) {
                 //Fade out after the Instruction
                 // playerOneUsername is not used for now, will implement when we merge with the username branch
@@ -148,7 +140,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                     .text(
                         400,
                         300,
-                        `You are Player ${playerNum}.\nDescribe your key to\n${playerOneUsername}\nand pay attention to which\nnumber your key is!`,
+                        `You are Player ${playerNum}.\nDescribe your key to\n${scene.hostPlayer}\nand pay attention to which\nnumber your key is!`,
                         {
                             fontFamily: "Chela One",
                             fontSize: 60,
