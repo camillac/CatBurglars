@@ -8,7 +8,12 @@ export default class FirstTask extends Phaser.Scene {
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
-        this.start = data.start
+        this.playerNum = data.playerNum;
+        this.playerName = data.playerName;
+        // console.log(this.socket.id);
+        console.log(this.playerName);
+        this.players = data.players;
+        this.start = data.start;
     }
     preload() {
         //load cats/players
@@ -24,7 +29,10 @@ export default class FirstTask extends Phaser.Scene {
         this.load.image("key5Image", "client/assets/sprites/key5.png");
         this.load.image("key6Image", "client/assets/sprites/key6.png");
         this.load.image("correctImage", "client/assets/sprites/correct.png");
-        this.load.image("incorrectImage", "client/assets/sprites/incorrect.png");
+        this.load.image(
+            "incorrectImage",
+            "client/assets/sprites/incorrect.png"
+        );
 
         //load background
         this.scene.run("FirstTask");
@@ -54,21 +62,38 @@ export default class FirstTask extends Phaser.Scene {
             scene.socket
         );
 
-        //start the Timer for eveybody 
+        // DISCONNECT
+        this.socket.on("backToLobby", function (arg) {
+            console.log("LOBBYSCENE");
+            const { roomKey } = arg;
+
+            scene.scene.start("LobbyScene", {
+                ...scene.state,
+                socket: scene.socket,
+                roomKey: roomKey,
+                playerName: this.playerName,
+            });
+        });
+
         this.socket.on("startTimerEX", function (arg) {
             const { roomKey, counter } = arg;
             scene.socket.emit("startTimer", roomKey, counter);
         });
 
         // wait for other players until everybody syncs
-        scene.waiting = scene.add.text(290, 30, "Waiting for other players.. ", {
-            fontFamily: "Chela One",
-            fontSize: 45,
-            color: "#FFFFFF",
-            fontStyle: "normal",
-            stroke: "#000000",
-            strokeThickness: 12,
-        });
+        scene.waiting = scene.add.text(
+            290,
+            30,
+            "Waiting for other players.. ",
+            {
+                fontFamily: "Chela One",
+                fontSize: 45,
+                color: "#FFFFFF",
+                fontStyle: "normal",
+                stroke: "#000000",
+                strokeThickness: 12,
+            }
+        );
 
         // Main Player Display
         this.socket.on("displayMainTaskOne", function (arg) {
@@ -179,10 +204,9 @@ export default class FirstTask extends Phaser.Scene {
             key_6.on("pointerout", () => {
                 key_6.setAlpha(1);
             });
-
         });
 
-        // Side Task Display 
+        // Side Task Display
         this.socket.on("displaySideTaskOne", function (arg) {
             scene.waiting.destroy();
             console.log("displaySideTaskOne");
@@ -200,28 +224,31 @@ export default class FirstTask extends Phaser.Scene {
             });
         });
 
-        // timer text connected with socket 
-        var timer = scene.add
-            .text(750, 550, "", {
-                fontFamily: "Chela One",
-                fontSize: 40,
-                color: "black",
-                align: "center",
-            });
+        // timer text connected with socket
+        var timer = scene.add.text(750, 550, "", {
+            fontFamily: "Chela One",
+            fontSize: 40,
+            color: "black",
+            align: "center",
+        });
         this.socket.on("counter", function (counter) {
             timer.text = counter;
         });
 
-        // win condition 
-        this.socket.on('win', function (roomKey) {
+        this.socket.on("endGame", function (newKey) {
+            scene.socket.emit("stopTimer", newKey);
+        });
+
+        this.socket.on("win", function (roomKey) {
             console.log("Won!");
             scene.scene.start("WinningScene", {
                 ...scene.state,
                 socket: scene.socket,
-            })
-        })
+                roomKey: scene.roomKey,
+            });
+        });
 
-        // lost condition 
+        // lost condition
         this.socket.on("lost", function (roomKey) {
             console.log("Lost!");
             scene.scene.start("LostScene", {
@@ -232,6 +259,15 @@ export default class FirstTask extends Phaser.Scene {
     }
 
     update() {
+        // this.socket.on("disconnected", function (arg) {
+        //     console.log("LOBBYSCENE");
+        //     scene.scene.start("LobbyScene", {
+        //         ...scene.state,
+        //         socket: scene.socket,
+        //         roomKey: roomKey,
+        //         playerName: this.playerName,
+        //     });
+        // });
     }
 
     // Check if the Key selected is correct/incorrect
@@ -250,15 +286,14 @@ export default class FirstTask extends Phaser.Scene {
                 callback: incorr,
                 callbackScope: this,
             });
-        }
-        else {
+        } else {
             // the key is correct
             if (scene.alreadyClickedKeys.length == 0) {
                 scene.correct++;
                 scene.alreadyClickedKeys.push(currentKey);
             }
             var hasNot = true; // check if the key has not been clicked
-            scene.alreadyClickedKeys.forEach(element => {
+            scene.alreadyClickedKeys.forEach((element) => {
                 if (element == currentKey) {
                     hasNot = false;
                 }
@@ -270,7 +305,7 @@ export default class FirstTask extends Phaser.Scene {
 
             var correctImage = scene.add.sprite(200, 300, "correctImage");
             correctImage.setScale(1).setPosition(posX, posY);
-            // destory the correct image 
+            // destory the correct image
             function corr() {
                 correctImage.destroy();
             }
@@ -280,7 +315,59 @@ export default class FirstTask extends Phaser.Scene {
                 callbackScope: this,
             });
             console.log(scene.correct);
-            // All 3 correct keys are pressed 
+            // All 3 correct keys are pressed
+            if (scene.correct === 3) {
+                scene.socket.emit("showWinScene");
+            }
+        }
+    }
+
+    // Check if the Key selected is correct/incorrect
+    isCorrectKey(scene, currentKey, key1, key2, key3, posX, posY) {
+        // if the key is incorrect
+        if (!(key1 == currentKey || key2 == currentKey || key3 == currentKey)) {
+            scene.socket.emit("decreaseCounter");
+            var incorrect = scene.add.sprite(200, 300, "incorrectImage");
+            incorrect.setScale(1).setPosition(posX, posY);
+            // destroy the incorrect image
+            function incorr() {
+                incorrect.destroy();
+            }
+            scene.time.addEvent({
+                delay: 200,
+                callback: incorr,
+                callbackScope: this,
+            });
+        } else {
+            // the key is correct
+            if (scene.alreadyClickedKeys.length == 0) {
+                scene.correct++;
+                scene.alreadyClickedKeys.push(currentKey);
+            }
+            var hasNot = true; // check if the key has not been clicked
+            scene.alreadyClickedKeys.forEach((element) => {
+                if (element == currentKey) {
+                    hasNot = false;
+                }
+            });
+            if (hasNot) {
+                scene.correct++;
+                scene.alreadyClickedKeys.push(currentKey);
+            }
+
+            var correctImage = scene.add.sprite(200, 300, "correctImage");
+            correctImage.setScale(1).setPosition(posX, posY);
+            // destory the correct image
+            function corr() {
+                correctImage.destroy();
+            }
+            scene.time.addEvent({
+                delay: 200,
+                callback: corr,
+                callbackScope: this,
+            });
+            console.log(scene.correct);
+            // All 3 correct keys are pressed
             if (scene.correct === 3) {
                 scene.socket.emit("showWinScene");
             }
