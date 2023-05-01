@@ -9,7 +9,7 @@ export default class IntroductionScene extends Phaser.Scene {
         this.playerInfo = data.playerInfo;
     }
     preload() {
-        this.load.image("House", "client/assets/sprites/House_1.png"); //Need to Update this
+        this.load.image("House", "client/assets/sprites/House.png"); //Need to Update this
         this.load.image("Sky", "client/assets/sprites/Sky.png");
         this.load.image("settings", "client/assets/sprites/settings_icon.png");
         this.load.image("Door", "client/assets/sprites/oor.png");
@@ -34,11 +34,10 @@ export default class IntroductionScene extends Phaser.Scene {
         const scene = this;
         this.cameras.main.fadeIn(1000, 0, 0, 0);
 
-        const background = this.add.image(400, 300, "background");
-        background.setScale(2.0);
+       
         var sky = this.add.image(400, 300, "Sky");
         sky.setScale(4.0);
-
+    
         //---------------------------- Moving Clouds--------------------------------
         var Clouds_bg1 = this.add.tileSprite(
             400,
@@ -47,6 +46,8 @@ export default class IntroductionScene extends Phaser.Scene {
             600,
             "Clouds_small"
         );
+
+        //MOVING CLOUDS
         var Clouds_bg2 = this.add.tileSprite(400, 100, 800, 600, "big_clouds");
         scene.tweens.add({
             targets: Clouds_bg1,
@@ -64,11 +65,13 @@ export default class IntroductionScene extends Phaser.Scene {
             repeat: -1, //Infinity Times
             yoyo: false,
         });
-        //-------------------------Add Grass-----------------------
-        var Grass = this.add.sprite(300, 450, "Grass");
-        Grass.setScale(1.5);
-
+       
         //----------------------- House with Zoom In effect-----------------------
+        // House 
+
+        const background = this.add.image(400, 300, "House");
+        background.setScale(4.0);
+
         var House = this.add
             .image(450, 300, "House")
             .setOrigin(0.5)

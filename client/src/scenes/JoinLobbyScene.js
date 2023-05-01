@@ -15,6 +15,8 @@ export default class JoinLobbyScene extends Phaser.Scene {
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
         );
+
+        this.load.image("Button", "client/assets/sprites/Button.png");
     }
 
     create() {
@@ -28,54 +30,55 @@ export default class JoinLobbyScene extends Phaser.Scene {
 
         WebFont.load({
             google: {
-                families: ["Chela One"],
+                families: ["Black Ops One"],
             },
             active: function () {
                 // Title
-                add.text(125, 110, "Cat", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
-                    color: "#F8F0C6",
+                add.text(15, 110, "Cat", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 95,
+                    color: "#f1c582",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
-                add.text(250, 110, "Burglars", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
-                    color: "#C1A87D",
+                add.text(185, 110, "Burglars", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 95,
+                    color: "#f1c582",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
-                add.text(565, 110, ".io", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
-                    color: "#EEBA6B",
+                add.text(655, 110, ".io", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 95,
+                    color: "#f1c582",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 9,
                 });
-
+        
                 // Back button
-                const backButton = add
-                    .text(50, 30, "Back", {
-                        fontFamily: "Chela One",
-                        fontSize: 20,
+                  
+                const backButton = add.text(60, 25, "Back", {
+                        fontFamily: "Black Ops One",
+                        fontSize: 25,
                         color: "#FFFBF4",
                         fontStyle: "normal",
                         stroke: "#000000",
-                        strokeThickness: 12,
+                        strokeThickness: 8,
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
+        
                 scene.notValidText = scene.add
                     .text(400, 300, "", {
                         fill: "#ff0000",
                         fontSize: "35px",
-                        fontFamily: "Chela One",
+                        fontFamily: "Black Ops One",
                         fontStyle: "normal",
-                        strokeThickness: 12,
+                        strokeThickness: 8,
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);

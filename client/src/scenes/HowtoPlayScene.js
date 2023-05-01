@@ -12,24 +12,27 @@ export default class HowtoPlayScene extends Phaser.Scene {
         );
 
         this.load.image(
-            "background",
-            "client/assets/backgrounds/blob-scene-haikei (6).png"
+            "Uncolored_plain",
+            "client/assets/sprites/uncolored_plain.png"
         );
+        
     }
 
     create() {
         const scene = this;
         var box = scene.add.group();
 
-        const background = this.add.image(400, 300, "background");
+        const background = this.add.image(400, 300, "Uncolored_plain");
         background.setScale(2.0);
 
         // Title
         var title = scene.add
-            .text(400, 150, "How To Play", {
-                fontFamily: "Chela One",
+            .text(400, 100, "How To Play", {
+                fontFamily: "Black Ops One",
                 fontSize: 60,
-                color: "#C1A87D",
+                color: "#FFFFFF",
+                stroke: "#1E5162",
+                strokeThickness:4,
                 align: "center",
             })
             .setOrigin(0.5)
@@ -40,25 +43,27 @@ export default class HowtoPlayScene extends Phaser.Scene {
             .text(
                 400,
                 300,
-                "Communicate and work together to steal a \nfresh supply of fish before the owners get home!\nUse your mouse to navigate and communicate with \nyour team to complete tasks and win.",
+                "Communicate and work together to\nsteal a fresh supply of fish before\nthe owners get home! \nUse your mouse to navigate and\ncommunicate with your team to \nccomplete tasks and win.",
                 {
-                    fontFamily: "Chela One",
+                    fontFamily: "Black Ops One",
                     fontSize: 40,
-                    color: "#C1A87D",
+                    color: "#1E5162",
                     align: "center",
+                    stroke: "#ffffff",
+                    strokeThickness:4,
                 }
             )
             .setOrigin(0.5);
 
         // Close Button
         var closeButton = scene.add
-            .text(400, 450, "Close", {
-                fontFamily: "Chela One",
+            .text(400, 500, "Close", {
+                fontFamily: "Black Ops One",
                 fontSize: 45,
                 color: "#FFFFFF",
                 fontStyle: "normal",
-                stroke: "#000000",
-                strokeThickness: 12,
+                stroke: "#1E5162",
+                strokeThickness: 4,
             })
             .setOrigin(0.5)
             .setPadding(10, 10, 10, 10)
