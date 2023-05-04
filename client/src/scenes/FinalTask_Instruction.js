@@ -7,7 +7,8 @@ export default class FinalTask_Instruction extends Phaser.Scene {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
         this.playerName = data.playerName;
-        this.playerInfo = data.playerInfo;
+        this.players = data.players;
+        this.playerNum = data.playerNum;
     }
 
     preload() {
@@ -57,10 +58,9 @@ export default class FinalTask_Instruction extends Phaser.Scene {
         });
 
         // Showing player instructions
-
         function playerInstruction() {
             // if you are player 1
-            if (this.playerInfo[scene.socket.id].playerNum === 1) {
+            if (this.playerNum === 1) {
                 this.cameras.main.fadeOut(5000, 0, 0, 0);
                 this.cameras.main.once(
                     Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
@@ -70,23 +70,14 @@ export default class FinalTask_Instruction extends Phaser.Scene {
                             socket: scene.socket,
                             roomKey: this.roomKey,
                             playerName: this.playerName,
-                            start: scene.socket.id,
+                            playerNum: this.playerNum,
+                            start: this.socket.id,
                         });
                     }
                 );
-                var playerInfo = scene.add
-                    .text(
-                        400,
-                        300,
-                        `You are Player 1.\nCommunicate with your team\nto figure out the correct\nthree keys in the\ncorrect order!`,
-                        {
-                            fontFamily: "Chela One",
-                            fontSize: 60,
-                            color: "#000000",
-                            align: "center",
-                        }
-                    )
-                    .setOrigin(0.5);
+
+                displayInstructions();
+
             } else {
                 this.cameras.main.fadeOut(5000, 0, 0, 0);
                 this.cameras.main.once(
@@ -97,35 +88,29 @@ export default class FinalTask_Instruction extends Phaser.Scene {
                             socket: scene.socket,
                             roomKey: this.roomKey,
                             playerName: this.playerName,
+                            playerNum: this.playerNum,
                             start: "",
                         });
                     }
                 );
 
-                otherPlayerInstruction(
-                    this.playerInfo[scene.socket.id].playerNum
-                );
+                displayInstructions();
             }
 
-            function otherPlayerInstruction(
-                playerNum,
-                playerOneUsername = "Player 1"
-            ) {
-                //Fade out after the Instruction
-                // playerOneUsername is not used for now, will implement when we merge with the username branch
-                var playerInfo = scene.add
-                    .text(
-                        400,
-                        300,
-                        `You are Player ${playerNum}.\nDescribe your key to\n${playerOneUsername}\nand pay attention to which\nnumber your key is!`,
-                        {
-                            fontFamily: "Chela One",
-                            fontSize: 60,
-                            color: "#000000",
-                            align: "center",
-                        }
-                    )
-                    .setOrigin(0.5);
+            function displayInstructions() {
+            var playerInfo = scene.add
+            .text(
+                400,
+                300,
+                `Catch as many fish\nas you can before\ntime runs out!`,
+                {
+                    fontFamily: "Chela One",
+                    fontSize: 60,
+                    color: "#000000",
+                    align: "center",
+                }
+            )
+            .setOrigin(0.5);
             }
         }
     }

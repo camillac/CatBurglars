@@ -8,6 +8,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         this.roomKey = data.roomKey;
         this.playerName = data.playerName;
         this.playerInfo = data.playerInfo;
+        this.playerNum = data.playerNum;
     }
 
     preload() {
@@ -106,6 +107,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                             socket: scene.socket,
                             roomKey: this.roomKey,
                             playerName: this.playerName,
+                            playerNum: this.playerNum,
                             start: scene.socket.id,
                         });
                     }
@@ -133,6 +135,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                             socket: scene.socket,
                             roomKey: this.roomKey,
                             playerName: this.playerName,
+                            playerNum: this.playerNum,
                             start: "",
                         });
                     }
