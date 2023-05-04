@@ -239,9 +239,9 @@ export default class FirstTask extends Phaser.Scene {
             scene.socket.emit("stopTimer", newKey);
         });
 
-        this.socket.on("win", function (roomKey) {
-            console.log("Won!");
-            scene.scene.start("WinningScene", {
+        this.socket.on("nextTask", function (roomKey) {
+            console.log("Finished Task 1, moving to Final Task!");
+            scene.scene.start("FinalTask_Instruction", {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: scene.roomKey,
@@ -317,7 +317,7 @@ export default class FirstTask extends Phaser.Scene {
             console.log(scene.correct);
             // All 3 correct keys are pressed
             if (scene.correct === 3) {
-                scene.socket.emit("showWinScene");
+                scene.socket.emit("endedTask");
             }
         }
     }
@@ -369,7 +369,7 @@ export default class FirstTask extends Phaser.Scene {
             console.log(scene.correct);
             // All 3 correct keys are pressed
             if (scene.correct === 3) {
-                scene.socket.emit("showWinScene");
+                scene.socket.emit("endedTask");
             }
         }
     }

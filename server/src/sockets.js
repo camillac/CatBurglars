@@ -186,6 +186,12 @@ module.exports = (io) => {
                 clearInterval(Countdown);
             });
 
+            socket.on("endedTask", function () {
+                console.log("counter destroyed, moving on to next task");
+                io.to(roomKey).emit("nextTask", roomKey);
+                clearInterval(Countdown);
+            })
+
             socket.on("stopTimer", function (newKey) {
                 clearInterval(Countdown);
                 io.to(roomKey).emit("backToLobby", {
