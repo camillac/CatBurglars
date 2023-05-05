@@ -4,7 +4,7 @@ export default {
     width: 800,
     height: 600,
     backgroundColor: "#FCFBF4",
-    disableVisibilityChange : true,
+    // disableVisibilityChange : true,
     render: {
         pixelArt: true,
     },
