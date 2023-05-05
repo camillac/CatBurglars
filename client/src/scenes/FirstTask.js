@@ -10,8 +10,6 @@ export default class FirstTask extends Phaser.Scene {
         this.roomKey = data.roomKey;
         this.playerNum = data.playerNum;
         this.playerName = data.playerName;
-        // console.log(this.socket.id);
-        console.log(this.playerName);
         this.players = data.players;
         this.start = data.start;
     }
@@ -98,7 +96,6 @@ export default class FirstTask extends Phaser.Scene {
         // Main Player Display
         this.socket.on("displayMainTaskOne", function (arg) {
             scene.waiting.destroy();
-            console.log("displayMainTaskOne");
             scene.add.text(290, 30, "Choose the right keys!", {
                 fontFamily: "Chela One",
                 fontSize: 45,
@@ -239,12 +236,15 @@ export default class FirstTask extends Phaser.Scene {
             scene.socket.emit("stopTimer", newKey);
         });
 
-        this.socket.on("win", function (roomKey) {
-            console.log("Won!");
-            scene.scene.start("WinningScene", {
+        this.socket.on("nextTask", function (roomKey) {
+            console.log("Finished Task 1, moving to Final Task!");
+            scene.scene.start("FinalTask_Instruction", {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: scene.roomKey,
+                playerName: scene.playerName,
+                playerInfo: scene.playerInfo,
+                playerNum: scene.playerNum
             });
         });
 
@@ -317,7 +317,7 @@ export default class FirstTask extends Phaser.Scene {
             console.log(scene.correct);
             // All 3 correct keys are pressed
             if (scene.correct === 3) {
-                scene.socket.emit("showWinScene");
+                scene.socket.emit("endedTask");
             }
         }
     }
@@ -369,7 +369,7 @@ export default class FirstTask extends Phaser.Scene {
             console.log(scene.correct);
             // All 3 correct keys are pressed
             if (scene.correct === 3) {
-                scene.socket.emit("showWinScene");
+                scene.socket.emit("endedTask");
             }
         }
     }

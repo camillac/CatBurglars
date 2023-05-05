@@ -186,6 +186,12 @@ module.exports = (io) => {
                 clearInterval(Countdown);
             });
 
+            socket.on("endedTask", function () {
+                console.log("counter destroyed, moving on to next task");
+                io.to(roomKey).emit("nextTask", roomKey);
+                clearInterval(Countdown);
+            })
+
             socket.on("stopTimer", function (newKey) {
                 clearInterval(Countdown);
                 io.to(roomKey).emit("backToLobby", {
@@ -255,6 +261,40 @@ module.exports = (io) => {
         });
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
+
+        // ************************************ FINAL TASK SCENE SOCKETS *********************************************
+        socket.on("startFinalTask", function (roomKey, mainPlayer) {
+           console.log("entered startFinalTask");
+            const roomInfo = gameRooms[roomKey];
+            for (playerId in roomInfo.players) {
+                console.log("playerID: ", playerId)
+                if (roomInfo.players[playerId].playerNum === mainPlayer) {
+                    console.log("entered mainPlayer");
+                    const counter = 30;
+                    io.to(roomInfo.players[playerId].playerId).emit(
+                        "startTimerEX",
+                        { roomKey, counter }
+                    );
+                    io.to(roomInfo.players[playerId].playerId).emit(
+                        "displayMainFinal",
+                        {
+                            playerId: playerId,
+                            playerNum: roomInfo.players[playerId].playerNum,
+                        }
+                    );
+                } else {
+                    console.log("Entered side player");
+                    io.to(roomInfo.players[playerId].playerId).emit(
+                        "displaySideFinal",
+                        {
+                            playerId: playerId,
+                            playerNum: roomInfo.players[playerId].playerNum,
+                        }
+                    );
+                } 
+            }
+        });
+
     });
 };
 
