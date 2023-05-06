@@ -117,15 +117,18 @@ export default class JoinLobbyScene extends Phaser.Scene {
                     scene.socket.on("keyNotValid", function () {
                         scene.notValidText.setText("Invalid Room Key");
                     });
-                    scene.socket.on("roomIsFull", function () {
-                        scene.notValidText.setText("This Room is Full!");
-                    });
                     scene.socket.on("keyIsValid", function (code, name) {
-                        scene.scene.start("LobbyScene", {
-                            ...scene.state,
-                            socket: scene.socket,
-                            roomKey: code,
-                            playerName: name,
+                        scene.socket.emit("isRoomFull", code);
+                        scene.socket.on("roomIsFull", function () {
+                            scene.notValidText.setText("This Room is Full!");
+                        });
+                        scene.socket.on("roomNotFull", function () {
+                            scene.scene.start("LobbyScene", {
+                                ...scene.state,
+                                socket: scene.socket,
+                                roomKey: code,
+                                playerName: name,
+                            });
                         });
                     });
                 });

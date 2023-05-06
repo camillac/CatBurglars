@@ -30,7 +30,7 @@ export default class LobbyScene extends Phaser.Scene {
 
     create() {
         const scene = this;
-
+        
         scene.socket.emit("joinRoom", this.roomKey, this.playerName);
         // set background
         const background = this.add.image(400, 300, "background");
@@ -258,13 +258,12 @@ export default class LobbyScene extends Phaser.Scene {
                 color: "#FFFBF4",
             });
         });
+        
         // DISCONNECT
         this.socket.on("disconnected",  (arg) => {
             this.scene.restart(); // restart current scene
         });
     }
-
-
 
     //-------------------------- Add Players Functions -----------------------------
 

@@ -144,13 +144,16 @@ module.exports = (io) => {
         });
 
         socket.on("isKeyValid", function (code, name) {
-            console.log(gameRooms[code].numPlayers);
-            if (gameRooms[code].numPlayers >= 4) {
-                socket.emit("roomIsFull");
-            } else {
-                Object.keys(gameRooms).includes(code)
+            Object.keys(gameRooms).includes(code)
                     ? socket.emit("keyIsValid", code, name)
                     : socket.emit("keyNotValid");
+        });
+
+        socket.on("isRoomFull", function (roomKey) {
+            if (gameRooms[roomKey].numPlayers >= 4) {
+                socket.emit("roomIsFull");
+            } else {
+                socket.emit("roomNotFull");
             }
         });
 
