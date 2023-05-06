@@ -14,7 +14,6 @@ export default class FinalTask extends Phaser.Scene {
         this.playerNum = data.playerNum;
         this.players = data.players;
         this.start = data.start;
-
     }
     preload() {
         //load cats/players
@@ -42,14 +41,14 @@ export default class FinalTask extends Phaser.Scene {
     create() {
         const scene = this;
         scene.state.start_game = false; // flag to tell fish when to start falling
-
+        scene.state.fishCaughtN = 0; 
         // Setting up background for the game
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
 
         // tell backend to start task
         if (scene.socket.id === this.start) {
-            this.socket.emit("startFinalTask", this.roomKey, 1);
+            this.socket.emit("startFinalTask", this.roomKey, scene.socket.id);
         }
 
         // Sidebar Set Up
@@ -74,9 +73,10 @@ export default class FinalTask extends Phaser.Scene {
             });
         });
 
-        this.socket.on("startTimerEX", function (arg) {
+        this.socket.on("startTimerEXFinal", function (arg) {
+            console.log("IN TIMRE EX");
             const { roomKey, counter } = arg;
-            scene.socket.emit("startTimer", roomKey, counter);
+            scene.socket.emit("startTimerFinal", roomKey, counter);
         });
 
         // wait for other players until everybody syncs
@@ -119,7 +119,7 @@ export default class FinalTask extends Phaser.Scene {
         // *** Host and other players are separated in case we need it for backend, but
         // *** there is no UI difference for this task as of now between them
         // Main Player Final Task Display
-        this.socket.on("displayMainFinal", function (arg) {
+        this.socket.on("displayFinal", function (arg) {
             // destroy "Waiting for players..."
             scene.waiting.destroy();
 
@@ -127,7 +127,31 @@ export default class FinalTask extends Phaser.Scene {
             scene.state.start_game = true;
 
             const { playerId, playerNum } = arg;
-
+            var dragBasket = scene.add.text(300, 0, "Drag the basket to ", {
+                fontFamily: "Chela One",
+                fontSize: 40,
+                color: "black",
+                align: "center",
+            });
+            var fishCatch = scene.add.text(300, 25, "Catch at least 30 fish!", {
+                fontFamily: "Chela One",
+                fontSize: 40,
+                color: "black",
+                align: "center",
+            });
+            // Fish Caught text 
+            var fishCaught = scene.add.text(250, 550, "Fish Caught: ", {
+                fontFamily: "Chela One",
+                fontSize: 40,
+                color: "black",
+                align: "center",
+            });
+            var fishCaughtNumber = scene.add.text(450, 550, "", {
+                fontFamily: "Chela One",
+                fontSize: 40,
+                color: "black",
+                align: "center",
+            });
             // credit: https://github.com/photonstorm/phaser3-examples/blob/master/public/src/input/dragging/drag%20horizontally.js
             // create basket and allow it to be dragged
             // ** boundaries are not working, need to fix so that it doesnt overlap sidebar
@@ -146,38 +170,13 @@ export default class FinalTask extends Phaser.Scene {
                 fish.y = 0;
                 var randomX = Phaser.Math.Between(scene.game.config.width / 4, scene.game.config.width - 10);
                 fish.x = randomX;
-            })
-        });
-
-        
-        // Other Player Final Task display
-        this.socket.on("displaySideFinal", function (arg) {
-            // destroy "Waiting for players..."
-            scene.waiting.destroy();
-
-            // tell update() to start moving fish
-            scene.state.start_game = true;
-
-            const { playerId, playerNum } = arg;
-
-            // credit: https://github.com/photonstorm/phaser3-examples/blob/master/public/src/input/dragging/drag%20horizontally.js
-            // create basket and allow it to be dragged
-            // ** boundaries are not working, need to fix so that it doesnt overlap sidebar
-            var basket = scene.physics.add.sprite(scene.game.config.width / 2, scene.game.config.height - 200, "basket");
-            basket.setScale(0.5);
-            basket.setInteractive({ draggable: true });
-
-            basket.body.onOverlap = true;
-
-            // credit: https://labs.phaser.io/edit.html?src=src/physics/arcade/overlap%20event.js
-            // collision event with basket+fish
-            scene.physics.add.overlap(basket, scene.fishies);
-            scene.physics.world.on('overlap', (basket, fish, basketbody, fishbody) =>
-            {
-                // this is the resetFish code, for some reason it was not letting me call it
-                fish.y = 0;
-                var randomX = Phaser.Math.Between(scene.game.config.width / 4, scene.game.config.width - 10);
-                fish.x = randomX;
+                scene.state.fishCaughtN +=1; 
+                fishCaughtNumber.text = scene.state.fishCaughtN; 
+                console.log(scene.state.fishCaughtN); 
+                if(scene.state.fishCaughtN ==30){
+                    console.log("GOT ALL 30"); 
+                    scene.socket.emit("gotAllFish", scene.roomKey, scene.socket.id ); 
+                }
             })
         });
 
@@ -189,23 +188,25 @@ export default class FinalTask extends Phaser.Scene {
         });
 
         // timer text connected with socket
-        var timer = scene.add.text(750, 550, "", {
+        var timerFinal = scene.add.text(750, 550, "", {
             fontFamily: "Chela One",
             fontSize: 40,
             color: "black",
             align: "center",
         });
 
-        this.socket.on("counter", function (counter) {
-            timer.text = counter;
+        
+
+        this.socket.on("counterFinal", function (counterFinal) {
+            timerFinal.text = counterFinal;
         });
 
-        this.socket.on("endGame", function (newKey) {
-            scene.socket.emit("stopTimer", newKey);
+        this.socket.on("endGameFinal", function (newKey) {
+            scene.socket.emit("stopTimerFinal", newKey);
         });
 
         // win condition
-        this.socket.on("win", function (roomKey) {
+        this.socket.on("winFinal", function (roomKey) {
             console.log("Won!");
             scene.scene.start("WinningScene", {
                 ...scene.state,
@@ -215,7 +216,7 @@ export default class FinalTask extends Phaser.Scene {
         });
 
         // lost condition
-        this.socket.on("lost", function (roomKey) {
+        this.socket.on("lostFinal", function (roomKey) {
             console.log("Lost!");
             scene.scene.start("LostScene", {
                 ...scene.state,

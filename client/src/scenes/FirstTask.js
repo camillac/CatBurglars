@@ -46,7 +46,6 @@ export default class FirstTask extends Phaser.Scene {
         // Setting up background for the game
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
-
         if (scene.socket.id == this.start) {
             scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
         }
@@ -238,13 +237,15 @@ export default class FirstTask extends Phaser.Scene {
 
         this.socket.on("nextTask", function (roomKey) {
             console.log("Finished Task 1, moving to Final Task!");
-            scene.scene.start("FinalTask_Instruction", {
+            console.log(scene.start); 
+            scene.scene.start("FinalTask", {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: scene.roomKey,
                 playerName: scene.playerName,
                 playerInfo: scene.playerInfo,
-                playerNum: scene.playerNum
+                playerNum: scene.playerNum, 
+                start: scene.start,
             });
         });
 
@@ -259,67 +260,6 @@ export default class FirstTask extends Phaser.Scene {
     }
 
     update() {
-        // this.socket.on("disconnected", function (arg) {
-        //     console.log("LOBBYSCENE");
-        //     scene.scene.start("LobbyScene", {
-        //         ...scene.state,
-        //         socket: scene.socket,
-        //         roomKey: roomKey,
-        //         playerName: this.playerName,
-        //     });
-        // });
-    }
-
-    // Check if the Key selected is correct/incorrect
-    isCorrectKey(scene, currentKey, key1, key2, key3, posX, posY) {
-        // if the key is incorrect
-        if (!(key1 == currentKey || key2 == currentKey || key3 == currentKey)) {
-            scene.socket.emit("decreaseCounter");
-            var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-            incorrect.setScale(1).setPosition(posX, posY);
-            // destroy the incorrect image
-            function incorr() {
-                incorrect.destroy();
-            }
-            scene.time.addEvent({
-                delay: 200,
-                callback: incorr,
-                callbackScope: this,
-            });
-        } else {
-            // the key is correct
-            if (scene.alreadyClickedKeys.length == 0) {
-                scene.correct++;
-                scene.alreadyClickedKeys.push(currentKey);
-            }
-            var hasNot = true; // check if the key has not been clicked
-            scene.alreadyClickedKeys.forEach((element) => {
-                if (element == currentKey) {
-                    hasNot = false;
-                }
-            });
-            if (hasNot) {
-                scene.correct++;
-                scene.alreadyClickedKeys.push(currentKey);
-            }
-
-            var correctImage = scene.add.sprite(200, 300, "correctImage");
-            correctImage.setScale(1).setPosition(posX, posY);
-            // destory the correct image
-            function corr() {
-                correctImage.destroy();
-            }
-            scene.time.addEvent({
-                delay: 200,
-                callback: corr,
-                callbackScope: this,
-            });
-            console.log(scene.correct);
-            // All 3 correct keys are pressed
-            if (scene.correct === 3) {
-                scene.socket.emit("endedTask");
-            }
-        }
     }
 
     // Check if the Key selected is correct/incorrect
