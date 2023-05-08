@@ -52,11 +52,11 @@ export default class FirstTask extends Phaser.Scene {
         }
 
         // Sidebar Set Up
-        const sidebar = new Sidebar(
+        let sidebar = new Sidebar(
             scene,
             this.game.config.width,
             this.game.config.height,
-            scene.players,
+            this.roomKey,
             scene.socket
         );
 

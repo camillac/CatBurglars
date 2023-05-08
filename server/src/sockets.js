@@ -1,8 +1,8 @@
 // local variables
 var gameRooms = {};
 var users = {};
-var allFinished = false; 
-module.exports = (io) => {
+
+module.exports = function (io) {
     io.on("connection", (socket) => {
         console.log(
             `A socket connection to the server has been made: ${socket.id}`
@@ -25,6 +25,11 @@ module.exports = (io) => {
             };
             console.log("ROOM CREATED - ROOM KEY: " + key);
             socket.emit("roomCreated", key, name);
+        });
+
+        // GET ALL ROOMS DETAILS
+        socket.on("getRooms", async function () {
+            socket.emit("getRooms", gameRooms);
         });
 
         // JOIN A ROOM

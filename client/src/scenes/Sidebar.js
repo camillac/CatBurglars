@@ -143,6 +143,7 @@ class Sidebar extends Phaser.GameObjects.Container {
       popup.add(closeButton);
       // Pop Up Settings
     }*/
+
   } // end of constructor
 
 }
