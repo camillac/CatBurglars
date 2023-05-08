@@ -47,12 +47,15 @@ export default class FinalTask extends Phaser.Scene {
         // Setting up background for the game
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
-
+        scene.socket.emit("playerIsReadyForFinalTask",this.roomKey,scene.socket.id);
         // tell backend to start task
-        if (scene.socket.id === this.start) {
-            this.socket.emit("startFinalTask", this.roomKey, scene.socket.id);
-        }
+        scene.socket.on("startFinalTaskForAllPlayers", function(roomKey){
+            scene.socket.emit("startFinalTask", roomKey, 1, scene.socket.id);
+        });
 
+        // if (scene.socket.id === this.start) {
+        //     this.socket.emit("startFinalTask", this.roomKey, scene.socket.id);
+        // }
         // Sidebar Set Up
         const sidebar = new Sidebar(
             scene,
@@ -162,7 +165,7 @@ export default class FinalTask extends Phaser.Scene {
                 color: "black",
                 align: "center",
             });
-            var fishCatch = scene.add.text(300, 25, "Catch at least 30 fish!", {
+            var fishCatch = scene.add.text(300, 25, "Catch at least 10 fish!", {
                 fontFamily: "Chela One",
                 fontSize: 40,
                 color: "black",
@@ -210,8 +213,8 @@ export default class FinalTask extends Phaser.Scene {
                     scene.state.fishCaughtN += 1;
                     fishCaughtNumber.text = scene.state.fishCaughtN;
                     console.log(scene.state.fishCaughtN);
-                    if (scene.state.fishCaughtN == 30) {
-                        console.log("GOT ALL 30");
+                    if (scene.state.fishCaughtN == 10) {
+                        console.log("GOT ALL 10");
                         scene.socket.emit(
                             "gotAllFish",
                             scene.roomKey,

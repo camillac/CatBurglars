@@ -42,13 +42,17 @@ export default class FirstTask extends Phaser.Scene {
 
     create() {
         const scene = this;
-
+        scene.state.alreadyCalledNextTask = false;
         // Setting up background for the game
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
-        if (scene.socket.id == this.start) {
-            scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
-        }
+        scene.socket.emit("playerIsReadyForTask1",this.roomKey,scene.socket.id); 
+        scene.socket.on("startTask1ForAllPlayers", function(roomKey){
+            scene.socket.emit("startTaskOne", roomKey, 1, scene.socket.id);
+        });
+        // if (scene.socket.id == this.start) {
+        //     scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
+        // }
 
         // Sidebar Set Up
         const sidebar = new Sidebar(
@@ -236,18 +240,22 @@ export default class FirstTask extends Phaser.Scene {
         });
 
         this.socket.on("nextTask", function (roomKey) {
-            console.log("Finished Task 1, moving to Final Task!");
-            console.log(scene.start); 
-            scene.scene.start("FinalTask", {
-                ...scene.state,
-                socket: scene.socket,
-                roomKey: scene.roomKey,
-                playerName: scene.playerName,
-                playerInfo: scene.playerInfo,
-                playerNum: scene.playerNum, 
-                start: scene.start,
-            });
+            if (!(scene.state.alreadyCalledNextTask)) {
+                scene.state.alreadyCalledNextTask = true;
+                console.log("Finished Task 1, moving to Final Task!");
+                console.log(scene.start);
+                scene.scene.start("FinalTask", {
+                    ...scene.state,
+                    socket: scene.socket,
+                    roomKey: scene.roomKey,
+                    playerName: scene.playerName,
+                    playerInfo: scene.playerInfo,
+                    playerNum: scene.playerNum,
+                    start: scene.start,
+                });
+            }
         });
+
 
         // lost condition
         this.socket.on("lost", function (roomKey) {
