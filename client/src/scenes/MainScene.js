@@ -43,9 +43,8 @@ export default class MainScene extends Phaser.Scene {
          // To add the Cats
          
         // Add the House in the Background
-        const Home = this.add.image(300, 300, "House_main");
+        const Home = this.add.image(270, 320, "House_main");
         Home.setScale(1);
-        Home.setDepth(2);
         //To add cats
         const cat1 = this.add.image(100,200,"Cats_1");
          cat1.setScale(0.3);
@@ -78,8 +77,8 @@ export default class MainScene extends Phaser.Scene {
         });
         scene.tweens.add({
             targets: cat1, 
-            x: {from: 120, to: 310},
-            y: { from: 390, to: 340},
+            x: {from: 120, to: 200},
+            y: { from: 390, to: 380},
             duration: 8000,
             ease:'sine.inout', 
             repeat: -1, 
@@ -91,8 +90,8 @@ export default class MainScene extends Phaser.Scene {
 
         scene.tweens.add({
             targets: cat2, 
-            x: {from: 130, to: 310},
-            y: { from: 390, to: 340},
+            x: {from: 130, to: 210},
+            y: { from: 390, to: 380},
             duration: 8000,
             ease:'sine.inout', 
             repeat: -1, 
@@ -104,8 +103,8 @@ export default class MainScene extends Phaser.Scene {
         });
         scene.tweens.add({
             targets: cat3, 
-            x: {from: 140, to: 310},
-            y: { from: 390, to: 340},
+            x: {from: 140, to: 230},
+            y: { from: 390, to: 380},
           
             duration: 8000,
             ease:'sine.inout', 
@@ -118,8 +117,8 @@ export default class MainScene extends Phaser.Scene {
         });
         scene.tweens.add({
             targets: cat4, 
-            x: {from: 150, to: 310},
-            y: { from: 390, to: 340},
+            x: {from: 150, to: 240},
+            y: { from: 390, to: 380},
             duration: 8000,
             ease:'sine.inout', 
             repeat: -1, 
