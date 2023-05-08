@@ -43,13 +43,18 @@ export default class FirstTask extends Phaser.Scene {
 
     create() {
         const scene = this;
-
+        scene.state.alreadyCalledNextTask = false;
         // Setting up background for the game
-        const background = this.add.image(400, 300, "Door");
-        background.setScale(0.5);
-        if (scene.socket.id == this.start) {
-            scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
-        }
+        const background = this.add.image(400, 300, "background");
+        background.setScale(2.0);
+        scene.socket.emit(
+            "playerIsReadyForTask1",
+            this.roomKey,
+            scene.socket.id
+        );
+        scene.socket.on("startTask1ForAllPlayers", function (roomKey) {
+            scene.socket.emit("startTaskOne", roomKey, 1, scene.socket.id);
+        });
 
         // Sidebar Set Up
         let sidebar = new Sidebar(
@@ -84,7 +89,7 @@ export default class FirstTask extends Phaser.Scene {
             30,
             "Waiting for other players.. ",
             {
-                fontFamily:"Black Ops One",
+                fontFamily: "Black Ops One",
                 fontSize: 40,
                 color: "#FFFFFF",
                 fontStyle: "normal",
@@ -96,8 +101,8 @@ export default class FirstTask extends Phaser.Scene {
         // Main Player Display
         this.socket.on("displayMainTaskOne", function (arg) {
             scene.waiting.destroy();
-            scene.add.text(200, 30, "Choose the right keys!", {
-                fontFamily: "Black Ops One",
+            scene.add.text(290, 30, "Choose the right keys!", {
+                fontFamily: "Chela One",
                 fontSize: 45,
                 color: "#FFFFFF",
                 fontStyle: "normal",
@@ -237,17 +242,20 @@ export default class FirstTask extends Phaser.Scene {
         });
 
         this.socket.on("nextTask", function (roomKey) {
-            console.log("Finished Task 1, moving to Final Task!");
-            console.log(scene.start); 
-            scene.scene.start("FinalTask", {
-                ...scene.state,
-                socket: scene.socket,
-                roomKey: scene.roomKey,
-                playerName: scene.playerName,
-                playerInfo: scene.playerInfo,
-                playerNum: scene.playerNum, 
-                start: scene.start,
-            });
+            if (!scene.state.alreadyCalledNextTask) {
+                scene.state.alreadyCalledNextTask = true;
+                console.log("Finished Task 1, moving to Final Task!");
+                console.log(scene.start);
+                scene.scene.start("FinalTask", {
+                    ...scene.state,
+                    socket: scene.socket,
+                    roomKey: scene.roomKey,
+                    playerName: scene.playerName,
+                    playerInfo: scene.playerInfo,
+                    playerNum: scene.playerNum,
+                    start: scene.start,
+                });
+            }
         });
 
         // lost condition
@@ -260,8 +268,7 @@ export default class FirstTask extends Phaser.Scene {
         });
     }
 
-    update() {
-    }
+    update() {}
 
     // Check if the Key selected is correct/incorrect
     isCorrectKey(scene, currentKey, key1, key2, key3, posX, posY) {

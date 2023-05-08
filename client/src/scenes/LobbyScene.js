@@ -1,3 +1,6 @@
+// PlayScene and LobbyScene both use this Among Us Tutorial as a reference:
+// github.com/hannahrobot/amongus-tutorial
+
 export default class LobbyScene extends Phaser.Scene {
     constructor() {
         super({ LobbyScene });
@@ -11,7 +14,6 @@ export default class LobbyScene extends Phaser.Scene {
     }
 
     preload() {
-
         //load images from the assets folder
         this.load.image("icon", "client/assets/sprites/cat.png");
         this.load.image(
@@ -23,9 +25,7 @@ export default class LobbyScene extends Phaser.Scene {
         this.load.image("player3", "client/assets/sprites/player3.png");
         this.load.image("player4", "client/assets/sprites/player4.png");
         this.load.image("Sky_Lobby", "client/assets/sprites/Sky.png");
-
     }
-
 
     create() {
         const scene = this;
@@ -35,7 +35,7 @@ export default class LobbyScene extends Phaser.Scene {
         const background = this.add.image(400, 300, "Sky_Lobby");
         background.setScale(4);
 
-        // Set House as a Background 
+        // Set House as a Background
         const House = this.add.image(400, 300, "House_no_background");
         House.setScale(3.5);
 
@@ -85,11 +85,11 @@ export default class LobbyScene extends Phaser.Scene {
                 socket: scene.socket,
                 roomKey: roomKey,
                 playerName: scene.playerName,
+                playerName: scene.playerName,
                 playerInfo: scene.state.players,
-                playerNum: scene.state.players[scene.socket.id].playerNum
+                playerNum: scene.state.players[scene.socket.id].playerNum,
             });
         });
-
 
         //Players Circle
         scene.boxes = scene.add.graphics();
@@ -104,8 +104,7 @@ export default class LobbyScene extends Phaser.Scene {
                 color: "#FFFBF4",
                 fontSize: "40px",
                 stroke: "#000000",
-                strokeThickness: 5
-
+                strokeThickness: 5,
             })
             .setOrigin(0.5);
 
@@ -117,7 +116,7 @@ export default class LobbyScene extends Phaser.Scene {
                 fontSize: "40px",
                 fontWeight: "bold",
                 stroke: "#000000",
-                strokeThickness: 5
+                strokeThickness: 5,
             })
             .setOrigin(0.5);
 
@@ -165,7 +164,6 @@ export default class LobbyScene extends Phaser.Scene {
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(125, 210, 50);
 
-
         // Player 2
         scene.circle.fillStyle(0xe8ded1, 1);
         scene.circle.fillCircle(300, 210, 50);
@@ -179,7 +177,6 @@ export default class LobbyScene extends Phaser.Scene {
         scene.circle.fillCircle(650, 210, 50);
 
         // Title
-
 
         var cat = scene.add.text(15, 15, "Cat", {
             fontFamily: "Black Ops One",
@@ -234,7 +231,7 @@ export default class LobbyScene extends Phaser.Scene {
                     roomKey: this.roomKey,
                     playerName: this.playerName,
                     playerInfo: scene.state.players,
-                    playerNum: scene.state.players[this.socket.id].playerNum
+                    playerNum: scene.state.players[this.socket.id].playerNum,
                 });
             } else {
                 console.log("Not Enough Players!");

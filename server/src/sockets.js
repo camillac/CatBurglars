@@ -1,8 +1,11 @@
-// local variables
-var gameRooms = {};
-var users = {};
+// PlayScene and LobbyScene both use this Among Us Tutorial as a reference:
+// github.com/hannahrobot/amongus-tutorial
 
-module.exports = function (io) {
+// local variables
+https: var gameRooms = {};
+var users = {};
+var allFinished = false;
+module.exports = (io) => {
     io.on("connection", (socket) => {
         console.log(
             `A socket connection to the server has been made: ${socket.id}`
@@ -22,6 +25,8 @@ module.exports = function (io) {
                 numPlayers: 0,
                 inGame: false,
                 inFinalTask: false,
+                task1IsStarted: false,
+                finalTaskIsStarted: false,
             };
             console.log("ROOM CREATED - ROOM KEY: " + key);
             socket.emit("roomCreated", key, name);
@@ -43,6 +48,8 @@ module.exports = function (io) {
                     playerNum: 0,
                     playerName: playerName,
                     finished: false,
+                    readyForTask1: false,
+                    readyForFinalTask: false,
                 };
 
                 roomInfo.players[socket.id].playerNum = Object.keys(
@@ -133,16 +140,17 @@ module.exports = function (io) {
                         players: {},
                         numPlayers: 0,
                         inGame: false,
-                        inFinalTask: false, 
+                        inFinalTask: false,
+                        readyForTask1: false,
+                        readyForFinalTask: false,
                     };
 
                     console.log("ROOM CREATED - ROOM KEY: " + newKey);
-                    if(roomInfo.inFinalTask){
+                    if (roomInfo.inFinalTask) {
                         io.to(roomKey).emit("endGameFinal", newKey);
+                    } else {
+                        io.to(roomKey).emit("endGame", newKey);
                     }
-                    else{
-                        io.to(roomKey).emit("endGame", newKey);}
-                    
                 } else {
                     io.to(roomKey).emit("disconnected", {
                         playerId: socket.id,
@@ -157,9 +165,13 @@ module.exports = function (io) {
         });
 
         socket.on("isKeyValid", function (code, name) {
-            Object.keys(gameRooms).includes(code)
+            if (gameRooms[code].numPlayers >= 4) {
+                socket.emit("roomIsFull");
+            } else {
+                Object.keys(gameRooms).includes(code)
                     ? socket.emit("keyIsValid", code, name)
                     : socket.emit("keyNotValid");
+            }
         });
 
         socket.on("isRoomFull", function (roomKey) {
@@ -180,16 +192,102 @@ module.exports = function (io) {
                 .emit("startRoom", { roomKey: roomKey, start: start });
         });
 
+        // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
+
+        // ************************************* TASK ONE SCENE SOCKETS **********************************************
+        socket.on("playerIsReadyForTask1", function (roomKey, sockId) {
+            const roomInfo = gameRooms[roomKey];
+            roomInfo.players[sockId].readyForTask1 = true;
+            let allPlayersReadyForTask1 = true;
+            for (playerId in roomInfo.players) {
+                console.log(
+                    roomInfo.players[playerId],
+                    roomInfo.players[playerId].readyForTask1
+                );
+                if (!roomInfo.players[playerId].readyForTask1) {
+                    console.log("MAKE IT FALSE");
+                    allPlayersReadyForTask1 = false;
+                }
+            }
+            if (allPlayersReadyForTask1) {
+                console.log(
+                    "NOW ALL PLYAERS READY FOR TASK 1, ",
+                    allPlayersReadyForTask1
+                );
+                socket.emit("startTask1ForAllPlayers", roomKey);
+            }
+        });
+
+        socket.on("startTaskOne", function (roomKey, mainPlayer, playerIdx) {
+            const roomInfo = gameRooms[roomKey];
+            if (!roomInfo.task1IsStarted) {
+                roomInfo.task1IsStarted = true;
+                let arr = [1, 2, 3, 4, 5, 6];
+                shuffleArray(arr);
+                const key1 = arr[0];
+                const key2 = arr[1];
+                const key3 = arr[2];
+                console.log(roomKey);
+                console.log(key1, key2, key3);
+                // const roomInfo = gameRooms[roomKey];
+                console.log(roomInfo);
+                for (playerId in roomInfo.players) {
+                    if (roomInfo.players[playerId].playerNum == mainPlayer) {
+                        const counter = 30;
+                        io.to(roomInfo.players[playerId].playerId).emit(
+                            "startTimerEX",
+                            { roomKey, counter }
+                        );
+                        io.to(roomInfo.players[playerId].playerId).emit(
+                            "displayMainTaskOne",
+                            {
+                                playerId: playerId,
+                                playerNum: roomInfo.players[playerId].playerNum,
+                                key1: key1,
+                                key2: key2,
+                                key3: key3,
+                            }
+                        );
+                    } else if (roomInfo.players[playerId].playerNum == 2) {
+                        io.to(roomInfo.players[playerId].playerId).emit(
+                            "displaySideTaskOne",
+                            {
+                                playerId: playerId,
+                                playerNum: roomInfo.players[playerId].playerNum,
+                                key: key1,
+                            }
+                        );
+                    } else if (roomInfo.players[playerId].playerNum == 3) {
+                        io.to(roomInfo.players[playerId].playerId).emit(
+                            "displaySideTaskOne",
+                            {
+                                playerId: playerId,
+                                playerNum: roomInfo.players[playerId].playerNum,
+                                key: key2,
+                            }
+                        );
+                    } else {
+                        io.to(roomInfo.players[playerId].playerId).emit(
+                            "displaySideTaskOne",
+                            {
+                                playerId: playerId,
+                                playerNum: roomInfo.players[playerId].playerNum,
+                                key: key3,
+                            }
+                        );
+                    }
+                }
+            }
+        });
+
         socket.on("startTimer", function (roomKey, counter) {
             console.log("IN START TIMER");
-            console.log(roomKey);
-            console.log(counter); 
             socket.on("decreaseCounter", function () {
                 counter = counter - 5;
             });
 
             var Countdown = setInterval(function () {
-                console.log(counter); 
+                console.log(counter);
                 io.to(roomKey).emit("counter", counter);
                 counter--;
                 if (counter <= 0) {
@@ -210,52 +308,99 @@ module.exports = function (io) {
                 console.log("counter destroyed, moving on to next task");
                 io.to(roomKey).emit("nextTask", roomKey);
                 clearInterval(Countdown);
-            })
+            });
 
             socket.on("stopTimer", function (newKey) {
                 clearInterval(Countdown);
                 io.to(roomKey).emit("backToLobby", {
                     roomKey: newKey,
                 });
+                delete gameRooms[roomKey];
+
+                console.log(gameRooms);
             });
         });
+
+        // ************************************* TASK ONE SCENE SOCKETS **********************************************
+
+        // ************************************ FINAL TASK SCENE SOCKETS *********************************************
+        socket.on("playerIsReadyForFinalTask", function (roomKey, sockId) {
+            const roomInfo = gameRooms[roomKey];
+            roomInfo.players[sockId].readyForFinalTask = true;
+            let allPlayersReadyForFinalTask = true;
+            for (playerId in roomInfo.players) {
+                if (!roomInfo.players[playerId].readyForFinalTask) {
+                    console.log("MAKE IT FALSE");
+                    allPlayersReadyForFinalTask = false;
+                }
+            }
+            if (allPlayersReadyForFinalTask) {
+                console.log(
+                    "NOW ALL PLYAERS READY FOR FINAL TASK, ",
+                    allPlayersReadyForFinalTask
+                );
+                socket.emit("startFinalTaskForAllPlayers", roomKey);
+            }
+        });
+
+        socket.on("startFinalTask", function (roomKey, mainPlayer) {
+            const roomInfo = gameRooms[roomKey];
+            roomInfo.inFinalTask = true;
+            if (!roomInfo.finalTaskIsStarted) {
+                roomInfo.finalTaskIsStarted = true;
+                console.log("entered startFinalTask");
+                const counter = 30;
+                for (playerId in roomInfo.players) {
+                    if (roomInfo.players[playerId].playerNum == mainPlayer) {
+                        io.to(roomInfo.players[playerId].playerId).emit(
+                            "startTimerEXFinal",
+                            { roomKey, counter }
+                        );
+                    }
+                    io.to(roomInfo.players[playerId].playerId).emit(
+                        "displayFinal",
+                        {
+                            playerId: playerId,
+                            playerNum: roomInfo.players[playerId].playerNum,
+                        }
+                    );
+                }
+            }
+        });
+
         socket.on("startTimerFinal", function (roomKey, counterFinal) {
             console.log("IN START TIMER");
-            console.log(roomKey);
-            console.log(counterFinal); 
             const roomInfo = gameRooms[roomKey];
             var CountdownFinal = setInterval(function () {
                 console.log(counterFinal);
                 io.to(roomKey).emit("counterFinal", counterFinal);
                 counterFinal--;
                 if (counterFinal <= 0) {
-                    console.log(gameRooms[roomKey]); 
-                    let allFinishedPlaceholder = true;  
-                    for(playerId in roomInfo.players){
-                        console.log(roomInfo.players[playerId], roomInfo.players[playerId].finished);
-                        if(!(roomInfo.players[playerId].finished)){
-                            console.log("MAKE IT FALSE"); 
-                            allFinishedPlaceholder = false; 
+                    let allFinishedPlaceholder = true;
+                    for (playerId in roomInfo.players) {
+                        if (!roomInfo.players[playerId].finished) {
+                            console.log("MAKE IT FALSE");
+                            allFinishedPlaceholder = false;
                         }
                     }
-                    console.log("ALL FINISHED:" , allFinished); 
+                    if (allFinishedPlaceholder) {
+                        allFinished = true;
+                        console.log("NOW ALL FINISHED, ", allFinished);
+                    } else {
+                        allFinished = false;
+                    }
+                    console.log("ALL FINISHED:", allFinished);
                     if (allFinished) {
                         console.log("WON");
                         console.log("counter destroyed");
                         io.to(roomKey).emit("winFinal", roomKey);
                         clearInterval(CountdownFinal);
-                    }
-                    else {
+                    } else {
                         console.log("Lost!");
                         io.to(roomKey).emit("lostFinal", roomKey);
                         clearInterval(CountdownFinal);
                     }
                 }
-                // if(counter <= 0 && finished){
-                // console.log("counter destroyed");
-                // io.to(roomKey).emit("winFinal", roomKey);
-                // clearInterval(Countdown);
-                // }
             }, 1000);
 
             // stop the counter so it doesnt keep going after game ends
@@ -265,131 +410,23 @@ module.exports = function (io) {
                 clearInterval(CountdownFinal);
             });
 
-            // socket.on("endedTaskFinal", function () {
-            //     console.log("counter destroyed, moving on to next task");
-            //     io.to(roomKey).emit("nextTask", roomKey);
-            //     clearInterval(CountdownFinal);
-            // })
-
             socket.on("stopTimerFinal", function (newKey) {
                 clearInterval(CountdownFinal);
                 io.to(roomKey).emit("backToLobbyFinal", {
                     roomKey: newKey,
                 });
+
+                delete gameRooms[roomKey];
+
+                console.log(gameRooms);
             });
         });
-        socket.on("gotAllFish", function (roomKey, playerI){
-            console.log("GOT ALL FISH"); 
-            // finished = true; 
+
+        socket.on("gotAllFish", function (roomKey, playerI) {
+            console.log("GOT ALL FISH");
             const roomInfo = gameRooms[roomKey];
-            // console.log(roomKey); 
-            // console.log(roomInfo);
-            // console.log((roomInfo.players)[playerI]); 
-            (roomInfo.players)[playerI].finished = true; 
-            console.log(roomInfo); 
-            let allFinishedPlaceholder = true;  
-                for(playerId in roomInfo.players){
-                    console.log(roomInfo.players[playerId], roomInfo.players[playerId].finished);
-                    if(!(roomInfo.players[playerId].finished)){
-                        console.log("MAKE IT FALSE"); 
-                        allFinishedPlaceholder = false; 
-                    }
-                }
-            console.log(allFinished); 
-            if(allFinishedPlaceholder){
-                allFinished = true; 
-                console.log("NOW ALL FINISHED, ", allFinished); 
-            }
-            
+            roomInfo.players[playerI].finished = true;
         });
-
-        // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
-
-        // ************************************* TASK ONE SCENE SOCKETS **********************************************
-
-        socket.on("startTaskOne", function (roomKey, mainPlayer, playerIdx) {
-            let arr = [1, 2, 3, 4, 5, 6];
-            shuffleArray(arr);
-            const key1 = arr[0];
-            const key2 = arr[1];
-            const key3 = arr[2];
-            console.log(key1, key2, key3);
-            const roomInfo = gameRooms[roomKey];
-            for (playerId in roomInfo.players) {
-                if (roomInfo.players[playerId].playerNum == mainPlayer) {
-                    const counter = 30;
-                    io.to(roomInfo.players[playerId].playerId).emit(
-                        "startTimerEX",
-                        { roomKey, counter }
-                    );
-                    io.to(roomInfo.players[playerId].playerId).emit(
-                        "displayMainTaskOne",
-                        {
-                            playerId: playerId,
-                            playerNum: roomInfo.players[playerId].playerNum,
-                            key1: key1,
-                            key2: key2,
-                            key3: key3,
-                        }
-                    );
-                } else if (roomInfo.players[playerId].playerNum == 2) {
-                    io.to(roomInfo.players[playerId].playerId).emit(
-                        "displaySideTaskOne",
-                        {
-                            playerId: playerId,
-                            playerNum: roomInfo.players[playerId].playerNum,
-                            key: key1,
-                        }
-                    );
-                } else if (roomInfo.players[playerId].playerNum == 3) {
-                    io.to(roomInfo.players[playerId].playerId).emit(
-                        "displaySideTaskOne",
-                        {
-                            playerId: playerId,
-                            playerNum: roomInfo.players[playerId].playerNum,
-                            key: key2,
-                        }
-                    );
-                } else {
-                    io.to(roomInfo.players[playerId].playerId).emit(
-                        "displaySideTaskOne",
-                        {
-                            playerId: playerId,
-                            playerNum: roomInfo.players[playerId].playerNum,
-                            key: key3,
-                        }
-                    );
-                }
-            }
-        });
-
-        // ************************************* TASK ONE SCENE SOCKETS **********************************************
-
-        // ************************************ FINAL TASK SCENE SOCKETS *********************************************
-        socket.on("startFinalTask", function (roomKey, mainPlayer) {
-        gameRooms[roomKey].inFinalTask = true;
-           console.log("entered startFinalTask");
-            const roomInfo = gameRooms[roomKey];
-            const counter = 20; 
-            console.log("main player: ", mainPlayer); 
-            console.log(roomInfo.players[mainPlayer].playerId);
-            io.to(roomInfo.players[mainPlayer].playerId).emit(
-                        "startTimerEXFinal",
-                        { roomKey, counter }
-                    );
-            for (playerId in roomInfo.players) {
-                console.log("playerID: ", playerId); 
-                console.log("playerIDscok: ", roomInfo.players[playerId].playerId); 
-                io.to(roomInfo.players[playerId].playerId).emit(
-                            "displayFinal",
-                            {
-                                playerId: playerId,
-                                playerNum: roomInfo.players[playerId].playerNum,
-                            }
-                        );
-            }
-        });
-
     });
 };
 

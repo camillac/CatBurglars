@@ -1,3 +1,6 @@
+// PlayScene and LobbyScene both use this Among Us Tutorial as a reference:
+// github.com/hannahrobot/amongus-tutorial
+
 export default class PlayScene extends Phaser.Scene {
     constructor() {
         super("PlayScene");
@@ -314,5 +317,5 @@ export default class PlayScene extends Phaser.Scene {
         });
     }
 
-    update() { }
+    update() {}
 }
