@@ -10,8 +10,6 @@ export default class FirstTask extends Phaser.Scene {
         this.roomKey = data.roomKey;
         this.playerNum = data.playerNum;
         this.playerName = data.playerName;
-        // console.log(this.socket.id);
-        console.log(this.playerName);
         this.players = data.players;
         this.start = data.start;
     }
@@ -33,22 +31,22 @@ export default class FirstTask extends Phaser.Scene {
             "incorrectImage",
             "client/assets/sprites/incorrect.png"
         );
+        this.load.image("Door", "client/assets/sprites/door.png");
 
         //load background
         this.scene.run("FirstTask");
-        this.load.image(
+        /*this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
-        );
+        );*/
     }
 
     create() {
         const scene = this;
 
         // Setting up background for the game
-        const background = this.add.image(400, 300, "background");
-        background.setScale(2.0);
-
+        const background = this.add.image(400, 300, "Door");
+        background.setScale(0.5);
         if (scene.socket.id == this.start) {
             scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
         }
@@ -82,30 +80,29 @@ export default class FirstTask extends Phaser.Scene {
 
         // wait for other players until everybody syncs
         scene.waiting = scene.add.text(
-            290,
+            200,
             30,
             "Waiting for other players.. ",
             {
-                fontFamily: "Chela One",
-                fontSize: 45,
+                fontFamily:"Black Ops One",
+                fontSize: 40,
                 color: "#FFFFFF",
                 fontStyle: "normal",
                 stroke: "#000000",
-                strokeThickness: 12,
+                strokeThickness: 8,
             }
         );
 
         // Main Player Display
         this.socket.on("displayMainTaskOne", function (arg) {
             scene.waiting.destroy();
-            console.log("displayMainTaskOne");
-            scene.add.text(290, 30, "Choose the right keys!", {
-                fontFamily: "Chela One",
+            scene.add.text(200, 30, "Choose the right keys!", {
+                fontFamily: "Black Ops One",
                 fontSize: 45,
                 color: "#FFFFFF",
                 fontStyle: "normal",
                 stroke: "#000000",
-                strokeThickness: 12,
+                strokeThickness: 8,
             });
 
             const { playerId, playerNum, key1, key2, key3 } = arg;
@@ -214,19 +211,19 @@ export default class FirstTask extends Phaser.Scene {
             var keyImage = scene.add.sprite(250, 300, `key` + key + `Image`);
             keyImage.setScale(5).setPosition(475, 350);
 
-            scene.add.text(320, 50, "Describe your key!", {
-                fontFamily: "Chela One",
+            scene.add.text(250, 30, "Describe your key!", {
+                fontFamily: "Black Ops One",
                 fontSize: 45,
                 color: "#FFFFFF",
                 fontStyle: "normal",
                 stroke: "#000000",
-                strokeThickness: 12,
+                strokeThickness: 8,
             });
         });
 
         // timer text connected with socket
         var timer = scene.add.text(750, 550, "", {
-            fontFamily: "Chela One",
+            fontFamily: "Black Ops One",
             fontSize: 40,
             color: "black",
             align: "center",
@@ -239,12 +236,17 @@ export default class FirstTask extends Phaser.Scene {
             scene.socket.emit("stopTimer", newKey);
         });
 
-        this.socket.on("win", function (roomKey) {
-            console.log("Won!");
-            scene.scene.start("WinningScene", {
+        this.socket.on("nextTask", function (roomKey) {
+            console.log("Finished Task 1, moving to Final Task!");
+            console.log(scene.start); 
+            scene.scene.start("FinalTask", {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: scene.roomKey,
+                playerName: scene.playerName,
+                playerInfo: scene.playerInfo,
+                playerNum: scene.playerNum, 
+                start: scene.start,
             });
         });
 
@@ -259,15 +261,6 @@ export default class FirstTask extends Phaser.Scene {
     }
 
     update() {
-        // this.socket.on("disconnected", function (arg) {
-        //     console.log("LOBBYSCENE");
-        //     scene.scene.start("LobbyScene", {
-        //         ...scene.state,
-        //         socket: scene.socket,
-        //         roomKey: roomKey,
-        //         playerName: this.playerName,
-        //     });
-        // });
     }
 
     // Check if the Key selected is correct/incorrect
@@ -317,59 +310,7 @@ export default class FirstTask extends Phaser.Scene {
             console.log(scene.correct);
             // All 3 correct keys are pressed
             if (scene.correct === 3) {
-                scene.socket.emit("showWinScene");
-            }
-        }
-    }
-
-    // Check if the Key selected is correct/incorrect
-    isCorrectKey(scene, currentKey, key1, key2, key3, posX, posY) {
-        // if the key is incorrect
-        if (!(key1 == currentKey || key2 == currentKey || key3 == currentKey)) {
-            scene.socket.emit("decreaseCounter");
-            var incorrect = scene.add.sprite(200, 300, "incorrectImage");
-            incorrect.setScale(1).setPosition(posX, posY);
-            // destroy the incorrect image
-            function incorr() {
-                incorrect.destroy();
-            }
-            scene.time.addEvent({
-                delay: 200,
-                callback: incorr,
-                callbackScope: this,
-            });
-        } else {
-            // the key is correct
-            if (scene.alreadyClickedKeys.length == 0) {
-                scene.correct++;
-                scene.alreadyClickedKeys.push(currentKey);
-            }
-            var hasNot = true; // check if the key has not been clicked
-            scene.alreadyClickedKeys.forEach((element) => {
-                if (element == currentKey) {
-                    hasNot = false;
-                }
-            });
-            if (hasNot) {
-                scene.correct++;
-                scene.alreadyClickedKeys.push(currentKey);
-            }
-
-            var correctImage = scene.add.sprite(200, 300, "correctImage");
-            correctImage.setScale(1).setPosition(posX, posY);
-            // destory the correct image
-            function corr() {
-                correctImage.destroy();
-            }
-            scene.time.addEvent({
-                delay: 200,
-                callback: corr,
-                callbackScope: this,
-            });
-            console.log(scene.correct);
-            // All 3 correct keys are pressed
-            if (scene.correct === 3) {
-                scene.socket.emit("showWinScene");
+                scene.socket.emit("endedTask");
             }
         }
     }

@@ -8,13 +8,19 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         this.roomKey = data.roomKey;
         this.playerName = data.playerName;
         this.playerInfo = data.playerInfo;
+        this.playerNum = data.playerNum;
     }
 
     preload() {
-        this.load.image("Scroll", "client/assets/sprites/scroll.png");
+       
+        this.load.image("House", "client/assets/sprites/House.png"); //Need to Update this
+        this.load.image("Sky", "client/assets/sprites/Sky.png");
+        this.load.image("settings", "client/assets/sprites/settings_icon.png");
+        this.load.image("Door", "client/assets/sprites/oor.png");
+        this.load.image("big_clouds", "client/assets/sprites/big_clouds.png");
         this.load.image(
-            "Background",
-            "client/assets/backgrounds/blob-scene-haikei (6).png"
+            "Clouds_small",
+            "client/assets/sprites/clouds-white-small.png"
         );
     }
 
@@ -57,9 +63,9 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             .text(
                 400,
                 300,
-                "Communicate with your team and\ninsert the keys in the correct order\nto break into the house!",
+                "Communicate with your \n team and insert the \nkeys in the correct\n order to break \ninto the house!",
                 {
-                    fontFamily: "Chela One",
+                    fontFamily: "Black Ops One",
                     fontSize: 60,
                     color: "#000000",
                     align: "center",
@@ -106,6 +112,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                             socket: scene.socket,
                             roomKey: this.roomKey,
                             playerName: this.playerName,
+                            playerNum: this.playerNum,
                             start: scene.socket.id,
                         });
                     }
@@ -114,9 +121,9 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                     .text(
                         400,
                         300,
-                        `You are Player 1.\nCommunicate with your team\nto figure out the correct\nthree keys in the\ncorrect order!`,
+                        `You are Player 1.\nCommunicate with your \n team to figure out the \n correct three keys`,
                         {
-                            fontFamily: "Chela One",
+                            fontFamily:"Black Ops One",
                             fontSize: 60,
                             color: "#000000",
                             align: "center",
@@ -133,6 +140,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                             socket: scene.socket,
                             roomKey: this.roomKey,
                             playerName: this.playerName,
+                            playerNum: this.playerNum,
                             start: "",
                         });
                     }
@@ -153,9 +161,9 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                     .text(
                         400,
                         300,
-                        `You are Player ${playerNum}.\nDescribe your key to\n${playerOneUsername}\nand pay attention to which\nnumber your key is!`,
+                        `You are Player ${playerNum}.\nDescribe your key to\n${playerOneUsername}`,
                         {
-                            fontFamily: "Chela One",
+                            fontFamily: "Black Ops One",
                             fontSize: 60,
                             color: "#000000",
                             align: "center",
