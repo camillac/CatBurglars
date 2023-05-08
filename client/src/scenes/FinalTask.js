@@ -62,7 +62,7 @@ export default class FinalTask extends Phaser.Scene {
             scene,
             this.game.config.width,
             this.game.config.height,
-            scene.players,
+            this.roomKey,
             scene.socket
         );
 
