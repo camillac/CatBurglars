@@ -1,7 +1,7 @@
 // local variables
 var gameRooms = {};
 var users = {};
-
+var allFinished = false; 
 module.exports = (io) => {
     io.on("connection", (socket) => {
         console.log(
@@ -21,6 +21,7 @@ module.exports = (io) => {
                 players: {},
                 numPlayers: 0,
                 inGame: false,
+                inFinalTask: false,
             };
             console.log("ROOM CREATED - ROOM KEY: " + key);
             socket.emit("roomCreated", key, name);
@@ -36,6 +37,7 @@ module.exports = (io) => {
                     playerId: socket.id,
                     playerNum: 0,
                     playerName: playerName,
+                    finished: false,
                 };
 
                 roomInfo.players[socket.id].playerNum = Object.keys(
@@ -126,10 +128,16 @@ module.exports = (io) => {
                         players: {},
                         numPlayers: 0,
                         inGame: false,
+                        inFinalTask: false, 
                     };
 
                     console.log("ROOM CREATED - ROOM KEY: " + newKey);
-                    io.to(roomKey).emit("endGame", newKey);
+                    if(roomInfo.inFinalTask){
+                        io.to(roomKey).emit("endGameFinal", newKey);
+                    }
+                    else{
+                        io.to(roomKey).emit("endGame", newKey);}
+                    
                 } else {
                     io.to(roomKey).emit("disconnected", {
                         playerId: socket.id,
@@ -168,11 +176,15 @@ module.exports = (io) => {
         });
 
         socket.on("startTimer", function (roomKey, counter) {
+            console.log("IN START TIMER");
+            console.log(roomKey);
+            console.log(counter); 
             socket.on("decreaseCounter", function () {
                 counter = counter - 5;
             });
 
             var Countdown = setInterval(function () {
+                console.log(counter); 
                 io.to(roomKey).emit("counter", counter);
                 counter--;
                 if (counter <= 0) {
@@ -189,12 +201,101 @@ module.exports = (io) => {
                 clearInterval(Countdown);
             });
 
+            socket.on("endedTask", function () {
+                console.log("counter destroyed, moving on to next task");
+                io.to(roomKey).emit("nextTask", roomKey);
+                clearInterval(Countdown);
+            })
+
             socket.on("stopTimer", function (newKey) {
                 clearInterval(Countdown);
                 io.to(roomKey).emit("backToLobby", {
                     roomKey: newKey,
                 });
             });
+        });
+        socket.on("startTimerFinal", function (roomKey, counterFinal) {
+            console.log("IN START TIMER");
+            console.log(roomKey);
+            console.log(counterFinal); 
+            const roomInfo = gameRooms[roomKey];
+            var CountdownFinal = setInterval(function () {
+                console.log(counterFinal);
+                io.to(roomKey).emit("counterFinal", counterFinal);
+                counterFinal--;
+                if (counterFinal <= 0) {
+                    console.log(gameRooms[roomKey]); 
+                    let allFinishedPlaceholder = true;  
+                    for(playerId in roomInfo.players){
+                        console.log(roomInfo.players[playerId], roomInfo.players[playerId].finished);
+                        if(!(roomInfo.players[playerId].finished)){
+                            console.log("MAKE IT FALSE"); 
+                            allFinishedPlaceholder = false; 
+                        }
+                    }
+                    console.log("ALL FINISHED:" , allFinished); 
+                    if (allFinished) {
+                        console.log("WON");
+                        console.log("counter destroyed");
+                        io.to(roomKey).emit("winFinal", roomKey);
+                        clearInterval(CountdownFinal);
+                    }
+                    else {
+                        console.log("Lost!");
+                        io.to(roomKey).emit("lostFinal", roomKey);
+                        clearInterval(CountdownFinal);
+                    }
+                }
+                // if(counter <= 0 && finished){
+                // console.log("counter destroyed");
+                // io.to(roomKey).emit("winFinal", roomKey);
+                // clearInterval(Countdown);
+                // }
+            }, 1000);
+
+            // stop the counter so it doesnt keep going after game ends
+            socket.on("showWinSceneFinal", function () {
+                console.log("counter destroyed");
+                io.to(roomKey).emit("winFinal", roomKey);
+                clearInterval(CountdownFinal);
+            });
+
+            // socket.on("endedTaskFinal", function () {
+            //     console.log("counter destroyed, moving on to next task");
+            //     io.to(roomKey).emit("nextTask", roomKey);
+            //     clearInterval(CountdownFinal);
+            // })
+
+            socket.on("stopTimerFinal", function (newKey) {
+                clearInterval(CountdownFinal);
+                io.to(roomKey).emit("backToLobbyFinal", {
+                    roomKey: newKey,
+                });
+            });
+        });
+        socket.on("gotAllFish", function (roomKey, playerI){
+            console.log("GOT ALL FISH"); 
+            // finished = true; 
+            const roomInfo = gameRooms[roomKey];
+            // console.log(roomKey); 
+            // console.log(roomInfo);
+            // console.log((roomInfo.players)[playerI]); 
+            (roomInfo.players)[playerI].finished = true; 
+            console.log(roomInfo); 
+            let allFinishedPlaceholder = true;  
+                for(playerId in roomInfo.players){
+                    console.log(roomInfo.players[playerId], roomInfo.players[playerId].finished);
+                    if(!(roomInfo.players[playerId].finished)){
+                        console.log("MAKE IT FALSE"); 
+                        allFinishedPlaceholder = false; 
+                    }
+                }
+            console.log(allFinished); 
+            if(allFinishedPlaceholder){
+                allFinished = true; 
+                console.log("NOW ALL FINISHED, ", allFinished); 
+            }
+            
         });
 
         // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
@@ -258,6 +359,32 @@ module.exports = (io) => {
         });
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
+
+        // ************************************ FINAL TASK SCENE SOCKETS *********************************************
+        socket.on("startFinalTask", function (roomKey, mainPlayer) {
+        gameRooms[roomKey].inFinalTask = true;
+           console.log("entered startFinalTask");
+            const roomInfo = gameRooms[roomKey];
+            const counter = 20; 
+            console.log("main player: ", mainPlayer); 
+            console.log(roomInfo.players[mainPlayer].playerId);
+            io.to(roomInfo.players[mainPlayer].playerId).emit(
+                        "startTimerEXFinal",
+                        { roomKey, counter }
+                    );
+            for (playerId in roomInfo.players) {
+                console.log("playerID: ", playerId); 
+                console.log("playerIDscok: ", roomInfo.players[playerId].playerId); 
+                io.to(roomInfo.players[playerId].playerId).emit(
+                            "displayFinal",
+                            {
+                                playerId: playerId,
+                                playerNum: roomInfo.players[playerId].playerNum,
+                            }
+                        );
+            }
+        });
+
     });
 };
 

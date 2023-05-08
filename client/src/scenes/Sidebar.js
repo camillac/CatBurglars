@@ -28,6 +28,7 @@ class Sidebar extends Phaser.GameObjects.Container {
     player_4.setScale(0.9).setPosition(width / 9.5, 430);
 
     // Add the setting wheel button
+    /*
     const settingsBtn = this.scene.add
       .image(width / 9.5, 535, "settings")
       .setInteractive();
@@ -35,9 +36,9 @@ class Sidebar extends Phaser.GameObjects.Container {
     settingsBtn.on("pointerup", () => {
       // Open the settings popup
       showSettingsPopup();
-    });
+    });*/
 
-    function showSettingsPopup() {
+    /*function showSettingsPopup() {
       // Create and display the settings popup
       const popup = scene.add.container(width / 2, height / 2);
       const background = scene.add.graphics();
@@ -58,7 +59,7 @@ class Sidebar extends Phaser.GameObjects.Container {
       popup.add(background);
       popup.add(closeButton);
       // Pop Up Settings
-    }
+    }*/
   }
 }
 
