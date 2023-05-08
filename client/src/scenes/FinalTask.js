@@ -47,9 +47,13 @@ export default class FinalTask extends Phaser.Scene {
         // Setting up background for the game
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
-        scene.socket.emit("playerIsReadyForFinalTask",this.roomKey,scene.socket.id);
+        scene.socket.emit(
+            "playerIsReadyForFinalTask",
+            this.roomKey,
+            scene.socket.id
+        );
         // tell backend to start task
-        scene.socket.on("startFinalTaskForAllPlayers", function(roomKey){
+        scene.socket.on("startFinalTaskForAllPlayers", function (roomKey) {
             scene.socket.emit("startFinalTask", roomKey, 1, scene.socket.id);
         });
 

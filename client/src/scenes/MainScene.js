@@ -10,72 +10,179 @@ export default class MainScene extends Phaser.Scene {
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
         );
 
-        this.load.image(
-            "background",
-            "client/assets/backgrounds/blob-scene-haikei (6).png"
-        );
+        this.load.image("Background1","client/assets/sprites/colored_talltrees.png" );
+       // this.load.image("Red_button", "client/assets/sprites/red_button13.png");
+
+       this.load.image("House_main", "client/assets/sprites/House_No_Backgroung2.png"); 
+
+       //------------------ ADD CATS------------------------
+       this.load.image("Cats_1", "client/assets/sprites/player1.png");
+       this.load.image("Cats_2", "client/assets/sprites/player2.png");
+       this.load.image("Cats_3", "client/assets/sprites/player3.png");
+       this.load.image("Cats_4", "client/assets/sprites/player4.png");
+
+    //---------------SUN ASSETS----------------
+        this.load.image("Main_Sun","client/assets/sprites/sun.png");
+
+    //----CLoud -----------
+
+    this.load.image("Main_cloud", "client/assets/sprites/cloud8.png");
+
+
     }
 
     create() {
         var add = this.add;
         const scene = this;
 
-        const background = this.add.image(400, 300, "background");
-        background.setScale(2.0);
+       
+
+        //Add The House Background
+        const background = this.add.image(400, 300, "Background1");
+        background.setScale(0.8);
+         // To add the Cats
+         
+        // Add the House in the Background
+        const Home = this.add.image(270, 320, "House_main");
+        Home.setScale(1);
+        //To add cats
+        const cat1 = this.add.image(100,200,"Cats_1");
+         cat1.setScale(0.3);
+         const cat2 = this.add.image(130,200,"Cats_2");
+         cat2.setScale(0.3);
+         const cat3 = this.add.image(160,200,"Cats_3");
+         cat3.setScale(0.3);
+         const cat4 = this.add.image(190,200,"Cats_4");
+         cat4.setScale(0.3);
+        /* const cat5 = this.add.image(761,170,"Cats_4");
+         cat5.setScale(0.6);
+         cat5.setDepth(1);*/
+         
+        //----SUN ASSETS 
+        const Sun = this.add.image(200,50,"Main_Sun"); 
+        Sun.setScale(0.7); 
+
+        const MainCloud = this.add.image(260,70,"Main_cloud");
+        MainCloud.setScale(0.5);
+
+       // const y = this.y - (Phaser.Math.Between(150, 280));
+        scene.tweens.add({
+            targets: Home, 
+            y: { from: 290, to: 300},
+            duration: 800,
+            ease:'sine.inout', 
+            repeat: -1, 
+            yoyo: true, // Will go back and Forth
+           // duration: Phaser.Math.Between(900, 1200)
+        });
+        scene.tweens.add({
+            targets: cat1, 
+            x: {from: 120, to: 200},
+            y: { from: 390, to: 380},
+            duration: 8000,
+            ease:'sine.inout', 
+            repeat: -1, 
+            yoyo: false,
+            scale: 0.175
+
+           // duration: Phaser.Math.Between(900, 1200)
+        });
+
+        scene.tweens.add({
+            targets: cat2, 
+            x: {from: 130, to: 210},
+            y: { from: 390, to: 380},
+            duration: 8000,
+            ease:'sine.inout', 
+            repeat: -1, 
+            yoyo: false, //Will only go from x to y
+            scale: 0.175,
+        
+
+           // duration: Phaser.Math.Between(900, 1200)
+        });
+        scene.tweens.add({
+            targets: cat3, 
+            x: {from: 140, to: 230},
+            y: { from: 390, to: 380},
+          
+            duration: 8000,
+            ease:'sine.inout', 
+            repeat: -1, 
+            yoyo: false,
+            scale: 0.2,
+         
+
+           // duration: Phaser.Math.Between(900, 1200)
+        });
+        scene.tweens.add({
+            targets: cat4, 
+            x: {from: 150, to: 240},
+            y: { from: 390, to: 380},
+            duration: 8000,
+            ease:'sine.inout', 
+            repeat: -1, 
+            yoyo: false,
+            scale: 0.2,
+
+           // duration: Phaser.Math.Between(900, 1200)
+        });
 
         WebFont.load({
             google: {
-                families: ["Chela One", "Martian Mono"],
+                families: ["Black Ops One"],
             },
             active: function () {
                 // Title
-                add.text(125, 110, "Cat", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
-                    color: "#F8F0C6",
+                add.text(15, 110, "Cat", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 95,
+                    color: "#f1c582",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
-                add.text(250, 110, "Burglars", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
-                    color: "#C1A87D",
+                add.text(185, 110, "Burglars", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 95,
+                    color: "#f1c582",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
-                add.text(565, 110, ".io", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
-                    color: "#EEBA6B",
+                add.text(655, 110, ".io", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 95,
+                    color: "#f1c582",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 9,
                 });
-
+        
                 // Play button
                 const playButton = add
                     .text(400, 325, "Play", {
-                        fontFamily: "Chela One",
+                        fontFamily: "Black Ops One",
                         fontSize: 50,
                         color: "#FFFBF4",
                         fontStyle: "normal",
                         stroke: "#000000",
-                        strokeThickness: 12,
+                        strokeThickness: 8,
+                        
                     })
                     .setOrigin(0.5)
-                    .setPadding(5, 5, 5, 5);
+                    .setPadding(5, 5, 5, 5)
+                    .setDepth(3);
 
                 // How to Play button
                 const howToPlayButton = add
                     .text(400, 455, "How To Play", {
-                        fontFamily: "Chela One",
+                        fontFamily: "Black Ops One",
                         fontSize: 50,
                         color: "#FFFBF4",
                         fontStyle: "normal",
                         stroke: "#000000",
-                        strokeThickness: 12,
+                        strokeThickness: 8,
                     })
                     .setOrigin(0.5)
                     .setPadding(15, 15, 15, 15);

@@ -14,21 +14,17 @@ export default class LobbyScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.script(
-            "webfont",
-            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
-        );
-
         //load images from the assets folder
         this.load.image("icon", "client/assets/sprites/cat.png");
         this.load.image(
-            "background",
-            "client/assets/backgrounds/blob-scene-haikei (6).png"
+            "House_no_background",
+            "client/assets/sprites/House_No Backgroung.png"
         );
         this.load.image("player1", "client/assets/sprites/player1.png");
         this.load.image("player2", "client/assets/sprites/player2.png");
         this.load.image("player3", "client/assets/sprites/player3.png");
         this.load.image("player4", "client/assets/sprites/player4.png");
+        this.load.image("Sky_Lobby", "client/assets/sprites/Sky.png");
     }
 
     create() {
@@ -36,8 +32,12 @@ export default class LobbyScene extends Phaser.Scene {
 
         scene.socket.emit("joinRoom", this.roomKey, this.playerName);
         // set background
-        const background = this.add.image(400, 300, "background");
-        background.setScale(2.0);
+        const background = this.add.image(400, 300, "Sky_Lobby");
+        background.setScale(4);
+
+        // Set House as a Background
+        const House = this.add.image(400, 300, "House_no_background");
+        House.setScale(3.5);
 
         //set Variables
         console.log("Room Key " + this.roomKey);
@@ -85,6 +85,7 @@ export default class LobbyScene extends Phaser.Scene {
                 socket: scene.socket,
                 roomKey: roomKey,
                 playerName: scene.playerName,
+                playerName: scene.playerName,
                 playerInfo: scene.state.players,
                 playerNum: scene.state.players[scene.socket.id].playerNum,
             });
@@ -96,22 +97,26 @@ export default class LobbyScene extends Phaser.Scene {
 
         // Creates box for the lobby and start page
         scene.boxes.fillStyle(0xbeb2a8, 1);
-        scene.boxes.fillRect(275, 380, 250, 110);
+        scene.boxes.fillRect(265, 380, 270, 110);
         scene.lobbyText = scene.add
             .text(400, 410, "Lobby Code:", {
-                fontFamily: "Chela One",
+                fontFamily: "Black Ops One",
                 color: "#FFFBF4",
                 fontSize: "40px",
+                stroke: "#000000",
+                strokeThickness: 5,
             })
             .setOrigin(0.5);
 
         // room key and copy key functions
         var key = scene.add
             .text(400, 460, this.roomKey, {
-                fontFamily: "Martian Mono",
+                fontFamily: "Black Ops One",
                 color: "#FFFBF4",
                 fontSize: "40px",
                 fontWeight: "bold",
+                stroke: "#000000",
+                strokeThickness: 5,
             })
             .setOrigin(0.5);
 
@@ -121,12 +126,12 @@ export default class LobbyScene extends Phaser.Scene {
             navigator.clipboard.writeText(this.roomKey);
             scene.copiedRoomKey = scene.add
                 .text(390, 325, "Room Key Copied To Clipboard!", {
-                    fontFamily: "Chela One",
+                    fontFamily: "Black Ops One",
                     fontSize: 35,
                     color: "#FFFFFF",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 })
                 .setOrigin(0.5)
                 .setPadding(0.0, 0.0, 0);
@@ -157,57 +162,58 @@ export default class LobbyScene extends Phaser.Scene {
 
         //Player 1
         scene.circle.fillStyle(0xe8ded1, 1);
-        scene.circle.fillCircle(125, 200, 50);
+        scene.circle.fillCircle(125, 210, 50);
 
         // Player 2
         scene.circle.fillStyle(0xe8ded1, 1);
-        scene.circle.fillCircle(300, 200, 50);
+        scene.circle.fillCircle(300, 210, 50);
 
         // Player 3
         scene.circle.fillStyle(0xe8ded1, 1);
-        scene.circle.fillCircle(475, 200, 50);
+        scene.circle.fillCircle(475, 210, 50);
 
         // Player 4
         scene.circle.fillStyle(0xe8ded1, 1);
-        scene.circle.fillCircle(650, 200, 50);
+        scene.circle.fillCircle(650, 210, 50);
 
         // Title
-        var cat = scene.add.text(125, 5, "Cat", {
-            fontFamily: "Chela One",
-            fontSize: 100,
-            color: "#F8F0C6",
+
+        var cat = scene.add.text(15, 15, "Cat", {
+            fontFamily: "Black Ops One",
+            fontSize: 95,
+            color: "#f1c582",
             fontStyle: "normal",
             stroke: "#000000",
-            strokeThickness: 12,
+            strokeThickness: 8,
         });
-        var burg = scene.add.text(250, 5, "Burglars", {
-            fontFamily: "Chela One",
-            fontSize: 100,
-            color: "#C1A87D",
+        var burg = scene.add.text(185, 15, "Burglars", {
+            fontFamily: "Black Ops One",
+            fontSize: 95,
+            color: "#f1c582",
             fontStyle: "normal",
             stroke: "#000000",
-            strokeThickness: 12,
+            strokeThickness: 8,
         });
-        var end = scene.add.text(565, 5, ".io", {
-            fontFamily: "Chela One",
-            fontSize: 100,
-            color: "#EEBA6B",
+        var end = scene.add.text(655, 15, ".io", {
+            fontFamily: "Black Ops One",
+            fontSize: 95,
+            color: "#f1c582",
             fontStyle: "normal",
             stroke: "#000000",
-            strokeThickness: 12,
+            strokeThickness: 8,
         });
         scene.boxes.fillStyle(0xc1a87d, 1);
-        scene.boxes.fillRect(275, 500, 250, 75);
+        scene.boxes.fillRect(265, 500, 270, 75);
 
         // Start Game button
         var startGame = scene.add
             .text(400, 535, "Start Game", {
-                fontFamily: "Chela One",
+                fontFamily: "Black Ops One",
                 fontSize: 40,
                 color: "#FFFBF4",
                 fontStyle: "normal",
                 stroke: "#000000",
-                strokeThickness: 12,
+                strokeThickness: 5,
             })
             .setOrigin(0.5)
             .setPadding(0.0, 0.0, 0);
@@ -219,7 +225,7 @@ export default class LobbyScene extends Phaser.Scene {
             if (scene.state.numPlayers == 4) {
                 scene.socket.emit("startGame", this.roomKey, this.socket.id);
                 console.log("startGame", this.roomKey);
-                scene.scene.start("IntroductionScene", {
+                scene.scene.start("FirstTask_Instruction", {
                     ...scene.state,
                     socket: scene.socket,
                     roomKey: this.roomKey,
@@ -231,12 +237,11 @@ export default class LobbyScene extends Phaser.Scene {
                 console.log("Not Enough Players!");
                 scene.notEnoughPlayers = scene.add
                     .text(400, 325, "Not Enough Players!", {
-                        fontFamily: "Chela One",
+                        fontFamily: "Black Ops One",
                         fontSize: 35,
-                        color: "#FF0000",
+                        color: "#ff0000",
                         fontStyle: "normal",
-                        stroke: "#000000",
-                        strokeThickness: 12,
+                        strokeThickness: 5,
                     })
                     .setOrigin(0.5)
                     .setPadding(0.0, 0.0, 0);
@@ -262,6 +267,7 @@ export default class LobbyScene extends Phaser.Scene {
                 color: "#FFFBF4",
             });
         });
+
         // DISCONNECT
         this.socket.on("disconnected", (arg) => {
             this.scene.restart(); // restart current scene
@@ -273,27 +279,27 @@ export default class LobbyScene extends Phaser.Scene {
     addPlayer(scene, playerInfo) {
         scene.joined = true;
         var circle = scene.circle.fillStyle(0xffffff, 1);
-        circle.fillCircle(125 + 175 * (playerInfo.playerNum - 1), 200, 50);
+        circle.fillCircle(125 + 175 * (playerInfo.playerNum - 1), 210, 50);
         var mycats = scene.add.sprite(
             300,
-            300,
+            310,
             `player` + playerInfo.playerNum
         );
         mycats
             .setScale(0.6)
-            .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
+            .setPosition(125 + 175 * (playerInfo.playerNum - 1), 210);
         var playerNameDisplay = scene.add
             .text(
                 125 + 175 * (playerInfo.playerNum - 1),
-                275,
+                280,
                 playerInfo.playerName,
                 {
-                    fontFamily: "Chela One",
-                    fontSize: 20,
+                    fontFamily: "Black Ops One",
+                    fontSize: 25,
                     color: "#FFFFFF",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 }
             )
             .setOrigin(0.5)
@@ -309,18 +315,20 @@ export default class LobbyScene extends Phaser.Scene {
         );
         otherPlayer
             .setScale(0.5)
-            .setPosition(125 + 175 * (playerInfo.playerNum - 1), 200);
+            .setPosition(125 + 175 * (playerInfo.playerNum - 1), 210);
         otherPlayer.playerId = playerInfo.playerId;
         var playerNameDisplay = scene.add
             .text(
                 125 + 175 * (playerInfo.playerNum - 1),
-                275,
+                285,
                 playerInfo.playerName,
                 {
-                    fontFamily: "Chela One",
-                    fontSize: 25,
-                    color: "#000000",
+                    fontFamily: "Black Ops One",
+                    fontSize: 20,
+                    color: "#FFFFFF",
                     fontStyle: "normal",
+                    stroke: "#000000",
+                    strokeThickness: 3,
                 }
             )
             .setOrigin(0.5)

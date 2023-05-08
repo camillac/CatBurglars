@@ -1,13 +1,21 @@
 class Sidebar extends Phaser.GameObjects.Container {
-  constructor(scene, width, height, players, socket) {
+
+  preload() {
+    this.load.image("player1", "client/assets/sprites/player1.png");
+    this.load.image("player2", "client/assets/sprites/player2.png");
+    this.load.image("player3", "client/assets/sprites/player3.png");
+    this.load.image("player4", "client/assets/sprites/player4.png");
+  }
+  constructor(scene, width, height, roomkey, socket) {
     super(scene, width, height);
     this.scene = scene; // scene that is requesting sidebar
     this.width = width; // width of screen
     this.height = height; // height of screen
-    this.players = players; // player data
+    this.roomkey = roomkey; // player data
     this.socket = socket; // socket data
-
-    this.scene.add.existing(this);
+    this.roomList = [];
+    // this.scene.add.existing(this);
+    let increment = 0;
 
     // Rectangle background for sidebar
     const menu = this.scene.add.graphics();
@@ -18,16 +26,92 @@ class Sidebar extends Phaser.GameObjects.Container {
     menu_side.fillRect(this.width / 5, 0, 7, this.height);
 
     //Add Players Sprite
-    var player_1 = this.scene.add.sprite(100, 300, "Player_1");
-    player_1.setScale(0.9).setPosition(width / 9.5, 70);
-    var player_2 = this.scene.add.sprite(100, 300, "Player_2");
-    player_2.setScale(0.9).setPosition(width / 9.5, 190);
-    var player_3 = this.scene.add.sprite(100, 300, "Player_3");
-    player_3.setScale(0.9).setPosition(width / 9.5, 310);
-    var player_4 = this.scene.add.sprite(100, 300, "Player_4");
-    player_4.setScale(0.9).setPosition(width / 9.5, 430);
+    scene.circle = this.scene.add.graphics();
+    scene.circle.fillStyle(0xe8ded1, 1);
+    scene.circle.fillCircle(85, 70, 50);
 
+    // Player 2
+    scene.circle.fillStyle(0xe8ded1, 1);
+    scene.circle.fillCircle(85, 190, 50);
+
+    // Player 3
+    scene.circle.fillStyle(0xe8ded1, 1);
+    scene.circle.fillCircle(85, 310, 50);
+
+    // Player 4
+    scene.circle.fillStyle(0xe8ded1, 1);
+    scene.circle.fillCircle(85, 430, 50);
+
+    console.log(this.roomkey);
+    socket.emit("getRooms", {});
+
+    socket.on("getRooms", (data) => {
+      console.log(data);
+      var rooms = Object.values(data);
+
+      for (var i = 0; i < rooms.length; i++) {
+        if (rooms[i].roomKey == this.roomkey) {
+          this.roomList.push(rooms[i]);
+        }
+      }
+      console.log(this.roomList[0].players);
+      let players = this.roomList[0].players;
+
+      // destroy prevoius players before adding new ones
+      if (scene.currentPlayer) {
+        console.log(scene.currentPlayer);
+        scene.currentPlayer.destroy();
+        scene.playerNames.destroy();
+        // scene.playerNames.destroy();
+      }
+      if (scene.otherPlayers) {
+        console.log(scene.otherPlayers);
+        scene.otherPlayers.destroy();
+        scene.playerNames.destroy();
+        increment = 0;
+      }
+      console.log(players);
+      console.log(this.socket.id);
+      Object.keys(players).forEach(function (id) {
+        console.log(players[id].playerId);
+        if (players[id].playerId === scene.socket.id) {
+          // add current player
+          console.log(scene.socket.id);
+          var circle = scene.circle.fillStyle(0xffffff, 1);
+          circle.fillCircle(85, 70, 50);
+          scene.currentPlayer = scene.add
+            .sprite(85, 70, "player" + players[id].playerNum)
+            .setScale(0.5);
+          scene.playerNames = scene.add.text(85, 130, players[id].playerName, {
+            fontSize: "24px",
+            color: "#000000",
+            fontFamily: "Chela One",
+          });
+          scene.playerNames.setOrigin(0.5);
+          scene.playerNames.setWordWrapWidth(100, true);
+          scene.playerNames.setAlign("center");
+          scene.playerNames.setDepth(1);
+          scene.currentPlayer.setDepth(1);
+        } else {
+          scene.otherPlayers = scene.add
+            .sprite(85, 190 + increment, "player" + players[id].playerNum)
+            .setScale(0.5);
+          scene.playerNames = scene.add.text(85, 190 + increment + 60, players[id].playerName, {
+            fontSize: "24px",
+            color: "#000000",
+            fontFamily: "Chela One",
+          });
+          scene.playerNames.setOrigin(0.5);
+          scene.playerNames.setWordWrapWidth(100, true);
+          scene.playerNames.setAlign("center");
+          scene.playerNames.setDepth(1);
+          scene.otherPlayers.setDepth(1);
+          increment += 120;
+        }
+      });
+    });
     // Add the setting wheel button
+    /*
     const settingsBtn = this.scene.add
       .image(width / 9.5, 535, "settings")
       .setInteractive();
@@ -35,9 +119,9 @@ class Sidebar extends Phaser.GameObjects.Container {
     settingsBtn.on("pointerup", () => {
       // Open the settings popup
       showSettingsPopup();
-    });
+    });*/
 
-    function showSettingsPopup() {
+    /*function showSettingsPopup() {
       // Create and display the settings popup
       const popup = scene.add.container(width / 2, height / 2);
       const background = scene.add.graphics();
@@ -58,8 +142,10 @@ class Sidebar extends Phaser.GameObjects.Container {
       popup.add(background);
       popup.add(closeButton);
       // Pop Up Settings
-    }
-  }
+    }*/
+
+  } // end of constructor
+
 }
 
 export default Sidebar;

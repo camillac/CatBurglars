@@ -12,9 +12,17 @@ export default class JoinLobbyScene extends Phaser.Scene {
         );
 
         this.load.image(
-            "background",
-            "client/assets/backgrounds/blob-scene-haikei (6).png"
+            "Sky_1",
+            "client/assets/sprites/Sky.png"
         );
+
+        this.load.image("Button", "client/assets/sprites/Button.png");
+        this.load.image("big_clouds", "client/assets/sprites/big_clouds.png");
+        this.load.image(
+            "Clouds_small",
+            "client/assets/sprites/clouds-white-small.png"
+        );
+        this.load.image("House_JoinLobby", "client/assets/sprites/House_No Backgroung.png");
     }
 
     create() {
@@ -22,60 +30,88 @@ export default class JoinLobbyScene extends Phaser.Scene {
         const scene = this;
         scene.roomKey = "";
         this.socket = io();
-
-        const background = this.add.image(400, 300, "background");
-        background.setScale(2.0);
-
+ //----- SKY BACKG GROUND 
+        const background = this.add.image(400, 300, "Sky_1");
+        background.setScale(4.0);
+        var Clouds_bg1 = this.add.tileSprite(
+            400,
+            470,
+            800,
+            1000,
+            "Clouds_small"
+        );
+//-------- CLOUD EFFECT
+        var Clouds_bg2 = this.add.tileSprite(400, 470, 800, 1000, "big_clouds");
+        scene.tweens.add({
+            targets: Clouds_bg1,
+            tilePositionX: { from: 0, to: 180 },
+            ease: "linear",
+            duration: 8000,
+            repeat: -1, //Infinity Times
+            yoyo:false, // @False Does not go Back and Forth
+        });
+        scene.tweens.add({
+            targets: Clouds_bg2,
+            tilePositionX: { from: 0, to: 180 },
+            ease: "linear",
+            duration: 8000,
+            repeat: -1, //Infinity Times
+            yoyo: false,
+        });
+        const house = scene.add.image("400","300","House_JoinLobby");
+        house.setScale(4);
         WebFont.load({
             google: {
-                families: ["Chela One"],
+                families: ["Black Ops One"],
             },
             active: function () {
                 // Title
-                add.text(125, 110, "Cat", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
-                    color: "#F8F0C6",
+                add.text(15, 110, "Cat", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 95,
+                    color: "#f1c582",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
-                add.text(250, 110, "Burglars", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
-                    color: "#C1A87D",
+                add.text(185, 110, "Burglars", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 95,
+                    color: "#f1c582",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
-                add.text(565, 110, ".io", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
-                    color: "#EEBA6B",
+                add.text(655, 110, ".io", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 95,
+                    color: "#f1c582",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
-
+        
                 // Back button
-                const backButton = add
-                    .text(50, 30, "Back", {
-                        fontFamily: "Chela One",
-                        fontSize: 20,
+                  
+                const backButton = add.text(60, 25, "Back", {
+                        fontFamily: "Black Ops One",
+                        fontSize: 25,
                         color: "#FFFBF4",
                         fontStyle: "normal",
                         stroke: "#000000",
-                        strokeThickness: 12,
+                        strokeThickness: 8,
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
+                    
+        //KEY NOT VALID
                 scene.notValidText = scene.add
                     .text(400, 300, "", {
                         fill: "#ff0000",
                         fontSize: "35px",
-                        fontFamily: "Chela One",
+                        fontFamily: "Black Ops One",
                         fontStyle: "normal",
-                        strokeThickness: 12,
+                        strokeThickness: 8,
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
@@ -116,16 +152,21 @@ export default class JoinLobbyScene extends Phaser.Scene {
                     }
                     scene.socket.on("keyNotValid", function () {
                         scene.notValidText.setText("Invalid Room Key");
-                    });
-                    scene.socket.on("roomIsFull", function () {
-                        scene.notValidText.setText("This Room is Full!");
+                       
+    
                     });
                     scene.socket.on("keyIsValid", function (code, name) {
-                        scene.scene.start("LobbyScene", {
-                            ...scene.state,
-                            socket: scene.socket,
-                            roomKey: code,
-                            playerName: name,
+                        scene.socket.emit("isRoomFull", code);
+                        scene.socket.on("roomIsFull", function () {
+                            scene.notValidText.setText("This Room is Full!");
+                        });
+                        scene.socket.on("roomNotFull", function () {
+                            scene.scene.start("LobbyScene", {
+                                ...scene.state,
+                                socket: scene.socket,
+                                roomKey: code,
+                                playerName: name,
+                            });
                         });
                     });
                 });

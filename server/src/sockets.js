@@ -32,6 +32,11 @@ module.exports = (io) => {
             socket.emit("roomCreated", key, name);
         });
 
+        // GET ALL ROOMS DETAILS
+        socket.on("getRooms", async function () {
+            socket.emit("getRooms", gameRooms);
+        });
+
         // JOIN A ROOM
         socket.on("joinRoom", (roomKey, playerName) => {
             socket.join(roomKey);
@@ -43,8 +48,8 @@ module.exports = (io) => {
                     playerNum: 0,
                     playerName: playerName,
                     finished: false,
-                    readyForTask1: false, 
-                    readyForFinalTask: false, 
+                    readyForTask1: false,
+                    readyForFinalTask: false,
                 };
 
                 roomInfo.players[socket.id].playerNum = Object.keys(
@@ -136,7 +141,7 @@ module.exports = (io) => {
                         numPlayers: 0,
                         inGame: false,
                         inFinalTask: false,
-                        readyForTask1: false, 
+                        readyForTask1: false,
                         readyForFinalTask: false,
                     };
 
@@ -169,6 +174,14 @@ module.exports = (io) => {
             }
         });
 
+        socket.on("isRoomFull", function (roomKey) {
+            if (gameRooms[roomKey].numPlayers >= 4) {
+                socket.emit("roomIsFull");
+            } else {
+                socket.emit("roomNotFull");
+            }
+        });
+
         // RECEIVES STARTGAME EMIT FROM ONE PLAYER, EMIT STARTGAME TO ALL PLAYERS IN THE ROOM
         socket.on("startGame", function (roomKey, start) {
             console.log("start game");
@@ -182,82 +195,88 @@ module.exports = (io) => {
         // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
-        socket.on("playerIsReadyForTask1", function(roomKey, sockId){
+        socket.on("playerIsReadyForTask1", function (roomKey, sockId) {
             const roomInfo = gameRooms[roomKey];
-            (roomInfo.players)[sockId].readyForTask1 = true; 
-            let allPlayersReadyForTask1 = true;  
-                for(playerId in roomInfo.players){
-                    console.log(roomInfo.players[playerId], roomInfo.players[playerId].readyForTask1);
-                    if(!(roomInfo.players[playerId].readyForTask1)){
-                        console.log("MAKE IT FALSE"); 
-                        allPlayersReadyForTask1 = false; 
-                    }
+            roomInfo.players[sockId].readyForTask1 = true;
+            let allPlayersReadyForTask1 = true;
+            for (playerId in roomInfo.players) {
+                console.log(
+                    roomInfo.players[playerId],
+                    roomInfo.players[playerId].readyForTask1
+                );
+                if (!roomInfo.players[playerId].readyForTask1) {
+                    console.log("MAKE IT FALSE");
+                    allPlayersReadyForTask1 = false;
                 }
-            if(allPlayersReadyForTask1){
-                console.log("NOW ALL PLYAERS READY FOR TASK 1, ", allPlayersReadyForTask1); 
-                socket.emit("startTask1ForAllPlayers", roomKey );
             }
-        }); 
+            if (allPlayersReadyForTask1) {
+                console.log(
+                    "NOW ALL PLYAERS READY FOR TASK 1, ",
+                    allPlayersReadyForTask1
+                );
+                socket.emit("startTask1ForAllPlayers", roomKey);
+            }
+        });
 
         socket.on("startTaskOne", function (roomKey, mainPlayer, playerIdx) {
             const roomInfo = gameRooms[roomKey];
-            if(!(roomInfo.task1IsStarted)){
-            roomInfo.task1IsStarted = true; 
-            let arr = [1, 2, 3, 4, 5, 6];
-            shuffleArray(arr);
-            const key1 = arr[0];
-            const key2 = arr[1];
-            const key3 = arr[2];
-            console.log(roomKey); 
-            console.log(key1, key2, key3);
-            // const roomInfo = gameRooms[roomKey];
-            console.log(roomInfo); 
-            for (playerId in roomInfo.players) {
-                if (roomInfo.players[playerId].playerNum == mainPlayer) {
-                    const counter = 30;
-                    io.to(roomInfo.players[playerId].playerId).emit(
-                        "startTimerEX",
-                        { roomKey, counter }
-                    );
-                    io.to(roomInfo.players[playerId].playerId).emit(
-                        "displayMainTaskOne",
-                        {
-                            playerId: playerId,
-                            playerNum: roomInfo.players[playerId].playerNum,
-                            key1: key1,
-                            key2: key2,
-                            key3: key3,
-                        }
-                    );
-                } else if (roomInfo.players[playerId].playerNum == 2) {
-                    io.to(roomInfo.players[playerId].playerId).emit(
-                        "displaySideTaskOne",
-                        {
-                            playerId: playerId,
-                            playerNum: roomInfo.players[playerId].playerNum,
-                            key: key1,
-                        }
-                    );
-                } else if (roomInfo.players[playerId].playerNum == 3) {
-                    io.to(roomInfo.players[playerId].playerId).emit(
-                        "displaySideTaskOne",
-                        {
-                            playerId: playerId,
-                            playerNum: roomInfo.players[playerId].playerNum,
-                            key: key2,
-                        }
-                    );
-                } else {
-                    io.to(roomInfo.players[playerId].playerId).emit(
-                        "displaySideTaskOne",
-                        {
-                            playerId: playerId,
-                            playerNum: roomInfo.players[playerId].playerNum,
-                            key: key3,
-                        }
-                    );
+            if (!roomInfo.task1IsStarted) {
+                roomInfo.task1IsStarted = true;
+                let arr = [1, 2, 3, 4, 5, 6];
+                shuffleArray(arr);
+                const key1 = arr[0];
+                const key2 = arr[1];
+                const key3 = arr[2];
+                console.log(roomKey);
+                console.log(key1, key2, key3);
+                // const roomInfo = gameRooms[roomKey];
+                console.log(roomInfo);
+                for (playerId in roomInfo.players) {
+                    if (roomInfo.players[playerId].playerNum == mainPlayer) {
+                        const counter = 30;
+                        io.to(roomInfo.players[playerId].playerId).emit(
+                            "startTimerEX",
+                            { roomKey, counter }
+                        );
+                        io.to(roomInfo.players[playerId].playerId).emit(
+                            "displayMainTaskOne",
+                            {
+                                playerId: playerId,
+                                playerNum: roomInfo.players[playerId].playerNum,
+                                key1: key1,
+                                key2: key2,
+                                key3: key3,
+                            }
+                        );
+                    } else if (roomInfo.players[playerId].playerNum == 2) {
+                        io.to(roomInfo.players[playerId].playerId).emit(
+                            "displaySideTaskOne",
+                            {
+                                playerId: playerId,
+                                playerNum: roomInfo.players[playerId].playerNum,
+                                key: key1,
+                            }
+                        );
+                    } else if (roomInfo.players[playerId].playerNum == 3) {
+                        io.to(roomInfo.players[playerId].playerId).emit(
+                            "displaySideTaskOne",
+                            {
+                                playerId: playerId,
+                                playerNum: roomInfo.players[playerId].playerNum,
+                                key: key2,
+                            }
+                        );
+                    } else {
+                        io.to(roomInfo.players[playerId].playerId).emit(
+                            "displaySideTaskOne",
+                            {
+                                playerId: playerId,
+                                playerNum: roomInfo.players[playerId].playerNum,
+                                key: key3,
+                            }
+                        );
+                    }
                 }
-            }
             }
         });
 
@@ -305,47 +324,49 @@ module.exports = (io) => {
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
 
         // ************************************ FINAL TASK SCENE SOCKETS *********************************************
-        socket.on("playerIsReadyForFinalTask", function(roomKey, sockId){
+        socket.on("playerIsReadyForFinalTask", function (roomKey, sockId) {
             const roomInfo = gameRooms[roomKey];
-            (roomInfo.players)[sockId].readyForFinalTask = true; 
-            let allPlayersReadyForFinalTask = true;  
-                for(playerId in roomInfo.players){
-                    if(!(roomInfo.players[playerId].readyForFinalTask)){
-                        console.log("MAKE IT FALSE"); 
-                        allPlayersReadyForFinalTask = false; 
-                    }
-                }
-            if(allPlayersReadyForFinalTask){
-                console.log("NOW ALL PLYAERS READY FOR FINAL TASK, ", allPlayersReadyForFinalTask); 
-                socket.emit("startFinalTaskForAllPlayers", roomKey );
-            }
-        }); 
-
-        socket.on("startFinalTask", function (roomKey, mainPlayer) {
-            const roomInfo = gameRooms[roomKey];
-            roomInfo.inFinalTask = true; 
-            if(!(roomInfo.finalTaskIsStarted)){
-            roomInfo.finalTaskIsStarted = true; 
-            console.log("entered startFinalTask");
-            const counter = 30; 
+            roomInfo.players[sockId].readyForFinalTask = true;
+            let allPlayersReadyForFinalTask = true;
             for (playerId in roomInfo.players) {
-                if (roomInfo.players[playerId].playerNum == mainPlayer){
-                    io.to(roomInfo.players[playerId].playerId).emit(
-                        "startTimerEXFinal",
-                        { roomKey, counter }
-                    );
+                if (!roomInfo.players[playerId].readyForFinalTask) {
+                    console.log("MAKE IT FALSE");
+                    allPlayersReadyForFinalTask = false;
                 }
-                io.to(roomInfo.players[playerId].playerId).emit(
-                            "displayFinal",
-                            {
-                                playerId: playerId,
-                                playerNum: roomInfo.players[playerId].playerNum,
-                            }
-                        );
             }
+            if (allPlayersReadyForFinalTask) {
+                console.log(
+                    "NOW ALL PLYAERS READY FOR FINAL TASK, ",
+                    allPlayersReadyForFinalTask
+                );
+                socket.emit("startFinalTaskForAllPlayers", roomKey);
             }
         });
 
+        socket.on("startFinalTask", function (roomKey, mainPlayer) {
+            const roomInfo = gameRooms[roomKey];
+            roomInfo.inFinalTask = true;
+            if (!roomInfo.finalTaskIsStarted) {
+                roomInfo.finalTaskIsStarted = true;
+                console.log("entered startFinalTask");
+                const counter = 30;
+                for (playerId in roomInfo.players) {
+                    if (roomInfo.players[playerId].playerNum == mainPlayer) {
+                        io.to(roomInfo.players[playerId].playerId).emit(
+                            "startTimerEXFinal",
+                            { roomKey, counter }
+                        );
+                    }
+                    io.to(roomInfo.players[playerId].playerId).emit(
+                        "displayFinal",
+                        {
+                            playerId: playerId,
+                            playerNum: roomInfo.players[playerId].playerNum,
+                        }
+                    );
+                }
+            }
+        });
 
         socket.on("startTimerFinal", function (roomKey, counterFinal) {
             console.log("IN START TIMER");
@@ -355,35 +376,32 @@ module.exports = (io) => {
                 io.to(roomKey).emit("counterFinal", counterFinal);
                 counterFinal--;
                 if (counterFinal <= 0) {
-                    let allFinishedPlaceholder = true;  
-                    for(playerId in roomInfo.players){
-                        if(!(roomInfo.players[playerId].finished)){
-                            console.log("MAKE IT FALSE"); 
-                            allFinishedPlaceholder = false; 
+                    let allFinishedPlaceholder = true;
+                    for (playerId in roomInfo.players) {
+                        if (!roomInfo.players[playerId].finished) {
+                            console.log("MAKE IT FALSE");
+                            allFinishedPlaceholder = false;
                         }
                     }
-                    if(allFinishedPlaceholder){
-                        allFinished = true; 
-                        console.log("NOW ALL FINISHED, ", allFinished); 
+                    if (allFinishedPlaceholder) {
+                        allFinished = true;
+                        console.log("NOW ALL FINISHED, ", allFinished);
+                    } else {
+                        allFinished = false;
                     }
-                    else{
-                        allFinished = false; 
-                    }
-                    console.log("ALL FINISHED:" , allFinished); 
+                    console.log("ALL FINISHED:", allFinished);
                     if (allFinished) {
                         console.log("WON");
                         console.log("counter destroyed");
                         io.to(roomKey).emit("winFinal", roomKey);
                         clearInterval(CountdownFinal);
-                    }
-                    else {
+                    } else {
                         console.log("Lost!");
                         io.to(roomKey).emit("lostFinal", roomKey);
                         clearInterval(CountdownFinal);
                     }
                 }
             }, 1000);
-
 
             // stop the counter so it doesnt keep going after game ends
             socket.on("showWinSceneFinal", function () {
@@ -407,7 +425,7 @@ module.exports = (io) => {
         socket.on("gotAllFish", function (roomKey, playerI) {
             console.log("GOT ALL FISH");
             const roomInfo = gameRooms[roomKey];
-            (roomInfo.players)[playerI].finished = true; 
+            roomInfo.players[playerI].finished = true;
         });
     });
 };

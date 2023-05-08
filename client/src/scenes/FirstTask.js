@@ -31,13 +31,14 @@ export default class FirstTask extends Phaser.Scene {
             "incorrectImage",
             "client/assets/sprites/incorrect.png"
         );
+        this.load.image("Door", "client/assets/sprites/door.png");
 
         //load background
         this.scene.run("FirstTask");
-        this.load.image(
+        /*this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
-        );
+        );*/
     }
 
     create() {
@@ -46,17 +47,21 @@ export default class FirstTask extends Phaser.Scene {
         // Setting up background for the game
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
-        scene.socket.emit("playerIsReadyForTask1",this.roomKey,scene.socket.id); 
-        scene.socket.on("startTask1ForAllPlayers", function(roomKey){
+        scene.socket.emit(
+            "playerIsReadyForTask1",
+            this.roomKey,
+            scene.socket.id
+        );
+        scene.socket.on("startTask1ForAllPlayers", function (roomKey) {
             scene.socket.emit("startTaskOne", roomKey, 1, scene.socket.id);
         });
 
         // Sidebar Set Up
-        const sidebar = new Sidebar(
+        let sidebar = new Sidebar(
             scene,
             this.game.config.width,
             this.game.config.height,
-            scene.players,
+            this.roomKey,
             scene.socket
         );
 
@@ -80,16 +85,16 @@ export default class FirstTask extends Phaser.Scene {
 
         // wait for other players until everybody syncs
         scene.waiting = scene.add.text(
-            290,
+            200,
             30,
             "Waiting for other players.. ",
             {
-                fontFamily: "Chela One",
-                fontSize: 45,
+                fontFamily: "Black Ops One",
+                fontSize: 40,
                 color: "#FFFFFF",
                 fontStyle: "normal",
                 stroke: "#000000",
-                strokeThickness: 12,
+                strokeThickness: 8,
             }
         );
 
@@ -102,7 +107,7 @@ export default class FirstTask extends Phaser.Scene {
                 color: "#FFFFFF",
                 fontStyle: "normal",
                 stroke: "#000000",
-                strokeThickness: 12,
+                strokeThickness: 8,
             });
 
             const { playerId, playerNum, key1, key2, key3 } = arg;
@@ -211,19 +216,19 @@ export default class FirstTask extends Phaser.Scene {
             var keyImage = scene.add.sprite(250, 300, `key` + key + `Image`);
             keyImage.setScale(5).setPosition(475, 350);
 
-            scene.add.text(320, 50, "Describe your key!", {
-                fontFamily: "Chela One",
+            scene.add.text(250, 30, "Describe your key!", {
+                fontFamily: "Black Ops One",
                 fontSize: 45,
                 color: "#FFFFFF",
                 fontStyle: "normal",
                 stroke: "#000000",
-                strokeThickness: 12,
+                strokeThickness: 8,
             });
         });
 
         // timer text connected with socket
         var timer = scene.add.text(750, 550, "", {
-            fontFamily: "Chela One",
+            fontFamily: "Black Ops One",
             fontSize: 40,
             color: "black",
             align: "center",
@@ -237,7 +242,7 @@ export default class FirstTask extends Phaser.Scene {
         });
 
         this.socket.on("nextTask", function (roomKey) {
-            if (!(scene.state.alreadyCalledNextTask)) {
+            if (!scene.state.alreadyCalledNextTask) {
                 scene.state.alreadyCalledNextTask = true;
                 console.log("Finished Task 1, moving to Final Task!");
                 console.log(scene.start);
@@ -253,7 +258,6 @@ export default class FirstTask extends Phaser.Scene {
             }
         });
 
-
         // lost condition
         this.socket.on("lost", function (roomKey) {
             console.log("Lost!");
@@ -264,8 +268,7 @@ export default class FirstTask extends Phaser.Scene {
         });
     }
 
-    update() {
-    }
+    update() {}
 
     // Check if the Key selected is correct/incorrect
     isCorrectKey(scene, currentKey, key1, key2, key3, posX, posY) {
