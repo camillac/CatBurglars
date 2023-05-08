@@ -51,8 +51,7 @@ module.exports = (io) => {
                     playerNum: 0,
                     playerName: playerName,
                     finished: false,
-                    readyForTask1: false,
-                    readyForFinalTask: false,
+                    ready: false
                 };
 
                 roomInfo.players[socket.id].playerNum = Object.keys(
@@ -149,8 +148,8 @@ module.exports = (io) => {
                         numPlayers: 0,
                         inGame: false,
                         inFinalTask: false,
-                        readyForTask1: false,
-                        readyForFinalTask: false,
+                        task1IsStarted: false,
+                        finalTaskIsStarted: false,
                     };
 
                     console.log("ROOM CREATED - ROOM KEY: " + newKey);
@@ -203,29 +202,7 @@ module.exports = (io) => {
         // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
-        socket.on("playerIsReadyForTask1", function (roomKey, sockId) {
-            const roomInfo = gameRooms[roomKey];
-            roomInfo.players[sockId].readyForTask1 = true;
-            let allPlayersReadyForTask1 = true;
-            for (playerId in roomInfo.players) {
-                console.log(
-                    roomInfo.players[playerId],
-                    roomInfo.players[playerId].readyForTask1
-                );
-                if (!roomInfo.players[playerId].readyForTask1) {
-                    console.log("MAKE IT FALSE");
-                    allPlayersReadyForTask1 = false;
-                }
-            }
-            if (allPlayersReadyForTask1) {
-                console.log(
-                    "NOW ALL PLYAERS READY FOR TASK 1, ",
-                    allPlayersReadyForTask1
-                );
-                socket.emit("startTask1ForAllPlayers", roomKey);
-            }
-        });
-
+        
         socket.on("startTaskOne", function (roomKey, mainPlayer, playerIdx) {
             const roomInfo = gameRooms[roomKey];
             if (!roomInfo.task1IsStarted) {
@@ -332,24 +309,6 @@ module.exports = (io) => {
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
 
         // ************************************ FINAL TASK SCENE SOCKETS *********************************************
-        socket.on("playerIsReadyForFinalTask", function (roomKey, sockId) {
-            const roomInfo = gameRooms[roomKey];
-            roomInfo.players[sockId].readyForFinalTask = true;
-            let allPlayersReadyForFinalTask = true;
-            for (playerId in roomInfo.players) {
-                if (!roomInfo.players[playerId].readyForFinalTask) {
-                    console.log("MAKE IT FALSE");
-                    allPlayersReadyForFinalTask = false;
-                }
-            }
-            if (allPlayersReadyForFinalTask) {
-                console.log(
-                    "NOW ALL PLYAERS READY FOR FINAL TASK, ",
-                    allPlayersReadyForFinalTask
-                );
-                socket.emit("startFinalTaskForAllPlayers", roomKey);
-            }
-        });
 
         socket.on("startFinalTask", function (roomKey, mainPlayer) {
             const roomInfo = gameRooms[roomKey];
@@ -434,6 +393,35 @@ module.exports = (io) => {
             console.log("GOT ALL FISH");
             const roomInfo = gameRooms[roomKey];
             roomInfo.players[playerI].finished = true;
+        });
+
+        
+        
+        
+        // ************************************ SYNCING SOCKETS *********************************************
+
+        socket.on("ready", function(roomKey) {
+            const roomInfo = gameRooms[roomKey];
+            var check = 0;
+            roomInfo.players[socket.id].ready = true;
+            for (var player in roomInfo.players) {
+                if (roomInfo.players[player].ready == true)
+                {
+                    check++;
+                }
+            }
+            if (check < 4) {
+                socket.emit("waiting");
+            } else if (check = 4) {
+                io.to(roomKey).emit("canStart");
+                io.to(roomKey).emit("destroyWaitingScene");
+                for (var player in roomInfo.players) {
+                    if (roomInfo.players[player].ready == true)
+                    {
+                        roomInfo.players[player].ready = false;
+                    }
+                }
+            }
         });
     });
 };

@@ -44,17 +44,36 @@ export default class FirstTask extends Phaser.Scene {
     create() {
         const scene = this;
         scene.state.alreadyCalledNextTask = false;
-        // Setting up background for the game
+
+        this.socket.emit("ready", scene.roomKey);
+        this.socket.on("waiting", function() {
+            var waitingscene = scene.add.text(
+                200,
+                30,
+                "Waiting for other players.. ",
+                {
+                    fontFamily:"Black Ops One",
+                    fontSize: 40,
+                    color: "#FFFFFF",
+                    fontStyle: "normal",
+                    stroke: "#000000",
+                    strokeThickness: 8,
+                }
+            );
+            scene.socket.on("destroyWaitingScene", function() {
+                waitingscene.destroy();
+            });
+        });
+
+        this.socket.on("canStart", function() {
+            if (scene.socket.id == scene.start) {
+                scene.socket.emit("startTaskOne", scene.roomKey, 1, scene.socket.id);
+            }
+        });
+
+         // Setting up background for the game
         const background = this.add.image(400, 300, "Door");
         background.setScale(0.5);
-        scene.socket.emit(
-            "playerIsReadyForTask1",
-            this.roomKey,
-            scene.socket.id
-        );
-        scene.socket.on("startTask1ForAllPlayers", function (roomKey) {
-            scene.socket.emit("startTaskOne", roomKey, 1, scene.socket.id);
-        });
 
         // Sidebar Set Up
         let sidebar = new Sidebar(
@@ -83,24 +102,8 @@ export default class FirstTask extends Phaser.Scene {
             scene.socket.emit("startTimer", roomKey, counter);
         });
 
-        // wait for other players until everybody syncs
-        scene.waiting = scene.add.text(
-            200,
-            30,
-            "Waiting for other players.. ",
-            {
-                fontFamily: "Black Ops One",
-                fontSize: 40,
-                color: "#FFFFFF",
-                fontStyle: "normal",
-                stroke: "#000000",
-                strokeThickness: 8,
-            }
-        );
-
         // Main Player Display
         this.socket.on("displayMainTaskOne", function (arg) {
-            scene.waiting.destroy();
             scene.add.text(200, 30, "Choose the right keys!", {
                 fontFamily: "Black Ops One",
                 fontSize: 45,
@@ -210,7 +213,6 @@ export default class FirstTask extends Phaser.Scene {
 
         // Side Task Display
         this.socket.on("displaySideTaskOne", function (arg) {
-            scene.waiting.destroy();
             console.log("displaySideTaskOne");
             const { playerId, playerNum, key } = arg;
             var keyImage = scene.add.sprite(250, 300, `key` + key + `Image`);
@@ -233,6 +235,7 @@ export default class FirstTask extends Phaser.Scene {
             color: "black",
             align: "center",
         });
+        
         this.socket.on("counter", function (counter) {
             timer.text = counter;
         });

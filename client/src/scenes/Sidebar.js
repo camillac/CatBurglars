@@ -54,29 +54,22 @@ class Sidebar extends Phaser.GameObjects.Container {
           this.roomList.push(rooms[i]);
         }
       }
-      console.log(this.roomList[0].players);
       let players = this.roomList[0].players;
 
       // destroy prevoius players before adding new ones
       if (scene.currentPlayer) {
-        console.log(scene.currentPlayer);
         scene.currentPlayer.destroy();
         scene.playerNames.destroy();
         // scene.playerNames.destroy();
       }
       if (scene.otherPlayers) {
-        console.log(scene.otherPlayers);
         scene.otherPlayers.destroy();
         scene.playerNames.destroy();
         increment = 0;
       }
-      console.log(players);
-      console.log(this.socket.id);
       Object.keys(players).forEach(function (id) {
-        console.log(players[id].playerId);
         if (players[id].playerId === scene.socket.id) {
           // add current player
-          console.log(scene.socket.id);
           var circle = scene.circle.fillStyle(0xffffff, 1);
           circle.fillCircle(85, 70, 50);
           scene.currentPlayer = scene.add

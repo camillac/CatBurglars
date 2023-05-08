@@ -8,6 +8,7 @@ export default class FinalTask extends Phaser.Scene {
         super("FinalTask");
         this.state = {};
     }
+    
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
@@ -15,6 +16,7 @@ export default class FinalTask extends Phaser.Scene {
         this.players = data.players;
         this.start = data.start;
     }
+    
     preload() {
         //load cats/players
         this.load.image("Player_1", "client/assets/sprites/player1.png");
@@ -44,18 +46,36 @@ export default class FinalTask extends Phaser.Scene {
         const scene = this;
         scene.state.start_game = false; // flag to tell fish when to start falling
         scene.state.fishCaughtN = 0;
+        
+        this.socket.emit("ready", scene.roomKey);
+        this.socket.on("waiting", function() {
+            var waitingscene = scene.add.text(
+                200,
+                30,
+                "Waiting for other players.. ",
+                {
+                    fontFamily:"Black Ops One",
+                    fontSize: 40,
+                    color: "#FFFFFF",
+                    fontStyle: "normal",
+                    stroke: "#000000",
+                    strokeThickness: 8,
+                }
+            );
+            scene.socket.on("destroyWaitingScene", function() {
+                waitingscene.destroy();
+            });
+        });
+
+        this.socket.on("canStart", function() {
+            if (scene.socket.id == scene.start) {
+                scene.socket.emit("startFinalTask", scene.roomKey, 1, scene.socket.id);
+            }
+        });
+
         // Setting up background for the game
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
-        scene.socket.emit(
-            "playerIsReadyForFinalTask",
-            this.roomKey,
-            scene.socket.id
-        );
-        // tell backend to start task
-        scene.socket.on("startFinalTaskForAllPlayers", function (roomKey) {
-            scene.socket.emit("startFinalTask", roomKey, 1, scene.socket.id);
-        });
 
         // Sidebar Set Up
         const sidebar = new Sidebar(
@@ -84,21 +104,6 @@ export default class FinalTask extends Phaser.Scene {
             const { roomKey, counter } = arg;
             scene.socket.emit("startTimerFinal", roomKey, counter);
         });
-
-        // wait for other players until everybody syncs
-        scene.waiting = scene.add.text(
-            290,
-            30,
-            "Waiting for other players.. ",
-            {
-                fontFamily: "Chela One",
-                fontSize: 45,
-                color: "#FFFFFF",
-                fontStyle: "normal",
-                stroke: "#000000",
-                strokeThickness: 12,
-            }
-        );
 
         // create and manage fish sprites
         scene.fish1 = this.add.image(
@@ -154,7 +159,6 @@ export default class FinalTask extends Phaser.Scene {
         // Main Player Final Task Display
         this.socket.on("displayFinal", function (arg) {
             // destroy "Waiting for players..."
-            scene.waiting.destroy();
 
             // tell update() to start moving fish
             scene.state.start_game = true;
