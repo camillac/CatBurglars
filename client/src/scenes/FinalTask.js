@@ -1,4 +1,4 @@
-// the inspiration and general outline for a lot of functionality of 
+// the inspiration and general outline for a lot of functionality of
 // this task is attributed to this tutorial: https://www.youtube.com/watch?v=hkedWHfU_oQ&list=PLDyH9Tk5ZdFzEu_izyqgPFtHJJXkc79no&index=10
 
 import Sidebar from "./Sidebar.js";
@@ -23,11 +23,13 @@ export default class FinalTask extends Phaser.Scene {
         this.load.image("Player_4", "client/assets/sprites/player4.png");
         this.load.image("settings", "client/assets/sprites/settings_icon.png");
         this.load.image("basket", "client/assets/sprites/basket.png");
-        
 
         // Load fish images
         for (let i = 1; i <= 4; i++) {
-            this.load.image(`fish${i}`, `client/assets/sprites/fish/fish${i}.png`);
+            this.load.image(
+                `fish${i}`,
+                `client/assets/sprites/fish/fish${i}.png`
+            );
         }
 
         //load background
@@ -41,7 +43,7 @@ export default class FinalTask extends Phaser.Scene {
     create() {
         const scene = this;
         scene.state.start_game = false; // flag to tell fish when to start falling
-        scene.state.fishCaughtN = 0; 
+        scene.state.fishCaughtN = 0;
         // Setting up background for the game
         const background = this.add.image(400, 300, "background");
         background.setScale(2.0);
@@ -61,7 +63,7 @@ export default class FinalTask extends Phaser.Scene {
         );
 
         // DISCONNECT
-        this.socket.on("backToLobby", function (arg) {
+        this.socket.on("backToLobbyFinal", function (arg) {
             console.log("LOBBYSCENE");
             const { roomKey } = arg;
 
@@ -95,13 +97,41 @@ export default class FinalTask extends Phaser.Scene {
         );
 
         // create and manage fish sprites
-        scene.fish1 = this.add.image(Phaser.Math.Between(this.game.config.width / 4, this.game.config.width), (-10), "fish1");
+        scene.fish1 = this.add.image(
+            Phaser.Math.Between(
+                this.game.config.width / 4,
+                this.game.config.width
+            ),
+            -10,
+            "fish1"
+        );
         scene.fish1.setScale(0.1);
-        scene.fish2 = this.add.image(Phaser.Math.Between(this.game.config.width / 4, this.game.config.width), (-10), "fish2");
+        scene.fish2 = this.add.image(
+            Phaser.Math.Between(
+                this.game.config.width / 4,
+                this.game.config.width
+            ),
+            -10,
+            "fish2"
+        );
         scene.fish2.setScale(0.1);
-        scene.fish3 = this.add.image(Phaser.Math.Between(this.game.config.width / 4, this.game.config.width), (-10), "fish3");
+        scene.fish3 = this.add.image(
+            Phaser.Math.Between(
+                this.game.config.width / 4,
+                this.game.config.width
+            ),
+            -10,
+            "fish3"
+        );
         scene.fish3.setScale(0.1);
-        scene.fish4 = this.add.image(Phaser.Math.Between(this.game.config.width / 4, this.game.config.width), (-10), "fish4");
+        scene.fish4 = this.add.image(
+            Phaser.Math.Between(
+                this.game.config.width / 4,
+                this.game.config.width
+            ),
+            -10,
+            "fish4"
+        );
         scene.fish4.setScale(0.1);
 
         scene.fish1.setInteractive();
@@ -114,7 +144,6 @@ export default class FinalTask extends Phaser.Scene {
         this.fishies.add(this.fish2);
         this.fishies.add(this.fish3);
         this.fishies.add(this.fish4);
-
 
         // *** Host and other players are separated in case we need it for backend, but
         // *** there is no UI difference for this task as of now between them
@@ -139,7 +168,7 @@ export default class FinalTask extends Phaser.Scene {
                 color: "black",
                 align: "center",
             });
-            // Fish Caught text 
+            // Fish Caught text
             var fishCaught = scene.add.text(250, 550, "Fish Caught: ", {
                 fontFamily: "Chela One",
                 fontSize: 40,
@@ -155,7 +184,11 @@ export default class FinalTask extends Phaser.Scene {
             // credit: https://github.com/photonstorm/phaser3-examples/blob/master/public/src/input/dragging/drag%20horizontally.js
             // create basket and allow it to be dragged
             // ** boundaries are not working, need to fix so that it doesnt overlap sidebar
-            var basket = scene.physics.add.sprite(scene.game.config.width / 2, scene.game.config.height - 200, "basket");
+            var basket = scene.physics.add.sprite(
+                scene.game.config.width / 2,
+                scene.game.config.height - 200,
+                "basket"
+            );
             basket.setScale(0.5);
             basket.setInteractive({ draggable: true });
 
@@ -164,25 +197,38 @@ export default class FinalTask extends Phaser.Scene {
             // credit: https://labs.phaser.io/edit.html?src=src/physics/arcade/overlap%20event.js
             // collision event with basket+fish
             scene.physics.add.overlap(basket, scene.fishies);
-            scene.physics.world.on('overlap', (basket, fish, basketbody, fishbody) =>
-            {
-                // this is the resetFish code, for some reason it was not letting me call it
-                fish.y = 0;
-                var randomX = Phaser.Math.Between(scene.game.config.width / 4, scene.game.config.width - 10);
-                fish.x = randomX;
-                scene.state.fishCaughtN +=1; 
-                fishCaughtNumber.text = scene.state.fishCaughtN; 
-                console.log(scene.state.fishCaughtN); 
-                if(scene.state.fishCaughtN ==30){
-                    console.log("GOT ALL 30"); 
-                    scene.socket.emit("gotAllFish", scene.roomKey, scene.socket.id ); 
+            scene.physics.world.on(
+                "overlap",
+                (basket, fish, basketbody, fishbody) => {
+                    // this is the resetFish code, for some reason it was not letting me call it
+                    fish.y = 0;
+                    var randomX = Phaser.Math.Between(
+                        scene.game.config.width / 4,
+                        scene.game.config.width - 10
+                    );
+                    fish.x = randomX;
+                    scene.state.fishCaughtN += 1;
+                    fishCaughtNumber.text = scene.state.fishCaughtN;
+                    console.log(scene.state.fishCaughtN);
+                    if (scene.state.fishCaughtN == 30) {
+                        console.log("GOT ALL 30");
+                        scene.socket.emit(
+                            "gotAllFish",
+                            scene.roomKey,
+                            scene.socket.id
+                        );
+                    }
                 }
-            })
+            );
         });
 
         // credit: https://github.com/photonstorm/phaser3-examples/blob/master/public/src/input/dragging/drag%20horizontally.js
-        this.input.on('drag', (pointer, gameObject, dragX) => {
-            dragX = Phaser.Math.Clamp(dragX, scene.game.config.width / 5, scene.game.config.width);
+        this.input.on("drag", (pointer, gameObject, dragX) => {
+            dragX = Phaser.Math.Clamp(
+                dragX,
+                scene.game.config.width / 5,
+                scene.game.config.width
+            );
 
             gameObject.x = dragX;
         });
@@ -194,8 +240,6 @@ export default class FinalTask extends Phaser.Scene {
             color: "black",
             align: "center",
         });
-
-        
 
         this.socket.on("counterFinal", function (counterFinal) {
             timerFinal.text = counterFinal;
@@ -246,9 +290,10 @@ export default class FinalTask extends Phaser.Scene {
     // sets fish back to top of screen
     resetFish(fish) {
         fish.y = 0;
-        var randomX = Phaser.Math.Between(this.game.config.width / 4, this.game.config.width - 10);
+        var randomX = Phaser.Math.Between(
+            this.game.config.width / 4,
+            this.game.config.width - 10
+        );
         fish.x = randomX;
     }
 }
-
-
