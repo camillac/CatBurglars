@@ -30,7 +30,8 @@ export default class JoinLobbyScene extends Phaser.Scene {
         const scene = this;
         scene.roomKey = "";
         this.socket = io();
- //----- SKY BACKG GROUND 
+        
+        //----- SKY BACKG GROUND 
         const background = this.add.image(400, 300, "Sky_1");
         background.setScale(4.0);
         var Clouds_bg1 = this.add.tileSprite(
@@ -40,7 +41,8 @@ export default class JoinLobbyScene extends Phaser.Scene {
             1000,
             "Clouds_small"
         );
-//-------- CLOUD EFFECT
+        
+        //-------- CLOUD EFFECT
         var Clouds_bg2 = this.add.tileSprite(400, 470, 800, 1000, "big_clouds");
         scene.tweens.add({
             targets: Clouds_bg1,
@@ -58,6 +60,7 @@ export default class JoinLobbyScene extends Phaser.Scene {
             repeat: -1, //Infinity Times
             yoyo: false,
         });
+        
         const house = scene.add.image("400","300","House_JoinLobby");
         house.setScale(4);
         WebFont.load({
@@ -92,19 +95,18 @@ export default class JoinLobbyScene extends Phaser.Scene {
                 });
         
                 // Back button
-                  
                 const backButton = add.text(60, 25, "Back", {
-                        fontFamily: "Black Ops One",
-                        fontSize: 25,
-                        color: "#FFFBF4",
-                        fontStyle: "normal",
-                        stroke: "#000000",
-                        strokeThickness: 8,
-                    })
-                    .setOrigin(0.5)
-                    .setPadding(10, 10, 10, 10);
+                    fontFamily: "Black Ops One",
+                    fontSize: 25,
+                    color: "#FFFBF4",
+                    fontStyle: "normal",
+                    stroke: "#000000",
+                    strokeThickness: 8,
+                })
+                .setOrigin(0.5)
+                .setPadding(10, 10, 10, 10);
                     
-        //KEY NOT VALID
+                //KEY NOT VALID
                 scene.notValidText = scene.add
                     .text(400, 300, "", {
                         fill: "#ff0000",
@@ -152,8 +154,6 @@ export default class JoinLobbyScene extends Phaser.Scene {
                     }
                     scene.socket.on("keyNotValid", function () {
                         scene.notValidText.setText("Invalid Room Key");
-                       
-    
                     });
                     scene.socket.on("keyIsValid", function (code, name) {
                         scene.socket.emit("isRoomFull", code);
