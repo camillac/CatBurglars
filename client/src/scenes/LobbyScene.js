@@ -1,3 +1,6 @@
+// PlayScene and LobbyScene both use this Among Us Tutorial as a reference:
+// github.com/hannahrobot/amongus-tutorial
+
 export default class LobbyScene extends Phaser.Scene {
     constructor() {
         super({ LobbyScene });
@@ -83,10 +86,9 @@ export default class LobbyScene extends Phaser.Scene {
                 roomKey: roomKey,
                 playerName: scene.playerName,
                 playerInfo: scene.state.players,
-                playerNum: scene.state.players[scene.socket.id].playerNum
+                playerNum: scene.state.players[scene.socket.id].playerNum,
             });
         });
-
 
         //Players Circle
         scene.boxes = scene.add.graphics();
@@ -214,7 +216,7 @@ export default class LobbyScene extends Phaser.Scene {
 
         // Start Game button events
         startGame.on("pointerup", () => {
-            if (scene.state.numPlayers == 2) {
+            if (scene.state.numPlayers == 4) {
                 scene.socket.emit("startGame", this.roomKey, this.socket.id);
                 console.log("startGame", this.roomKey);
                 scene.scene.start("IntroductionScene", {
@@ -223,7 +225,7 @@ export default class LobbyScene extends Phaser.Scene {
                     roomKey: this.roomKey,
                     playerName: this.playerName,
                     playerInfo: scene.state.players,
-                    playerNum: scene.state.players[this.socket.id].playerNum
+                    playerNum: scene.state.players[this.socket.id].playerNum,
                 });
             } else {
                 console.log("Not Enough Players!");
@@ -261,12 +263,10 @@ export default class LobbyScene extends Phaser.Scene {
             });
         });
         // DISCONNECT
-        this.socket.on("disconnected",  (arg) => {
+        this.socket.on("disconnected", (arg) => {
             this.scene.restart(); // restart current scene
         });
     }
-
-
 
     //-------------------------- Add Players Functions -----------------------------
 
