@@ -45,8 +45,8 @@ export default class FirstTask extends Phaser.Scene {
         const scene = this;
         scene.state.alreadyCalledNextTask = false;
         // Setting up background for the game
-        const background = this.add.image(400, 300, "background");
-        background.setScale(2.0);
+        const background = this.add.image(400, 300, "Door");
+        background.setScale(0.5);
         scene.socket.emit(
             "playerIsReadyForTask1",
             this.roomKey,
@@ -101,7 +101,7 @@ export default class FirstTask extends Phaser.Scene {
         // Main Player Display
         this.socket.on("displayMainTaskOne", function (arg) {
             scene.waiting.destroy();
-            scene.add.text(290, 30, "Choose the right keys!", {
+            scene.add.text(200, 30, "Choose the right keys!", {
                 fontFamily: "Chela One",
                 fontSize: 45,
                 color: "#FFFFFF",
