@@ -186,14 +186,6 @@ module.exports = (io) => {
             }
         });
 
-        socket.on("isRoomFull", function (roomKey) {
-            if (gameRooms[roomKey].numPlayers >= 4) {
-                socket.emit("roomIsFull");
-            } else {
-                socket.emit("roomNotFull");
-            }
-        });
-
         // RECEIVES STARTGAME EMIT FROM ONE PLAYER, EMIT STARTGAME TO ALL PLAYERS IN THE ROOM
         socket.on("startGame", function (roomKey, start) {
             console.log("start game");
