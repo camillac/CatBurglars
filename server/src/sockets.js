@@ -263,8 +263,6 @@ module.exports = (io) => {
 
         socket.on("startTimer", function (roomKey, counter) {
             console.log("IN START TIMER");
-            console.log(roomKey);
-            console.log(counter);
             socket.on("decreaseCounter", function () {
                 counter = counter - 5;
             });
@@ -312,7 +310,6 @@ module.exports = (io) => {
             (roomInfo.players)[sockId].readyForFinalTask = true; 
             let allPlayersReadyForFinalTask = true;  
                 for(playerId in roomInfo.players){
-                    console.log(roomInfo.players[playerId], roomInfo.players[playerId].readyForFinalTask);
                     if(!(roomInfo.players[playerId].readyForFinalTask)){
                         console.log("MAKE IT FALSE"); 
                         allPlayersReadyForFinalTask = false; 
@@ -327,13 +324,10 @@ module.exports = (io) => {
         socket.on("startFinalTask", function (roomKey, mainPlayer) {
             const roomInfo = gameRooms[roomKey];
             roomInfo.inFinalTask = true; 
-            console.log(roomInfo); 
             if(!(roomInfo.finalTaskIsStarted)){
             roomInfo.finalTaskIsStarted = true; 
             console.log("entered startFinalTask");
             const counter = 30; 
-            console.log("main player: ", mainPlayer); 
-            console.log(roomInfo.players[mainPlayer]); 
             for (playerId in roomInfo.players) {
                 if (roomInfo.players[playerId].playerNum == mainPlayer){
                     io.to(roomInfo.players[playerId].playerId).emit(
@@ -341,8 +335,6 @@ module.exports = (io) => {
                         { roomKey, counter }
                     );
                 }
-                console.log("playerID: ", playerId); 
-                console.log("playerIDscok: ", roomInfo.players[playerId].playerId); 
                 io.to(roomInfo.players[playerId].playerId).emit(
                             "displayFinal",
                             {
@@ -357,18 +349,14 @@ module.exports = (io) => {
 
         socket.on("startTimerFinal", function (roomKey, counterFinal) {
             console.log("IN START TIMER");
-            console.log(roomKey);
-            console.log(counterFinal);
             const roomInfo = gameRooms[roomKey];
             var CountdownFinal = setInterval(function () {
                 console.log(counterFinal);
                 io.to(roomKey).emit("counterFinal", counterFinal);
                 counterFinal--;
                 if (counterFinal <= 0) {
-                    console.log(gameRooms[roomKey]); 
                     let allFinishedPlaceholder = true;  
                     for(playerId in roomInfo.players){
-                        console.log(roomInfo.players[playerId], roomInfo.players[playerId].finished);
                         if(!(roomInfo.players[playerId].finished)){
                             console.log("MAKE IT FALSE"); 
                             allFinishedPlaceholder = false; 
@@ -420,7 +408,6 @@ module.exports = (io) => {
             console.log("GOT ALL FISH");
             const roomInfo = gameRooms[roomKey];
             (roomInfo.players)[playerI].finished = true; 
-            console.log(roomInfo); 
         });
     });
 };

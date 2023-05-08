@@ -50,9 +50,6 @@ export default class FirstTask extends Phaser.Scene {
         scene.socket.on("startTask1ForAllPlayers", function(roomKey){
             scene.socket.emit("startTaskOne", roomKey, 1, scene.socket.id);
         });
-        // if (scene.socket.id == this.start) {
-        //     scene.socket.emit("startTaskOne", this.roomKey, 1, scene.socket.id);
-        // }
 
         // Sidebar Set Up
         const sidebar = new Sidebar(

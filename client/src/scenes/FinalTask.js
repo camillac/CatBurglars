@@ -53,9 +53,6 @@ export default class FinalTask extends Phaser.Scene {
             scene.socket.emit("startFinalTask", roomKey, 1, scene.socket.id);
         });
 
-        // if (scene.socket.id === this.start) {
-        //     this.socket.emit("startFinalTask", this.roomKey, scene.socket.id);
-        // }
         // Sidebar Set Up
         const sidebar = new Sidebar(
             scene,
