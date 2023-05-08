@@ -29,6 +29,9 @@ module.exports = (io) => {
                 finalTaskIsStarted: false,
             };
             console.log("ROOM CREATED - ROOM KEY: " + key);
+            if (name == "") {
+                name = "Player 1";
+            }
             socket.emit("roomCreated", key, name);
         });
 
@@ -55,6 +58,11 @@ module.exports = (io) => {
                 roomInfo.players[socket.id].playerNum = Object.keys(
                     roomInfo.players
                 ).length;
+
+                if (playerName == "") {
+                    roomInfo.players[socket.id].playerName =
+                        "Player " + roomInfo.players[socket.id].playerNum;
+                }
             }
 
             // Update number of players
