@@ -6,6 +6,7 @@ const app = express();
 const socketio = require("socket.io");
 module.exports = app;
 require('events').EventEmitter.defaultMaxListeners = 0
+
 // Create the express app
 const createApp = () => {
     app.use("/client", express.static(__dirname + "/../client"));
@@ -24,10 +25,11 @@ const startListening = () => {
     require("./src/sockets")(io);
 };
 
-// Boot the server up
+// Function to boot the server up
 async function bootApp() {
     await createApp();
     await startListening();
 }
 
+// BOOT THE SERVER
 bootApp();

@@ -16,9 +16,7 @@ module.exports = (io) => {
         // CREATE A ROOM
         socket.on("getRoomCode", async function (name) {
             let key = codeGenerator();
-            while (Object.keys(gameRooms).includes(key)) {
-                key = codeGenerator();
-            }
+            
             gameRooms[key] = {
                 roomKey: key,
                 players: {},
@@ -28,10 +26,12 @@ module.exports = (io) => {
                 task1IsStarted: false,
                 finalTaskIsStarted: false,
             };
+            
             console.log("ROOM CREATED - ROOM KEY: " + key);
             if (name == "") {
                 name = "Player 1";
             }
+            
             socket.emit("roomCreated", key, name);
         });
 
@@ -123,10 +123,13 @@ module.exports = (io) => {
                     );
 
                     if (roomInfo.players[playerId].playerNum > deletedNum) {
+                        if ((roomInfo.players[playerId].playerName) == ("Player " + roomInfo.players[playerId].playerNum)) {
+                            (roomInfo.players[playerId].playerName) = ("Player " + (roomInfo.players[socket.id].playerNum));
+                        }
                         roomInfo.players[playerId].playerNum =
                             roomInfo.players[playerId].playerNum - 1;
-                    }
-                }
+                    };
+                };
 
                 // Remove this player from our players object
                 delete roomInfo.players[socket.id];
@@ -391,7 +394,6 @@ module.exports = (io) => {
             roomInfo.players[playerI].finished = true;
         });
 
-        
         
         
         // ************************************ SYNCING SOCKETS *********************************************
