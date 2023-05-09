@@ -30,8 +30,8 @@
  </style>
  
  <asp:panel class = "container">
-    <input type="text" id="name-form-id" name="name-form" placeholder="Enter Username" class="input-box" /><br>
-    <br><button type="button" style="margin:0px auto; display:block;" id="createRoom-id" name="createRoom" onclick= "myFunction()" >Create a Room</button>
+    <input type="text" id="name-form-id" name="name-form" placeholder="Enter Username" class="input-box" maxlength = "12"/><br>
+    <br><button type="button" style="margin:0px auto; display:block;" id="createRoom-id" name="createRoom">Create a Room</button>
         <script>
             var enter = document.getElementById("Code-form-id"); 
             enter.addEventListener('keypress', function(event){ 
