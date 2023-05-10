@@ -13,6 +13,7 @@ export default class FinalTask extends Phaser.Scene {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
         this.playerNum = data.playerNum;
+        this.playerName = data.playerName;
         this.players = data.players;
         this.start = data.start;
     }
@@ -95,8 +96,8 @@ export default class FinalTask extends Phaser.Scene {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: roomKey,
-                playerName: scene.playerName,
                 playerInfo: scene.playerInfo,
+                playerName: scene.playerName,
                 playerNum: scene.playerNum
             });
         });

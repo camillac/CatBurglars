@@ -123,11 +123,11 @@ module.exports = (io) => {
                     );
 
                     if (roomInfo.players[playerId].playerNum > deletedNum) {
-                        if ((roomInfo.players[playerId].playerName) == ("Player " + roomInfo.players[playerId].playerNum)) {
-                            (roomInfo.players[playerId].playerName) = ("Player " + (roomInfo.players[socket.id].playerNum));
-                        }
                         roomInfo.players[playerId].playerNum =
                             roomInfo.players[playerId].playerNum - 1;
+                        if ((roomInfo.players[playerId].playerName) == ("Player " + (roomInfo.players[playerId].playerNum + 1))) {
+                            (roomInfo.players[playerId].playerName) = ("Player " + (roomInfo.players[playerId].playerNum));
+                        }
                     };
                 };
 
