@@ -95,7 +95,9 @@ export default class FinalTask extends Phaser.Scene {
                 ...scene.state,
                 socket: scene.socket,
                 roomKey: roomKey,
-                playerName: this.playerName,
+                playerName: scene.playerName,
+                playerInfo: scene.playerInfo,
+                playerNum: scene.playerNum
             });
         });
 

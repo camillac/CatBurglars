@@ -68,6 +68,7 @@ export default class JoinLobbyScene extends Phaser.Scene {
                 families: ["Black Ops One"],
             },
             active: function () {
+                
                 // Title
                 add.text(15, 110, "Cat", {
                     fontFamily: "Black Ops One",

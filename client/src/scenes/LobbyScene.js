@@ -14,7 +14,7 @@ export default class LobbyScene extends Phaser.Scene {
     }
 
     preload() {
-        //load images from the assets folder
+        // Load images from the assets folder
         this.load.image("icon", "client/assets/sprites/cat.png");
         this.load.image(
             "House_no_background",
@@ -31,7 +31,8 @@ export default class LobbyScene extends Phaser.Scene {
         const scene = this;
 
         scene.socket.emit("joinRoom", this.roomKey, this.playerName);
-        // set background
+        
+        // Set background
         const background = this.add.image(400, 300, "Sky_Lobby");
         background.setScale(4);
 
@@ -39,7 +40,7 @@ export default class LobbyScene extends Phaser.Scene {
         const House = this.add.image(400, 300, "House_no_background");
         House.setScale(3.5);
 
-        //set Variables
+        // Set Variables
         console.log("Room Key " + this.roomKey);
         this.currentPlayer = this.physics.add.group();
         this.otherPlayers = this.physics.add.group();
@@ -56,7 +57,7 @@ export default class LobbyScene extends Phaser.Scene {
             scene.state.numPlayers = numPlayers;
         });
 
-        // PLAYERS
+        // CURRENT PLAYERS
         this.socket.on("currentPlayers", function (arg) {
             const { players, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
@@ -108,7 +109,7 @@ export default class LobbyScene extends Phaser.Scene {
             })
             .setOrigin(0.5);
 
-        // room key and copy key functions
+        // Room key and copy key functions
         var key = scene.add
             .text(400, 460, this.roomKey, {
                 fontFamily: "Black Ops One",
@@ -119,7 +120,6 @@ export default class LobbyScene extends Phaser.Scene {
                 strokeThickness: 5,
             })
             .setOrigin(0.5);
-
         key.setInteractive();
 
         key.on("pointerup", () => {
@@ -177,7 +177,6 @@ export default class LobbyScene extends Phaser.Scene {
         scene.circle.fillCircle(650, 210, 50);
 
         // Title
-
         var cat = scene.add.text(15, 15, "Cat", {
             fontFamily: "Black Ops One",
             fontSize: 95,
