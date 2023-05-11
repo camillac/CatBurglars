@@ -1,10 +1,11 @@
 // PlayScene and LobbyScene both use this Among Us Tutorial as a reference:
 // github.com/hannahrobot/amongus-tutorial
 
-// local variables
+// Local Variables
 https: var gameRooms = {};
-var users = {};
 var allFinished = false;
+
+// SOCKETS START HERE
 module.exports = (io) => {
     io.on("connection", (socket) => {
         console.log(
@@ -58,6 +59,7 @@ module.exports = (io) => {
                     roomInfo.players
                 ).length;
 
+                // If player name not given, assign one
                 if (playerName == "") {
                     roomInfo.players[socket.id].playerName =
                         "Player " + roomInfo.players[socket.id].playerNum;
@@ -137,14 +139,15 @@ module.exports = (io) => {
                 // Update numPlayers
                 roomInfo.numPlayers = Object.keys(roomInfo.players).length;
 
+                // Handle in-game disconnects
                 if (roomInfo.inGame) {
-                    // clearInterval(Countdown);
 
                     // Emit a message to all players to generate a new room
                     let newKey = codeGenerator();
                     while (Object.keys(gameRooms).includes(newKey)) {
                         newKey = codeGenerator();
                     }
+                    
                     gameRooms[newKey] = {
                         roomKey: newKey,
                         players: {},
@@ -154,14 +157,13 @@ module.exports = (io) => {
                         task1IsStarted: false,
                         finalTaskIsStarted: false,
                     };
-
                     console.log("ROOM CREATED - ROOM KEY: " + newKey);
                     if (roomInfo.inFinalTask) {
                         io.to(roomKey).emit("endGameFinal", newKey);
                     } else {
                         io.to(roomKey).emit("endGame", newKey);
                     }
-                } else {
+                } else { // Handle lobby disconnects
                     io.to(roomKey).emit("disconnected", {
                         playerId: socket.id,
                         numPlayers: roomInfo.numPlayers,
@@ -174,12 +176,14 @@ module.exports = (io) => {
             }
         });
 
+        // Check if the key is valid
         socket.on("isKeyValid", function (code, name) {
             Object.keys(gameRooms).includes(code)
                     ? socket.emit("keyIsValid", code, name)
                     : socket.emit("keyNotValid");
         });
 
+        // Check if the room is full, notify player if it is
         socket.on("isRoomFull", function (roomKey) {
             if (gameRooms[roomKey].numPlayers >= 4) {
                 socket.emit("roomIsFull");
@@ -192,7 +196,6 @@ module.exports = (io) => {
         socket.on("startGame", function (roomKey, start) {
             console.log("start game");
             gameRooms[roomKey].inGame = true;
-            // const {roomkey, startId} = arg;
             socket
                 .to(roomKey)
                 .emit("startRoom", { roomKey: roomKey, start: start });
@@ -202,6 +205,7 @@ module.exports = (io) => {
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
         
+        // Starts task one
         socket.on("startTaskOne", function (roomKey, mainPlayer, playerIdx) {
             const roomInfo = gameRooms[roomKey];
             if (!roomInfo.task1IsStarted) {
@@ -210,12 +214,11 @@ module.exports = (io) => {
                 shuffleArray(arr);
                 const key1 = arr[0];
                 const key2 = arr[1];
-                const key3 = arr[2];
+                const key3 = arr[2]; // Randomly shuffle an array, in order to pick 3 random keys
                 console.log(roomKey);
                 console.log(key1, key2, key3);
-                // const roomInfo = gameRooms[roomKey];
                 console.log(roomInfo);
-                for (playerId in roomInfo.players) {
+                for (playerId in roomInfo.players) { // Assign the keys to the 3 other players
                     if (roomInfo.players[playerId].playerNum == mainPlayer) {
                         const counter = 30;
                         io.to(roomInfo.players[playerId].playerId).emit(
@@ -264,12 +267,14 @@ module.exports = (io) => {
             }
         });
 
+        // Start back-end timer
         socket.on("startTimer", function (roomKey, counter) {
             console.log("IN START TIMER");
-            socket.on("decreaseCounter", function () {
+            socket.on("decreaseCounter", function () { // Decrease timer on mistakes
                 counter = counter - 5;
             });
 
+            // Timer sends itself to the clients once every second
             var Countdown = setInterval(function () {
                 console.log(counter);
                 io.to(roomKey).emit("counter", counter);
@@ -281,19 +286,21 @@ module.exports = (io) => {
                 }
             }, 1000);
 
-            // stop the counter so it doesnt keep going after game ends
+            // Stop the counter so it doesnt keep going after game ends
             socket.on("showWinScene", function () {
                 console.log("counter destroyed");
                 io.to(roomKey).emit("win", roomKey);
                 clearInterval(Countdown);
             });
 
+            // Stop the timer and move on to the next task
             socket.on("endedTask", function () {
                 console.log("counter destroyed, moving on to next task");
                 io.to(roomKey).emit("nextTask", roomKey);
                 clearInterval(Countdown);
             });
 
+            // Stopping the timer when there's a disconnect
             socket.on("stopTimer", function (newKey) {
                 clearInterval(Countdown);
                 io.to(roomKey).emit("backToLobby", {
@@ -309,6 +316,7 @@ module.exports = (io) => {
 
         // ************************************ FINAL TASK SCENE SOCKETS *********************************************
 
+        // Start the final task
         socket.on("startFinalTask", function (roomKey, mainPlayer) {
             const roomInfo = gameRooms[roomKey];
             roomInfo.inFinalTask = true;
@@ -369,13 +377,14 @@ module.exports = (io) => {
                 }
             }, 1000);
 
-            // stop the counter so it doesnt keep going after game ends
+            // Stop the counter so it doesnt keep going after game ends
             socket.on("showWinSceneFinal", function () {
                 console.log("counter destroyed");
                 io.to(roomKey).emit("winFinal", roomKey);
                 clearInterval(CountdownFinal);
             });
 
+            // Stopping the timer on disconnects
             socket.on("stopTimerFinal", function (newKey) {
                 clearInterval(CountdownFinal);
                 io.to(roomKey).emit("backToLobbyFinal", {
@@ -394,10 +403,10 @@ module.exports = (io) => {
             roomInfo.players[playerI].finished = true;
         });
 
-        
-        
         // ************************************ SYNCING SOCKETS *********************************************
 
+        // Server checks if everyone is done with any animations 
+        // and if it can send out the tasks
         socket.on("ready", function(roomKey) {
             const roomInfo = gameRooms[roomKey];
             var check = 0;
@@ -424,6 +433,8 @@ module.exports = (io) => {
     });
 };
 
+// ************************************ HELPER FUNCTIONS *********************************************
+
 // CODE GENERATOR FOR LOBBY
 function codeGenerator() {
     let code = "";
@@ -433,6 +444,8 @@ function codeGenerator() {
     }
     return code;
 }
+
+// SHUFFLE ARRAYS FOR TASK ONE
 function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));

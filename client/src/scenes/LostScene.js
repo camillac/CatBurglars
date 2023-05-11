@@ -89,7 +89,6 @@ export default class LostScene extends Phaser.Scene {
                 // Play button events
                 backtolobbyButton.on("pointerover", () => {
                     backtolobbyButton.setStyle({
-                        // color: "#FFEBB9",
                         color: "#FFFBF4"
                     });
                 });

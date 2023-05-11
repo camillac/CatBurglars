@@ -1,5 +1,5 @@
-// the inspiration and general outline for a lot of functionality of
-// this task is attributed to this tutorial: https://www.youtube.com/watch?v=hkedWHfU_oQ&list=PLDyH9Tk5ZdFzEu_izyqgPFtHJJXkc79no&index=10
+// The inspiration and general outline for a lot of functionality of
+// This task is attributed to this tutorial: https://www.youtube.com/watch?v=hkedWHfU_oQ&list=PLDyH9Tk5ZdFzEu_izyqgPFtHJJXkc79no&index=10
 
 import Sidebar from "./Sidebar.js";
 
@@ -19,7 +19,7 @@ export default class FinalTask extends Phaser.Scene {
     }
     
     preload() {
-        //load cats/players
+        // Load cats/players
         this.load.image("Player_1", "client/assets/sprites/player1.png");
         this.load.image("Player_2", "client/assets/sprites/player2.png");
         this.load.image("Player_3", "client/assets/sprites/player3.png");
@@ -35,8 +35,9 @@ export default class FinalTask extends Phaser.Scene {
             );
         }
 
-        //load background
+        // Load background
         this.scene.run("FinalTask");
+        
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
@@ -45,10 +46,13 @@ export default class FinalTask extends Phaser.Scene {
 
     create() {
         const scene = this;
-        scene.state.start_game = false; // flag to tell fish when to start falling
+        scene.state.start_game = false; // Flag to tell fish when to start falling
         scene.state.fishCaughtN = 0;
         
+        // Client sends out message that it's ready to recieve the task
         this.socket.emit("ready", scene.roomKey);
+
+        // Wait if everyone is not ready
         this.socket.on("waiting", function() {
             var waitingscene = scene.add.text(
                 200,
@@ -63,11 +67,14 @@ export default class FinalTask extends Phaser.Scene {
                     strokeThickness: 8,
                 }
             );
+
+            // Destroy the waiting scene when told 
             scene.socket.on("destroyWaitingScene", function() {
                 waitingscene.destroy();
             });
         });
 
+        // Client told it can start the task after server checks that everyone is ready
         this.socket.on("canStart", function() {
             if (scene.socket.id == scene.start) {
                 scene.socket.emit("startFinalTask", scene.roomKey, 1, scene.socket.id);
@@ -108,7 +115,7 @@ export default class FinalTask extends Phaser.Scene {
             scene.socket.emit("startTimerFinal", roomKey, counter);
         });
 
-        // create and manage fish sprites
+        // Create and manage fish sprites
         scene.fish1 = this.add.image(
             Phaser.Math.Between(
                 this.game.config.width / 4,
@@ -158,12 +165,11 @@ export default class FinalTask extends Phaser.Scene {
         this.fishies.add(this.fish4);
 
         // *** Host and other players are separated in case we need it for backend, but
-        // *** there is no UI difference for this task as of now between them
+        // *** There is no UI difference for this task as of now between them
         // Main Player Final Task Display
         this.socket.on("displayFinal", function (arg) {
-            // destroy "Waiting for players..."
 
-            // tell update() to start moving fish
+            // Tell update() to start moving fish
             scene.state.start_game = true;
 
             const { playerId, playerNum } = arg;
@@ -192,9 +198,9 @@ export default class FinalTask extends Phaser.Scene {
                 color: "black",
                 align: "center",
             });
-            // credit: https://github.com/photonstorm/phaser3-examples/blob/master/public/src/input/dragging/drag%20horizontally.js
-            // create basket and allow it to be dragged
-            // ** boundaries are not working, need to fix so that it doesnt overlap sidebar
+            // Credit: https://github.com/photonstorm/phaser3-examples/blob/master/public/src/input/dragging/drag%20horizontally.js
+            // Create basket and allow it to be dragged
+            // ** Boundaries are not working, need to fix so that it doesnt overlap sidebar
             var basket = scene.physics.add.sprite(
                 scene.game.config.width / 2,
                 scene.game.config.height - 200,
@@ -205,8 +211,8 @@ export default class FinalTask extends Phaser.Scene {
 
             basket.body.onOverlap = true;
 
-            // credit: https://labs.phaser.io/edit.html?src=src/physics/arcade/overlap%20event.js
-            // collision event with basket+fish
+            // Credit: https://labs.phaser.io/edit.html?src=src/physics/arcade/overlap%20event.js
+            // Collision event with basket+fish
             scene.physics.add.overlap(basket, scene.fishies);
             scene.physics.world.on(
                 "overlap",
@@ -233,7 +239,7 @@ export default class FinalTask extends Phaser.Scene {
             );
         });
 
-        // credit: https://github.com/photonstorm/phaser3-examples/blob/master/public/src/input/dragging/drag%20horizontally.js
+        // Credit: https://github.com/photonstorm/phaser3-examples/blob/master/public/src/input/dragging/drag%20horizontally.js
         this.input.on("drag", (pointer, gameObject, dragX) => {
             dragX = Phaser.Math.Clamp(
                 dragX,
@@ -244,7 +250,7 @@ export default class FinalTask extends Phaser.Scene {
             gameObject.x = dragX;
         });
 
-        // timer text connected with socket
+        // Timer text connected with socket
         var timerFinal = scene.add.text(750, 550, "", {
             fontFamily: "Chela One",
             fontSize: 40,
@@ -252,15 +258,17 @@ export default class FinalTask extends Phaser.Scene {
             align: "center",
         });
 
+        // Update the timer from the server
         this.socket.on("counterFinal", function (counterFinal) {
             timerFinal.text = counterFinal;
         });
 
+        // End the timer 
         this.socket.on("endGameFinal", function (newKey) {
             scene.socket.emit("stopTimerFinal", newKey);
         });
 
-        // win condition
+        // Win condition
         this.socket.on("winFinal", function (roomKey) {
             console.log("Won!");
             scene.scene.start("WinningScene", {
@@ -270,7 +278,7 @@ export default class FinalTask extends Phaser.Scene {
             });
         });
 
-        // lost condition
+        // Lost condition
         this.socket.on("lostFinal", function (roomKey) {
             console.log("Lost!");
             scene.scene.start("LostScene", {
@@ -281,7 +289,7 @@ export default class FinalTask extends Phaser.Scene {
     }
 
     update() {
-        // starts fish once waiting for players text is destroyed
+        // Starts fish once waiting for players text is destroyed
         if (this.state.start_game === true) {
             this.moveFish(this.fish1, 3);
             this.moveFish(this.fish2, 4);
@@ -290,7 +298,9 @@ export default class FinalTask extends Phaser.Scene {
         }
     }
 
-    // moves fish down screen and resets them once they leave the screen
+// ******************* HELPER FUNCTIONS ******************* //
+
+    // Moves fish down screen and resets them once they leave the screen
     moveFish(fish, speed) {
         fish.y += speed;
         if (fish.y > this.game.config.height) {
@@ -298,7 +308,7 @@ export default class FinalTask extends Phaser.Scene {
         }
     }
 
-    // sets fish back to top of screen
+    // Sets fish back to top of screen
     resetFish(fish) {
         fish.y = 0;
         var randomX = Phaser.Math.Between(

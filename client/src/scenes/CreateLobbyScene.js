@@ -8,7 +8,7 @@ export default class CreateLobbyScene extends Phaser.Scene {
         this.load.script(
             "webfont",
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js",
-            this.load.html("nameform", "client/assets/text/nameform.html")
+            this.load.html("createform", "client/assets/text/createform.html")
         );
 
         this.load.image(
@@ -27,11 +27,15 @@ export default class CreateLobbyScene extends Phaser.Scene {
     create() {
         var add = this.add;
         const scene = this;
+
         scene.roomKey = "";
+
+        // START THE SOCKET CONNECTION
         this.socket = io();
 
         const background = this.add.image(400, 300, "background_createlobby");
         background.setScale(4.0);
+        
         var Clouds_bg1 = this.add.tileSprite(
             400,
             470,
@@ -39,8 +43,14 @@ export default class CreateLobbyScene extends Phaser.Scene {
             1000,
             "Clouds_small"
         );
+        var Clouds_bg2 = this.add.tileSprite(400, 
+            470, 
+            800, 
+            1000, 
+            "big_clouds"
+        );
+
         //-------- CLOUD EFFECT
-        var Clouds_bg2 = this.add.tileSprite(400, 470, 800, 1000, "big_clouds");
         scene.tweens.add({
             targets: Clouds_bg1,
             tilePositionX: { from: 0, to: 180 },
@@ -58,6 +68,7 @@ export default class CreateLobbyScene extends Phaser.Scene {
             yoyo: false,
         });
         // --------------- END OF CLOUDS EFFECT------------------
+        
         // --------------- HOUSE---------------------
         const house = scene.add.image("400", "300", "House_JoinLobby");
         house.setScale(4);
@@ -92,8 +103,6 @@ export default class CreateLobbyScene extends Phaser.Scene {
                     strokeThickness: 8,
                 });
         
-                
-
                 // Back button
                 const backButton = add
                     .text(60, 25, "Back", {
@@ -130,7 +139,7 @@ export default class CreateLobbyScene extends Phaser.Scene {
                 });
 
                 // Create a room
-                scene.inputElement = scene.add.dom(400, 440).createFromCache("nameform");
+                scene.inputElement = scene.add.dom(400, 440).createFromCache("createform");
                 scene.inputElement.addListener("click");
                 scene.inputElement.on("click", function (event) {
                     if (event.target.name === "createRoom") {

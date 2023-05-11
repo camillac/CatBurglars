@@ -275,6 +275,7 @@ export default class LobbyScene extends Phaser.Scene {
 
     //-------------------------- Add Players Functions -----------------------------
 
+    // Add playing that requested to join
     addPlayer(scene, playerInfo) {
         scene.joined = true;
         var circle = scene.circle.fillStyle(0xffffff, 1);
@@ -306,6 +307,8 @@ export default class LobbyScene extends Phaser.Scene {
         scene.playerNames.add(playerNameDisplay);
         scene.currentPlayer.add(mycats);
     }
+    
+    // Adding other players in the lobby
     addOtherPlayers(scene, playerInfo) {
         const otherPlayer = scene.add.sprite(
             300,

@@ -12,7 +12,6 @@ export default class FirstTask_Instruction extends Phaser.Scene {
     }
 
     preload() {
-       
         this.load.image("House", "client/assets/sprites/House.png"); //Need to Update this
         this.load.image("Sky", "client/assets/sprites/Sky.png");
         this.load.image("settings", "client/assets/sprites/settings_icon.png");
@@ -26,12 +25,14 @@ export default class FirstTask_Instruction extends Phaser.Scene {
 
     create() {
         const scene = this;
-        // background
+        
         const background = this.add.image(400, 300, "Background");
         background.setScale(2);
+        
         var sky = this.add.image(400, 350, "Sky");
         sky.setScale(4.0);
 
+        // Clouds
         var Clouds_bg1 = this.add.tileSprite(
             400,
             470,
@@ -39,7 +40,14 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             1000,
             "Clouds_small"
         );
-        var Clouds_bg2 = this.add.tileSprite(400, 470, 800, 1000, "big_clouds");
+        var Clouds_bg2 = this.add.tileSprite(
+            400, 
+            470, 
+            800, 
+            1000, 
+            "big_clouds"
+        );
+        
         scene.tweens.add({
             targets: Clouds_bg1,
             tilePositionX: { from: 0, to: 180 },
@@ -57,7 +65,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             yoyo: false,
         });
 
-        //Fade in Effect for the Instruction
+        // Fade in Effect for the Instruction
         this.cameras.main.fadeIn(5000, 0, 0, 0, instructions);
         var instructions = scene.add
             .text(
@@ -99,9 +107,8 @@ export default class FirstTask_Instruction extends Phaser.Scene {
         });
 
         // Showing player instructions
-
         function playerInstruction() {
-            // if you are player 1
+            // If you are player 1
             if (this.playerInfo[scene.socket.id].playerNum === 1) {
                 this.cameras.main.fadeOut(5000, 0, 0, 0);
                 this.cameras.main.once(
@@ -151,12 +158,12 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                 );
             }
 
+            // If you are not player 1
             function otherPlayerInstruction(
                 playerNum,
                 playerOneUsername = "Player 1"
             ) {
                 //Fade out after the Instruction
-                // playerOneUsername is not used for now, will implement when we merge with the username branch
                 var playerInfo = scene.add
                     .text(
                         400,
@@ -173,5 +180,6 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             }
         }
     }
+    
     update() {}
 }

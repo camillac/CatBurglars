@@ -11,52 +11,43 @@ export default class MainScene extends Phaser.Scene {
         );
 
         this.load.image("Background1","client/assets/sprites/colored_talltrees.png" );
-       // this.load.image("Red_button", "client/assets/sprites/red_button13.png");
 
-       this.load.image("House_main", "client/assets/sprites/House_No_Backgroung2.png"); 
+        this.load.image("House_main", "client/assets/sprites/House_No_Backgroung2.png"); 
 
-       //------------------ ADD CATS------------------------
-       this.load.image("Cats_1", "client/assets/sprites/player1.png");
-       this.load.image("Cats_2", "client/assets/sprites/player2.png");
-       this.load.image("Cats_3", "client/assets/sprites/player3.png");
-       this.load.image("Cats_4", "client/assets/sprites/player4.png");
+        //------------------ ADD CATS------------------------
+        this.load.image("Cats_1", "client/assets/sprites/player1.png");
+        this.load.image("Cats_2", "client/assets/sprites/player2.png");
+        this.load.image("Cats_3", "client/assets/sprites/player3.png");
+        this.load.image("Cats_4", "client/assets/sprites/player4.png");
 
-    //---------------SUN ASSETS----------------
+        //---------------SUN ASSETS----------------
         this.load.image("Main_Sun","client/assets/sprites/sun.png");
 
-    //----CLoud -----------
-
-    this.load.image("Main_cloud", "client/assets/sprites/cloud8.png");
-
-
+        //----CLoud -----------
+        this.load.image("Main_cloud", "client/assets/sprites/cloud8.png");
     }
 
     create() {
         var add = this.add;
         const scene = this;
 
-       
-
         //Add The House Background
         const background = this.add.image(400, 300, "Background1");
         background.setScale(0.8);
-         // To add the Cats
          
         // Add the House in the Background
         const Home = this.add.image(270, 320, "House_main");
         Home.setScale(1);
+        
         //To add cats
         const cat1 = this.add.image(100,200,"Cats_1");
-         cat1.setScale(0.3);
-         const cat2 = this.add.image(130,200,"Cats_2");
-         cat2.setScale(0.3);
-         const cat3 = this.add.image(160,200,"Cats_3");
-         cat3.setScale(0.3);
-         const cat4 = this.add.image(190,200,"Cats_4");
-         cat4.setScale(0.3);
-        /* const cat5 = this.add.image(761,170,"Cats_4");
-         cat5.setScale(0.6);
-         cat5.setDepth(1);*/
+        cat1.setScale(0.3);
+        const cat2 = this.add.image(130,200,"Cats_2");
+        cat2.setScale(0.3);
+        const cat3 = this.add.image(160,200,"Cats_3");
+        cat3.setScale(0.3);
+        const cat4 = this.add.image(190,200,"Cats_4");
+        cat4.setScale(0.3);
          
         //----SUN ASSETS 
         const Sun = this.add.image(200,50,"Main_Sun"); 
@@ -64,8 +55,7 @@ export default class MainScene extends Phaser.Scene {
 
         const MainCloud = this.add.image(260,70,"Main_cloud");
         MainCloud.setScale(0.5);
-
-       // const y = this.y - (Phaser.Math.Between(150, 280));
+        
         scene.tweens.add({
             targets: Home, 
             y: { from: 290, to: 300},
@@ -73,7 +63,6 @@ export default class MainScene extends Phaser.Scene {
             ease:'sine.inout', 
             repeat: -1, 
             yoyo: true, // Will go back and Forth
-           // duration: Phaser.Math.Between(900, 1200)
         });
         scene.tweens.add({
             targets: cat1, 
@@ -84,10 +73,7 @@ export default class MainScene extends Phaser.Scene {
             repeat: -1, 
             yoyo: false,
             scale: 0.175
-
-           // duration: Phaser.Math.Between(900, 1200)
         });
-
         scene.tweens.add({
             targets: cat2, 
             x: {from: 130, to: 210},
@@ -97,23 +83,16 @@ export default class MainScene extends Phaser.Scene {
             repeat: -1, 
             yoyo: false, //Will only go from x to y
             scale: 0.175,
-        
-
-           // duration: Phaser.Math.Between(900, 1200)
         });
         scene.tweens.add({
             targets: cat3, 
             x: {from: 140, to: 230},
             y: { from: 390, to: 380},
-          
             duration: 8000,
             ease:'sine.inout', 
             repeat: -1, 
             yoyo: false,
             scale: 0.2,
-         
-
-           // duration: Phaser.Math.Between(900, 1200)
         });
         scene.tweens.add({
             targets: cat4, 
@@ -124,8 +103,6 @@ export default class MainScene extends Phaser.Scene {
             repeat: -1, 
             yoyo: false,
             scale: 0.2,
-
-           // duration: Phaser.Math.Between(900, 1200)
         });
 
         WebFont.load({

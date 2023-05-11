@@ -21,11 +21,11 @@ export default class FinalTask_Instruction extends Phaser.Scene {
 
     create() {
         const scene = this;
-        // background
+        
         const background = this.add.image(400, 300, "Background");
         background.setScale(2);
         
-        //Fade in Effect for the Instruction
+        // Fade in Effect for the Instruction
         this.cameras.main.fadeIn(5000, 0, 0, 0, instructions);
         var instructions = scene.add
             .text(
@@ -41,7 +41,6 @@ export default class FinalTask_Instruction extends Phaser.Scene {
             )
             .setOrigin(0.5);
 
-        
         function destroyInstructions() {
             instructions.destroy();
         }
@@ -59,7 +58,7 @@ export default class FinalTask_Instruction extends Phaser.Scene {
 
         // Showing player instructions
         function playerInstruction() {
-            // if you are player 1
+            // If you are player 1
             if (this.playerNum === 1) {
                 this.cameras.main.fadeOut(5000, 0, 0, 0);
                 this.cameras.main.once(
@@ -75,9 +74,7 @@ export default class FinalTask_Instruction extends Phaser.Scene {
                         });
                     }
                 );
-
                 displayInstructions();
-
             } else {
                 this.cameras.main.fadeOut(5000, 0, 0, 0);
                 this.cameras.main.once(
@@ -93,7 +90,6 @@ export default class FinalTask_Instruction extends Phaser.Scene {
                         });
                     }
                 );
-
                 displayInstructions();
             }
 
@@ -114,5 +110,6 @@ export default class FinalTask_Instruction extends Phaser.Scene {
             }
         }
     }
+    
     update() {}
 }

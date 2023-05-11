@@ -50,7 +50,7 @@ export default class IntroductionScene extends Phaser.Scene {
             "Clouds_small"
         );
 
-        //MOVING CLOUDS
+        // MOVING CLOUDS
         var Clouds_bg2 = this.add.tileSprite(400, 100, 800, 600, "big_clouds");
         scene.tweens.add({
             targets: Clouds_bg1,
@@ -65,7 +65,7 @@ export default class IntroductionScene extends Phaser.Scene {
             tilePositionX: { from: 0, to: 180 },
             ease: "linear",
             duration: 8000,
-            repeat: -1, //Infinity Times
+            repeat: -1, // Infinity Times
             yoyo: false,
         });
        

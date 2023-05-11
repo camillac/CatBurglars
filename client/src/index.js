@@ -1,3 +1,4 @@
+// Importing all of the scenes necessary
 import config from "./config/config.js";
 import MainScene from "./scenes/MainScene.js";
 import HowtoPlayScene from "./scenes/HowtoPlayScene.js";

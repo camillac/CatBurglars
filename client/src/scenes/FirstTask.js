@@ -5,6 +5,7 @@ export default class FirstTask extends Phaser.Scene {
         super("FirstTask");
         this.state = {};
     }
+    
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
@@ -13,8 +14,9 @@ export default class FirstTask extends Phaser.Scene {
         this.players = data.players;
         this.start = data.start;
     }
+    
     preload() {
-        //load cats/players
+        // Load cats/players
         this.load.image("Player_1", "client/assets/sprites/player1.png");
         this.load.image("Player_2", "client/assets/sprites/player2.png");
         this.load.image("Player_3", "client/assets/sprites/player3.png");
@@ -32,20 +34,18 @@ export default class FirstTask extends Phaser.Scene {
             "client/assets/sprites/incorrect.png"
         );
         this.load.image("Door", "client/assets/sprites/door.png");
-
-        //load background
+        
         this.scene.run("FirstTask");
-        /*this.load.image(
-            "background",
-            "client/assets/backgrounds/blob-scene-haikei (6).png"
-        );*/
     }
 
     create() {
         const scene = this;
         scene.state.alreadyCalledNextTask = false;
 
+        // Client sends out message that it's ready to recieve the task
         this.socket.emit("ready", scene.roomKey);
+
+        // Wait if not everyone is ready
         this.socket.on("waiting", function() {
             var waitingscene = scene.add.text(
                 200,
@@ -60,11 +60,14 @@ export default class FirstTask extends Phaser.Scene {
                     strokeThickness: 8,
                 }
             );
+
+            // Destroy the waiting scene when told 
             scene.socket.on("destroyWaitingScene", function() {
                 waitingscene.destroy();
             });
         });
 
+        // Client told it can start the task after server checks that everyone is ready
         this.socket.on("canStart", function() {
             if (scene.socket.id == scene.start) {
                 scene.socket.emit("startTaskOne", scene.roomKey, 1, scene.socket.id);
@@ -117,7 +120,7 @@ export default class FirstTask extends Phaser.Scene {
 
             const { playerId, playerNum, key1, key2, key3 } = arg;
 
-            // position and scale sprites
+            // Position and scale sprites
             var key_1 = scene.add.sprite(200, 300, "key1Image");
             key_1.setScale(3).setPosition(330, 250);
             var key_2 = scene.add.sprite(200, 300, "key2Image");
@@ -142,7 +145,7 @@ export default class FirstTask extends Phaser.Scene {
             scene.alreadyClickedKeys = [];
             console.log(key1, key2, key3);
 
-            // key actions
+            // Key actions
             key_1.on("pointerup", () => {
                 scene.isCorrectKey(scene, 1, key1, key2, key3, 330, 250);
                 console.log("pressed key 1 ");
@@ -169,7 +172,7 @@ export default class FirstTask extends Phaser.Scene {
                 console.log("pressed key 6 ");
             });
 
-            // hover effect on keys
+            // Hover effect on keys
             key_1.on("pointerover", () => {
                 key_1.setAlpha(0.75);
             });
@@ -230,7 +233,7 @@ export default class FirstTask extends Phaser.Scene {
             });
         });
 
-        // timer text connected with socket
+        // Timer text connected with socket
         var timer = scene.add.text(720, 550, "", {
             fontFamily: "Black Ops One",
             fontSize: 40,
@@ -246,6 +249,7 @@ export default class FirstTask extends Phaser.Scene {
             scene.socket.emit("stopTimer", newKey);
         });
 
+        // Client gets told to move on to the next task by the backend
         this.socket.on("nextTask", function (roomKey) {
             if (!scene.state.alreadyCalledNextTask) {
                 scene.state.alreadyCalledNextTask = true;
@@ -263,7 +267,7 @@ export default class FirstTask extends Phaser.Scene {
             }
         });
 
-        // lost condition
+        // Lost condition
         this.socket.on("lost", function (roomKey) {
             console.log("Lost!");
             scene.scene.start("LostScene", {
@@ -277,12 +281,12 @@ export default class FirstTask extends Phaser.Scene {
 
     // Check if the Key selected is correct/incorrect
     isCorrectKey(scene, currentKey, key1, key2, key3, posX, posY) {
-        // if the key is incorrect
+        // If the key is incorrect
         if (!(key1 == currentKey || key2 == currentKey || key3 == currentKey)) {
             scene.socket.emit("decreaseCounter");
             var incorrect = scene.add.sprite(200, 300, "incorrectImage");
             incorrect.setScale(1).setPosition(posX, posY);
-            // destroy the incorrect image
+            // Destroy the incorrect image
             function incorr() {
                 incorrect.destroy();
             }
@@ -292,12 +296,12 @@ export default class FirstTask extends Phaser.Scene {
                 callbackScope: this,
             });
         } else {
-            // the key is correct
+            // The key is correct
             if (scene.alreadyClickedKeys.length == 0) {
                 scene.correct++;
                 scene.alreadyClickedKeys.push(currentKey);
             }
-            var hasNot = true; // check if the key has not been clicked
+            var hasNot = true; // Check if the key has not been clicked
             scene.alreadyClickedKeys.forEach((element) => {
                 if (element == currentKey) {
                     hasNot = false;
@@ -310,7 +314,7 @@ export default class FirstTask extends Phaser.Scene {
 
             var correctImage = scene.add.sprite(200, 300, "correctImage");
             correctImage.setScale(1).setPosition(posX, posY);
-            // destory the correct image
+            // Destroy the correct image
             function corr() {
                 correctImage.destroy();
             }

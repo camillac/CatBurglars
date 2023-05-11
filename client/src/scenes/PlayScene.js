@@ -38,16 +38,6 @@ export default class PlayScene extends Phaser.Scene {
 
         const Home= this.add.image(650,360,"House_main");
         Home.setScale(1);
-        //-----------------------CAT ASSETS-------------------
-        /*const cat1 = this.add.image(100,200,"Cats_1");
-         cat1.setScale(0.3);
-         const cat2 = this.add.image(130,200,"Cats_2");
-         cat2.setScale(0.3);
-         const cat3 = this.add.image(160,200,"Cats_3");
-         cat3.setScale(0.3);
-         const cat4 = this.add.image(190,200,"Cats_4");
-         cat4.setScale(0.3);*/
-        //----------------------- GRASS ASSETS------------------
         const Bush1 = this.add.image(100,420,"Grass_PlayScene");
         Bush1.setScale(0.75);
         Bush1.setDepth(1);
@@ -79,11 +69,9 @@ export default class PlayScene extends Phaser.Scene {
        //------------------------GRASS TWEEN----------------------
        scene.tweens.add({
         targets:Bush1,
-       // y: { from: 350, to: 300},
         x: {from:200, to:250},
         duration: 10000,
         ease: "linear",
-        //ease:'bounce.out', 
         repeat: 50, 
         yoyo: false,
         scale: {from:0.5, to:0.75}
@@ -132,7 +120,6 @@ export default class PlayScene extends Phaser.Scene {
             x: {from:500, to:550},
             duration: 10000,
             ease: "linear",
-            //ease:'bounce.out', 
             repeat: 50, 
             yoyo: false,
             scale: {from:0.1, to:0.3}
@@ -144,8 +131,7 @@ export default class PlayScene extends Phaser.Scene {
             targets: cat2,
             x: {from:400, to:450},
             duration: 10000,
-            ease: "linear",
-            //ease:'bounce.out', 
+            ease: "linear", 
             repeat: 50, 
             yoyo: false,
             scale: {from:0.1, to:0.3}
@@ -158,8 +144,7 @@ export default class PlayScene extends Phaser.Scene {
             targets: cat3,
             x: {from:300, to:350},
             duration: 10000,
-            ease: "linear",
-            //ease:'bounce.out', 
+            ease: "linear", 
             repeat: 50, 
             yoyo: false,
             scale: {from:0.1, to:0.3}
@@ -173,7 +158,6 @@ export default class PlayScene extends Phaser.Scene {
             x: {from:200, to:250},
             duration: 10000,
             ease: "linear",
-            //ease:'bounce.out', 
             repeat: 50, 
             yoyo: false,
             scale: {from:0.1, to:0.3}
@@ -225,16 +209,13 @@ export default class PlayScene extends Phaser.Scene {
                     .setPadding(10, 10, 10, 10);
 
                 // Back button
-               /* const backButton = add.image(70,25,"Back");
-                backButton.setScale(0.15)*/
-                  
                 const backButton = add.text(60, 25, "Back", {
-                        fontFamily: "Black Ops One",
-                        fontSize: 25,
-                        color: "#FFFBF4",
-                        fontStyle: "normal",
-                        stroke: "#000000",
-                        strokeThickness: 8,
+                    fontFamily: "Black Ops One",
+                    fontSize: 25,
+                    color: "#FFFBF4",
+                    fontStyle: "normal",
+                    stroke: "#000000",
+                    strokeThickness: 8,
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);

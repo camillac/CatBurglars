@@ -82,7 +82,8 @@ export default class WinningScene extends Phaser.Scene {
             },
 
         });
-        // confetti
+        
+        // Confetti
         const confetti = this.add.particles('confetti');
         confetti.createEmitter({
             frame: ['confeti1.png', 'confeti2.png', 'confeti3.png', 'confeti4.png', 'confeti5.png', 'confeti6.png'],
@@ -137,8 +138,6 @@ export default class WinningScene extends Phaser.Scene {
                 repeat: -1,
             });
         }
-
-
     }
 
     update() { }

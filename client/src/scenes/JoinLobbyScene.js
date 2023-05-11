@@ -8,7 +8,7 @@ export default class JoinLobbyScene extends Phaser.Scene {
         this.load.script(
             "webfont",
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js",
-            this.load.html("codeform", "client/assets/text/codeform.html")
+            this.load.html("joinform", "client/assets/text/joinform.html")
         );
 
         this.load.image(
@@ -28,10 +28,13 @@ export default class JoinLobbyScene extends Phaser.Scene {
     create() {
         var add = this.add;
         const scene = this;
+
         scene.roomKey = "";
+
+        // START THE SOCKET CONNECTION
         this.socket = io();
         
-        //----- SKY BACKG GROUND 
+        //----- SKY BACKGROUND 
         const background = this.add.image(400, 300, "Sky_1");
         background.setScale(4.0);
         var Clouds_bg1 = this.add.tileSprite(
@@ -143,7 +146,7 @@ export default class JoinLobbyScene extends Phaser.Scene {
                 // Join a room
                 scene.inputElement = scene.add
                     .dom(400, 450)
-                    .createFromCache("codeform");
+                    .createFromCache("joinform");
                 scene.inputElement.addListener("click");
                 scene.inputElement.on("click", function (event) {
                     if (event.target.name === "enterRoom") {

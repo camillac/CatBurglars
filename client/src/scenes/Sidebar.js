@@ -6,15 +6,16 @@ class Sidebar extends Phaser.GameObjects.Container {
     this.load.image("player3", "client/assets/sprites/player3.png");
     this.load.image("player4", "client/assets/sprites/player4.png");
   }
+  
   constructor(scene, width, height, roomkey, socket) {
     super(scene, width, height);
-    this.scene = scene; // scene that is requesting sidebar
-    this.width = width; // width of screen
-    this.height = height; // height of screen
-    this.roomkey = roomkey; // player data
-    this.socket = socket; // socket data
+    this.scene = scene; // Scene that is requesting sidebar
+    this.width = width; // Width of screen
+    this.height = height; // Height of screen
+    this.roomkey = roomkey; // Player data
+    this.socket = socket; // Socket data
     this.roomList = [];
-    // this.scene.add.existing(this);
+    
     let increment = 0;
 
     // Rectangle background for sidebar
@@ -56,20 +57,21 @@ class Sidebar extends Phaser.GameObjects.Container {
       }
       let players = this.roomList[0].players;
 
-      // destroy prevoius players before adding new ones
+      // Destroy prevoius players before adding new ones
       if (scene.currentPlayer) {
         scene.currentPlayer.destroy();
         scene.playerNames.destroy();
-        // scene.playerNames.destroy();
       }
+      
       if (scene.otherPlayers) {
         scene.otherPlayers.destroy();
         scene.playerNames.destroy();
         increment = 0;
       }
+      
       Object.keys(players).forEach(function (id) {
         if (players[id].playerId === scene.socket.id) {
-          // add current player
+          // Add current player
           var circle = scene.circle.fillStyle(0xffffff, 1);
           circle.fillCircle(85, 70, 50);
           scene.currentPlayer = scene.add
@@ -103,42 +105,7 @@ class Sidebar extends Phaser.GameObjects.Container {
         }
       });
     });
-    // Add the setting wheel button
-    /*
-    const settingsBtn = this.scene.add
-      .image(width / 9.5, 535, "settings")
-      .setInteractive();
-    settingsBtn.setScale(0.5);
-    settingsBtn.on("pointerup", () => {
-      // Open the settings popup
-      showSettingsPopup();
-    });*/
-
-    /*function showSettingsPopup() {
-      // Create and display the settings popup
-      const popup = scene.add.container(width / 2, height / 2);
-      const background = scene.add.graphics();
-      background.fillStyle(0xffffff, 1);
-      background.fillRect(-150, -150, 300, 300);
-      const closeButton = scene.add
-        .text(0, 100, "Close", {
-          fontSize: "24px",
-          color: "#000000",
-          fontFamily: "Chela One",
-        })
-        .setOrigin(0.5)
-        .setInteractive();
-      closeButton.on("pointerup", () => {
-        // Close the popup
-        popup.destroy();
-      });
-      popup.add(background);
-      popup.add(closeButton);
-      // Pop Up Settings
-    }*/
-
-  } // end of constructor
-
+  } 
 }
 
 export default Sidebar;
