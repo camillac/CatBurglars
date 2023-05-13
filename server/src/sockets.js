@@ -55,6 +55,7 @@ module.exports = (io) => {
                     playerName: playerName,
                     finished: false,
                     ready: false,
+                    defaultName: false,
                 };
 
                 roomInfo.players[socket.id].playerNum = Object.keys(
@@ -62,7 +63,14 @@ module.exports = (io) => {
                 ).length;
 
                 // If player name not given, assign one
-                if (playerName == "") {
+                // OR
+                // If the players name is currently a default name from a prev game (ex. Player 1),
+                // change it to match updated playerNum
+                if (
+                    playerName == "" ||
+                    roomInfo.players[socket.id].defaultName
+                ) {
+                    roomInfo.players[socket.id].defaultName = true;
                     roomInfo.players[socket.id].playerName =
                         "Player " + roomInfo.players[socket.id].playerNum;
                 }
