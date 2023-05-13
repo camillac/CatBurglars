@@ -15,7 +15,6 @@ export default class HowtoPlayScene extends Phaser.Scene {
             "Uncolored_plain",
             "client/assets/sprites/uncolored_plain.png"
         );
-        
     }
 
     create() {
@@ -32,7 +31,7 @@ export default class HowtoPlayScene extends Phaser.Scene {
                 fontSize: 60,
                 color: "#FFFFFF",
                 stroke: "#1E5162",
-                strokeThickness:4,
+                strokeThickness: 4,
                 align: "center",
             })
             .setOrigin(0.5)
@@ -50,7 +49,7 @@ export default class HowtoPlayScene extends Phaser.Scene {
                     color: "#1E5162",
                     align: "center",
                     stroke: "#ffffff",
-                    strokeThickness:4,
+                    strokeThickness: 4,
                 }
             )
             .setOrigin(0.5);

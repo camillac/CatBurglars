@@ -1,5 +1,5 @@
-// PlayScene and LobbyScene both use this Among Us Tutorial as a reference:
-// github.com/hannahrobot/amongus-tutorial
+// CreateLobbyScene, JoinLobbyScene and LobbyScene both use this Among Us Tutorial as a reference:
+// ** github.com/hannahrobot/amongus-tutorial
 
 export default class LobbyScene extends Phaser.Scene {
     constructor() {
@@ -31,7 +31,7 @@ export default class LobbyScene extends Phaser.Scene {
         const scene = this;
 
         scene.socket.emit("joinRoom", this.roomKey, this.playerName);
-        
+
         // Set background
         const background = this.add.image(400, 300, "Sky_Lobby");
         background.setScale(4);
@@ -41,12 +41,13 @@ export default class LobbyScene extends Phaser.Scene {
         House.setScale(3.5);
 
         // Set Variables
-        console.log("Room Key " + this.roomKey);
+        // console.log("Room Key " + this.roomKey);
         this.currentPlayer = this.physics.add.group();
         this.otherPlayers = this.physics.add.group();
         this.playerNames = this.physics.add.group();
 
         // JOINED ROOM - SET STATE
+        // ** Base code taken from Among Us Replica
         this.socket.on("setState", function (state) {
             const { roomKey, players, numPlayers } = state;
             scene.physics.resume();
@@ -79,7 +80,7 @@ export default class LobbyScene extends Phaser.Scene {
 
         // Other Player Started Game
         this.socket.on("startRoom", function (arg) {
-            console.log("gameStarted");
+            // console.log("gameStarted");
             const { roomKey, start } = arg;
             scene.scene.start("IntroductionScene", {
                 ...scene.state,
@@ -223,7 +224,7 @@ export default class LobbyScene extends Phaser.Scene {
         startGame.on("pointerup", () => {
             if (scene.state.numPlayers == 4) {
                 scene.socket.emit("startGame", this.roomKey, this.socket.id);
-                console.log("startGame", this.roomKey);
+                // console.log("startGame", this.roomKey);
                 scene.scene.start("FirstTask_Instruction", {
                     ...scene.state,
                     socket: scene.socket,
@@ -233,7 +234,6 @@ export default class LobbyScene extends Phaser.Scene {
                     playerNum: scene.state.players[this.socket.id].playerNum,
                 });
             } else {
-                console.log("Not Enough Players!");
                 scene.notEnoughPlayers = scene.add
                     .text(400, 325, "Not Enough Players!", {
                         fontFamily: "Black Ops One",
@@ -307,7 +307,7 @@ export default class LobbyScene extends Phaser.Scene {
         scene.playerNames.add(playerNameDisplay);
         scene.currentPlayer.add(mycats);
     }
-    
+
     // Adding other players in the lobby
     addOtherPlayers(scene, playerInfo) {
         const otherPlayer = scene.add.sprite(

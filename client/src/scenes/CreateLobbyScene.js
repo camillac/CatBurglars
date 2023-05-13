@@ -1,3 +1,6 @@
+// CreateLobbyScene, JoinLobbyScene and LobbyScene both use this Among Us Tutorial as a reference:
+// ** github.com/hannahrobot/amongus-tutorial
+
 export default class CreateLobbyScene extends Phaser.Scene {
     constructor() {
         super("CreateLobbyScene");
@@ -20,8 +23,10 @@ export default class CreateLobbyScene extends Phaser.Scene {
             "Clouds_small",
             "client/assets/sprites/clouds-white-small.png"
         );
-        this.load.image("House_JoinLobby", "client/assets/sprites/House_No Backgroung.png");
-        
+        this.load.image(
+            "House_JoinLobby",
+            "client/assets/sprites/House_No Backgroung.png"
+        );
     }
 
     create() {
@@ -35,7 +40,7 @@ export default class CreateLobbyScene extends Phaser.Scene {
 
         const background = this.add.image(400, 300, "background_createlobby");
         background.setScale(4.0);
-        
+
         var Clouds_bg1 = this.add.tileSprite(
             400,
             470,
@@ -43,12 +48,7 @@ export default class CreateLobbyScene extends Phaser.Scene {
             1000,
             "Clouds_small"
         );
-        var Clouds_bg2 = this.add.tileSprite(400, 
-            470, 
-            800, 
-            1000, 
-            "big_clouds"
-        );
+        var Clouds_bg2 = this.add.tileSprite(400, 470, 800, 1000, "big_clouds");
 
         //-------- CLOUD EFFECT
         scene.tweens.add({
@@ -68,7 +68,7 @@ export default class CreateLobbyScene extends Phaser.Scene {
             yoyo: false,
         });
         // --------------- END OF CLOUDS EFFECT------------------
-        
+
         // --------------- HOUSE---------------------
         const house = scene.add.image("400", "300", "House_JoinLobby");
         house.setScale(4);
@@ -102,7 +102,7 @@ export default class CreateLobbyScene extends Phaser.Scene {
                     stroke: "#000000",
                     strokeThickness: 8,
                 });
-        
+
                 // Back button
                 const backButton = add
                     .text(60, 25, "Back", {
@@ -139,25 +139,31 @@ export default class CreateLobbyScene extends Phaser.Scene {
                 });
 
                 // Create a room
-                scene.inputElement = scene.add.dom(400, 440).createFromCache("createform");
+                scene.inputElement = scene.add
+                    .dom(400, 440)
+                    .createFromCache("createform");
                 scene.inputElement.addListener("click");
                 scene.inputElement.on("click", function (event) {
                     if (event.target.name === "createRoom") {
-                        const name = scene.inputElement.getChildByName("name-form");
+                        const name =
+                            scene.inputElement.getChildByName("name-form");
                         scene.socket.emit("getRoomCode", name.value);
-                        scene.socket.on("roomCreated", function (roomKey, name) {
-                            scene.scene.start("LobbyScene", {
-                                ...scene.state,
-                                socket: scene.socket,
-                                roomKey: roomKey,
-                                playerName: name
-                            });
-                        });
+                        scene.socket.on(
+                            "roomCreated",
+                            function (roomKey, name) {
+                                scene.scene.start("LobbyScene", {
+                                    ...scene.state,
+                                    socket: scene.socket,
+                                    roomKey: roomKey,
+                                    playerName: name,
+                                });
+                            }
+                        );
                     }
                 });
             },
         });
     }
 
-    upload() { }
+    upload() {}
 }

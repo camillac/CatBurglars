@@ -60,14 +60,19 @@ export default class LostScene extends Phaser.Scene {
 
                 // Back to lobby button
                 const Lost = add
-                    .text(400, 325, "Unfortunately your team has lost the game. \nYou can try again by starting over!", {
-                        fontFamily: "Chela One",
-                        fontSize: 45,
-                        color: "#FFFBF4",
-                        fontStyle: "normal",
-                        stroke: "#000000",
-                        strokeThickness: 12,
-                    })
+                    .text(
+                        400,
+                        325,
+                        "Unfortunately your team has lost the game. \nYou can try again by starting over!",
+                        {
+                            fontFamily: "Chela One",
+                            fontSize: 45,
+                            color: "#FFFBF4",
+                            fontStyle: "normal",
+                            stroke: "#000000",
+                            strokeThickness: 12,
+                        }
+                    )
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
 
@@ -89,7 +94,7 @@ export default class LostScene extends Phaser.Scene {
                 // Play button events
                 backtolobbyButton.on("pointerover", () => {
                     backtolobbyButton.setStyle({
-                        color: "#FFFBF4"
+                        color: "#FFFBF4",
                     });
                 });
                 backtolobbyButton.on("pointerout", () => {
@@ -99,14 +104,12 @@ export default class LostScene extends Phaser.Scene {
                 });
                 backtolobbyButton.on("pointerup", () => {
                     scene.scene.start("MainScene", {
-                        ...scene.state
+                        ...scene.state,
                     });
                 });
-            }
+            },
         });
     }
 
-    update() {
-
-    }
+    update() {}
 }

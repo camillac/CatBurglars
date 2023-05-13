@@ -25,10 +25,10 @@ export default class FirstTask_Instruction extends Phaser.Scene {
 
     create() {
         const scene = this;
-        
+
         const background = this.add.image(400, 300, "Background");
         background.setScale(2);
-        
+
         var sky = this.add.image(400, 350, "Sky");
         sky.setScale(4.0);
 
@@ -40,14 +40,8 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             1000,
             "Clouds_small"
         );
-        var Clouds_bg2 = this.add.tileSprite(
-            400, 
-            470, 
-            800, 
-            1000, 
-            "big_clouds"
-        );
-        
+        var Clouds_bg2 = this.add.tileSprite(400, 470, 800, 1000, "big_clouds");
+
         scene.tweens.add({
             targets: Clouds_bg1,
             tilePositionX: { from: 0, to: 180 },
@@ -71,7 +65,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             .text(
                 400,
                 300,
-                "Communicate with your \n team and insert the \nkeys in the correct\n order to break \ninto the house!",
+                "Communicate with your \n team and insert the \ncorrect keys in order \nto break into the house!",
                 {
                     fontFamily: "Black Ops One",
                     fontSize: 60,
@@ -130,7 +124,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                         300,
                         `You are Player 1.\nCommunicate with your \n team to figure out the \n correct three keys`,
                         {
-                            fontFamily:"Black Ops One",
+                            fontFamily: "Black Ops One",
                             fontSize: 60,
                             color: "#000000",
                             align: "center",
@@ -180,6 +174,6 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             }
         }
     }
-    
+
     update() {}
 }

@@ -21,10 +21,10 @@ export default class FinalTask_Instruction extends Phaser.Scene {
 
     create() {
         const scene = this;
-        
+
         const background = this.add.image(400, 300, "Background");
         background.setScale(2);
-        
+
         // Fade in Effect for the Instruction
         this.cameras.main.fadeIn(5000, 0, 0, 0, instructions);
         var instructions = scene.add
@@ -94,22 +94,22 @@ export default class FinalTask_Instruction extends Phaser.Scene {
             }
 
             function displayInstructions() {
-            var playerInfo = scene.add
-            .text(
-                400,
-                300,
-                `Catch as many fish\nas you can before\ntime runs out!`,
-                {
-                    fontFamily: "Chela One",
-                    fontSize: 60,
-                    color: "#000000",
-                    align: "center",
-                }
-            )
-            .setOrigin(0.5);
+                var playerInfo = scene.add
+                    .text(
+                        400,
+                        300,
+                        `Catch as many fish\nas you can before\ntime runs out!`,
+                        {
+                            fontFamily: "Chela One",
+                            fontSize: 60,
+                            color: "#000000",
+                            align: "center",
+                        }
+                    )
+                    .setOrigin(0.5);
             }
         }
     }
-    
+
     update() {}
 }
