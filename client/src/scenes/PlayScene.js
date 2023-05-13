@@ -1,6 +1,3 @@
-// PlayScene and LobbyScene both use this Among Us Tutorial as a reference:
-// github.com/hannahrobot/amongus-tutorial
-
 export default class PlayScene extends Phaser.Scene {
     constructor() {
         super("PlayScene");
@@ -13,20 +10,23 @@ export default class PlayScene extends Phaser.Scene {
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
         );
 
-        /*this.load.image(
-            "background",
-            "client/assets/backgrounds/blob-scene-haikei (6).png"
-        );*/
-        this.load.image("PlayerScene_Bg", "client/assets/sprites/backgroundColorGrass.png");
-        this.load.image("grass1","client/assets/sprites/fish/bush3.png")
+        this.load.image(
+            "PlayerScene_Bg",
+            "client/assets/sprites/backgroundColorGrass.png"
+        );
+        this.load.image("grass1", "client/assets/sprites/fish/bush3.png");
         this.load.image("Back", "client/assets/sprites/Button2.png");
-        this.load.image("Grass_PlayScene","client/assets/sprites/fish/bush2.png");
+        this.load.image(
+            "Grass_PlayScene",
+            "client/assets/sprites/fish/bush2.png"
+        );
         this.load.image("puff", "client/assets/sprites/whitePuff01.png");
 
         // ------- PLUGIN FOR SHAKE----
         var url;
-        url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexshakepositionplugin.min.js';
-        this.load.plugin('rexshakepositionplugin', url, true);
+        url =
+            "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexshakepositionplugin.min.js";
+        this.load.plugin("rexshakepositionplugin", url, true);
     }
 
     create() {
@@ -36,133 +36,128 @@ export default class PlayScene extends Phaser.Scene {
         const background = this.add.image(400, 300, "PlayerScene_Bg");
         background.setScale(1.0);
 
-        const Home= this.add.image(650,360,"House_main");
+        const Home = this.add.image(650, 360, "House_main");
         Home.setScale(1);
-        const Bush1 = this.add.image(100,420,"Grass_PlayScene");
+        const Bush1 = this.add.image(100, 420, "Grass_PlayScene");
         Bush1.setScale(0.75);
         Bush1.setDepth(1);
-        const Bush2 = this.add.image(300,420,"Grass_PlayScene");
+        const Bush2 = this.add.image(300, 420, "Grass_PlayScene");
         Bush2.setScale(0.75);
         Bush2.setDepth(1);
-        const Bush3 = this.add.image(500,420,"Grass_PlayScene");
+        const Bush3 = this.add.image(500, 420, "Grass_PlayScene");
         Bush3.setScale(0.75);
         Bush3.setDepth(1);
-        const Bush4 = this.add.image(700,420,"Grass_PlayScene");
+        const Bush4 = this.add.image(700, 420, "Grass_PlayScene");
         Bush4.setScale(0.75);
         Bush4.setDepth(1);
 
         //------------------------ SMOKE SPRITE--------------------
-        const smoke = this.add.image(300,300,"puff");
+        const smoke = this.add.image(300, 300, "puff");
         smoke.setScale(0.2);
         const Smoke_tween = scene.tweens.add({
             targets: smoke,
-            y: { from: 290, to: 180},
-            x: {from:720, to:730},
+            y: { from: 290, to: 180 },
+            x: { from: 720, to: 730 },
             duration: 10000,
             ease: "linear",
-            //ease:'bounce.out', 
+            //ease:'bounce.out',
             repeat: -1,
             yoyo: false,
-
         });
 
-       //------------------------GRASS TWEEN----------------------
-       scene.tweens.add({
-        targets:Bush1,
-        x: {from:200, to:250},
-        duration: 10000,
-        ease: "linear",
-        repeat: 50, 
-        yoyo: false,
-        scale: {from:0.5, to:0.75}
-    });
-       scene.tweens.add({
-            targets:Bush2,
-           // y: { from: 350, to: 300},
-            x: {from:300, to:350},
+        //------------------------GRASS TWEEN----------------------
+        scene.tweens.add({
+            targets: Bush1,
+            x: { from: 200, to: 250 },
             duration: 10000,
             ease: "linear",
-            //ease:'bounce.out', 
-            repeat: 50, 
+            repeat: 50,
             yoyo: false,
-            scale: {from:0.5, to:0.75}
+            scale: { from: 0.5, to: 0.75 },
         });
         scene.tweens.add({
-            targets: (Bush3),
-           // y: { from: 350, to: 300},
-            x: {from:400, to:450},
+            targets: Bush2,
+            // y: { from: 350, to: 300},
+            x: { from: 300, to: 350 },
             duration: 10000,
             ease: "linear",
-            //ease:'bounce.out', 
-            repeat: 50, 
+            //ease:'bounce.out',
+            repeat: 50,
             yoyo: false,
-            scale: {from:0.5, to:0.75}
-        })
+            scale: { from: 0.5, to: 0.75 },
+        });
         scene.tweens.add({
-            targets: (Bush4),
-           // y: { from: 350, to: 300},
-            x: {from:500, to:550},
+            targets: Bush3,
+            // y: { from: 350, to: 300},
+            x: { from: 400, to: 450 },
             duration: 10000,
             ease: "linear",
-            //ease:'bounce.out', 
-            repeat: 50, 
+            //ease:'bounce.out',
+            repeat: 50,
             yoyo: false,
-            scale: {from:0.5, to:0.75}
-        })
+            scale: { from: 0.5, to: 0.75 },
+        });
+        scene.tweens.add({
+            targets: Bush4,
+            // y: { from: 350, to: 300},
+            x: { from: 500, to: 550 },
+            duration: 10000,
+            ease: "linear",
+            //ease:'bounce.out',
+            repeat: 50,
+            yoyo: false,
+            scale: { from: 0.5, to: 0.75 },
+        });
 
         //----------------END OF GRASS TWEENS---------------------
 
         //---------------START OF CAT TWEENS-----------------
-        var cat1 = scene.add.image(100,420,"Cats_1");
+        var cat1 = scene.add.image(100, 420, "Cats_1");
         cat1.setScale(0.3);
         scene.tweens.add({
             targets: cat1,
-            x: {from:500, to:550},
+            x: { from: 500, to: 550 },
             duration: 10000,
             ease: "linear",
-            repeat: 50, 
+            repeat: 50,
             yoyo: false,
-            scale: {from:0.1, to:0.3}
-
+            scale: { from: 0.1, to: 0.3 },
         });
-        var cat2 = scene.add.image(100,420,"Cats_2");
+        var cat2 = scene.add.image(100, 420, "Cats_2");
         cat2.setScale(0.3);
         scene.tweens.add({
             targets: cat2,
-            x: {from:400, to:450},
+            x: { from: 400, to: 450 },
             duration: 10000,
-            ease: "linear", 
-            repeat: 50, 
+            ease: "linear",
+            repeat: 50,
             yoyo: false,
-            scale: {from:0.1, to:0.3}
-
+            scale: { from: 0.1, to: 0.3 },
         });
 
-        var cat3 = scene.add.image(100,420,"Cats_3");
+        var cat3 = scene.add.image(100, 420, "Cats_3");
         cat3.setScale(0.3);
         scene.tweens.add({
             targets: cat3,
-            x: {from:300, to:350},
+            x: { from: 300, to: 350 },
             duration: 10000,
-            ease: "linear", 
-            repeat: 50, 
+            ease: "linear",
+            repeat: 50,
             yoyo: false,
-            scale: {from:0.1, to:0.3}
-
+            scale: { from: 0.1, to: 0.3 },
         });
 
-        var cat4 = scene.add.image(100,420,"Cats_4");
+        var cat4 = scene.add.image(100, 420, "Cats_4");
         cat4.setScale(0.3);
         scene.tweens.add({
             targets: cat4,
-            x: {from:200, to:250},
+            x: { from: 200, to: 250 },
             duration: 10000,
             ease: "linear",
-            repeat: 50, 
+            repeat: 50,
             yoyo: false,
-            scale: {from:0.1, to:0.3}
-
-        })
+            scale: { from: 0.1, to: 0.3 },
+        });
 
         WebFont.load({
             google: {
@@ -194,7 +189,7 @@ export default class PlayScene extends Phaser.Scene {
                     stroke: "#000000",
                     strokeThickness: 8,
                 });
-        
+
                 // Create lobby button
                 const createButton = add
                     .text(400, 325, "Create A Lobby", {
@@ -209,17 +204,17 @@ export default class PlayScene extends Phaser.Scene {
                     .setPadding(10, 10, 10, 10);
 
                 // Back button
-                const backButton = add.text(60, 25, "Back", {
-                    fontFamily: "Black Ops One",
-                    fontSize: 25,
-                    color: "#FFFBF4",
-                    fontStyle: "normal",
-                    stroke: "#000000",
-                    strokeThickness: 8,
+                const backButton = add
+                    .text(60, 25, "Back", {
+                        fontFamily: "Black Ops One",
+                        fontSize: 25,
+                        color: "#FFFBF4",
+                        fontStyle: "normal",
+                        stroke: "#000000",
+                        strokeThickness: 8,
                     })
                     .setOrigin(0.5)
                     .setPadding(10, 10, 10, 10);
-        
 
                 // Join lobby button
                 const joinButton = add

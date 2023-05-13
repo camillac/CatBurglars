@@ -1,3 +1,6 @@
+// CreateLobbyScene, JoinLobbyScene and LobbyScene both use this Among Us Tutorial as a reference:
+// ** github.com/hannahrobot/amongus-tutorial
+
 export default class JoinLobbyScene extends Phaser.Scene {
     constructor() {
         super("JoinLobbyScene");
@@ -11,10 +14,7 @@ export default class JoinLobbyScene extends Phaser.Scene {
             this.load.html("joinform", "client/assets/text/joinform.html")
         );
 
-        this.load.image(
-            "Sky_1",
-            "client/assets/sprites/Sky.png"
-        );
+        this.load.image("Sky_1", "client/assets/sprites/Sky.png");
 
         this.load.image("Button", "client/assets/sprites/Button.png");
         this.load.image("big_clouds", "client/assets/sprites/big_clouds.png");
@@ -22,7 +22,10 @@ export default class JoinLobbyScene extends Phaser.Scene {
             "Clouds_small",
             "client/assets/sprites/clouds-white-small.png"
         );
-        this.load.image("House_JoinLobby", "client/assets/sprites/House_No Backgroung.png");
+        this.load.image(
+            "House_JoinLobby",
+            "client/assets/sprites/House_No Backgroung.png"
+        );
     }
 
     create() {
@@ -33,8 +36,8 @@ export default class JoinLobbyScene extends Phaser.Scene {
 
         // START THE SOCKET CONNECTION
         this.socket = io();
-        
-        //----- SKY BACKGROUND 
+
+        //----- SKY BACKGROUND
         const background = this.add.image(400, 300, "Sky_1");
         background.setScale(4.0);
         var Clouds_bg1 = this.add.tileSprite(
@@ -44,7 +47,7 @@ export default class JoinLobbyScene extends Phaser.Scene {
             1000,
             "Clouds_small"
         );
-        
+
         //-------- CLOUD EFFECT
         var Clouds_bg2 = this.add.tileSprite(400, 470, 800, 1000, "big_clouds");
         scene.tweens.add({
@@ -53,7 +56,7 @@ export default class JoinLobbyScene extends Phaser.Scene {
             ease: "linear",
             duration: 8000,
             repeat: -1, //Infinity Times
-            yoyo:false, // @False Does not go Back and Forth
+            yoyo: false, // @False Does not go Back and Forth
         });
         scene.tweens.add({
             targets: Clouds_bg2,
@@ -63,15 +66,14 @@ export default class JoinLobbyScene extends Phaser.Scene {
             repeat: -1, //Infinity Times
             yoyo: false,
         });
-        
-        const house = scene.add.image("400","300","House_JoinLobby");
+
+        const house = scene.add.image("400", "300", "House_JoinLobby");
         house.setScale(4);
         WebFont.load({
             google: {
                 families: ["Black Ops One"],
             },
             active: function () {
-                
                 // Title
                 add.text(15, 110, "Cat", {
                     fontFamily: "Black Ops One",
@@ -97,19 +99,20 @@ export default class JoinLobbyScene extends Phaser.Scene {
                     stroke: "#000000",
                     strokeThickness: 8,
                 });
-        
+
                 // Back button
-                const backButton = add.text(60, 25, "Back", {
-                    fontFamily: "Black Ops One",
-                    fontSize: 25,
-                    color: "#FFFBF4",
-                    fontStyle: "normal",
-                    stroke: "#000000",
-                    strokeThickness: 8,
-                })
-                .setOrigin(0.5)
-                .setPadding(10, 10, 10, 10);
-                    
+                const backButton = add
+                    .text(60, 25, "Back", {
+                        fontFamily: "Black Ops One",
+                        fontSize: 25,
+                        color: "#FFFBF4",
+                        fontStyle: "normal",
+                        stroke: "#000000",
+                        strokeThickness: 8,
+                    })
+                    .setOrigin(0.5)
+                    .setPadding(10, 10, 10, 10);
+
                 //KEY NOT VALID
                 scene.notValidText = scene.add
                     .text(400, 300, "", {
@@ -178,5 +181,5 @@ export default class JoinLobbyScene extends Phaser.Scene {
         });
     }
 
-    upload() { }
+    upload() {}
 }

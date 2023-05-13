@@ -3,7 +3,7 @@ export default class IntroductionScene extends Phaser.Scene {
         super("IntroductionScene");
         this.state = {};
     }
-    
+
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
@@ -11,7 +11,7 @@ export default class IntroductionScene extends Phaser.Scene {
         this.playerInfo = data.playerInfo;
         this.playerNum = data.playerNum;
     }
-    
+
     preload() {
         this.load.image("House", "client/assets/sprites/House.png"); //Need to Update this
         this.load.image("Sky", "client/assets/sprites/Sky.png");
@@ -25,7 +25,7 @@ export default class IntroductionScene extends Phaser.Scene {
         this.load.image("Leaf_1", "client/assets/sprites/Leaf.png");
         this.load.image("Leaf_2", "client/assets/sprites/leaf2.png");
         this.load.image("Grass", "client/assets/sprites/grass.png");
-        
+
         // Load background
         this.load.image(
             "background",
@@ -40,7 +40,7 @@ export default class IntroductionScene extends Phaser.Scene {
 
         var sky = this.add.image(400, 300, "Sky");
         sky.setScale(4.0);
-    
+
         //---------------------------- Moving Clouds--------------------------------
         var Clouds_bg1 = this.add.tileSprite(
             400,
@@ -68,19 +68,17 @@ export default class IntroductionScene extends Phaser.Scene {
             repeat: -1, // Infinity Times
             yoyo: false,
         });
-       
+
         //----------------------- House with Zoom In effect-----------------------
         const background = this.add.image(400, 300, "House");
         background.setScale(4.0);
 
-        // House 
-        var House = this.add
-            .image(400, 300, "House_no_background")
-            .setScale(4);
+        // House
+        var House = this.add.image(400, 300, "House_no_background").setScale(4);
         this.tweens.add({
             targets: House,
             y: 10,
-            scale:9,
+            scale: 9,
             ease: "Cubic.easeIn",
             duration: 3500,
             onComplete: () => {

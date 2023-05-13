@@ -1,5 +1,5 @@
-// PlayScene and LobbyScene both use this Among Us Tutorial as a reference:
-// github.com/hannahrobot/amongus-tutorial
+// CreateLobbyScene, JoinLobbyScene and LobbyScene both use this Among Us Tutorial as a reference:
+// ** github.com/hannahrobot/amongus-tutorial
 
 // Local Variables
 https: var gameRooms = {};
@@ -15,9 +15,10 @@ module.exports = (io) => {
         // ************************************* PLAY SCENE SOCKETS **********************************************
 
         // CREATE A ROOM
+        // ** Base code taken from Among Us Replica
         socket.on("getRoomCode", async function (name) {
             let key = codeGenerator();
-            
+
             gameRooms[key] = {
                 roomKey: key,
                 players: {},
@@ -27,12 +28,12 @@ module.exports = (io) => {
                 task1IsStarted: false,
                 finalTaskIsStarted: false,
             };
-            
+
             console.log("ROOM CREATED - ROOM KEY: " + key);
             if (name == "") {
                 name = "Player 1";
             }
-            
+
             socket.emit("roomCreated", key, name);
         });
 
@@ -42,6 +43,7 @@ module.exports = (io) => {
         });
 
         // JOIN A ROOM
+        // ** Base code taken from Among Us Replica
         socket.on("joinRoom", (roomKey, playerName) => {
             socket.join(roomKey);
             const roomInfo = gameRooms[roomKey];
@@ -52,7 +54,7 @@ module.exports = (io) => {
                     playerNum: 0,
                     playerName: playerName,
                     finished: false,
-                    ready: false
+                    ready: false,
                 };
 
                 roomInfo.players[socket.id].playerNum = Object.keys(
@@ -68,7 +70,7 @@ module.exports = (io) => {
 
             // Update number of players
             roomInfo.numPlayers = Object.keys(roomInfo.players).length;
-            console.log("JOIN ROOM ");
+            // console.log("JOIN ROOM ");
 
             // Set initial state
             socket.emit("setState", roomInfo);
@@ -85,7 +87,7 @@ module.exports = (io) => {
                 numPlayers: roomInfo.numPlayers,
             });
 
-            console.log(roomInfo);
+            // console.log(roomInfo);
         });
 
         // ************************************* END OF PLAY SCENE SOCKETS **********************************************
@@ -93,6 +95,7 @@ module.exports = (io) => {
         // ************************************* LOBBY SCENE SOCKETS **********************************************
 
         // CLIENT DISCONNECT
+        // ** Base code taken from Among Us Replica
         socket.on("disconnect", () => {
             console.log(`A socket has disconnected`);
 
@@ -111,27 +114,33 @@ module.exports = (io) => {
             const roomInfo = gameRooms[roomKey];
 
             if (roomInfo) {
-                console.log("User Disconnected: ", socket.id);
-                console.log("Room Info BEFORE Removing Player");
-                console.log(roomInfo);
+                // console.log("User Disconnected: ", socket.id);
+                // console.log("Room Info BEFORE Removing Player");
+                // console.log(roomInfo);
 
                 var deletedNum = roomInfo.players[socket.id].playerNum;
 
                 // SHIFT PLAYERNUMS DOWN IF PLAYERNUM > DELETED_PLAYERNUM
                 for (playerId in roomInfo.players) {
-                    console.log("player: " + playerId);
-                    console.log(
-                        "playerNum: " + roomInfo.players[playerId].playerNum
-                    );
+                    // console.log("player: " + playerId);
+                    // console.log(
+                    //     "playerNum: " + roomInfo.players[playerId].playerNum
+                    // );
 
                     if (roomInfo.players[playerId].playerNum > deletedNum) {
                         roomInfo.players[playerId].playerNum =
                             roomInfo.players[playerId].playerNum - 1;
-                        if ((roomInfo.players[playerId].playerName) == ("Player " + (roomInfo.players[playerId].playerNum + 1))) {
-                            (roomInfo.players[playerId].playerName) = ("Player " + (roomInfo.players[playerId].playerNum));
+                        if (
+                            roomInfo.players[playerId].playerName ==
+                            "Player " +
+                                (roomInfo.players[playerId].playerNum + 1)
+                        ) {
+                            roomInfo.players[playerId].playerName =
+                                "Player " +
+                                roomInfo.players[playerId].playerNum;
                         }
-                    };
-                };
+                    }
+                }
 
                 // Remove this player from our players object
                 delete roomInfo.players[socket.id];
@@ -141,13 +150,12 @@ module.exports = (io) => {
 
                 // Handle in-game disconnects
                 if (roomInfo.inGame) {
-
                     // Emit a message to all players to generate a new room
                     let newKey = codeGenerator();
                     while (Object.keys(gameRooms).includes(newKey)) {
                         newKey = codeGenerator();
                     }
-                    
+
                     gameRooms[newKey] = {
                         roomKey: newKey,
                         players: {},
@@ -158,12 +166,17 @@ module.exports = (io) => {
                         finalTaskIsStarted: false,
                     };
                     console.log("ROOM CREATED - ROOM KEY: " + newKey);
+
+                    // Final Task Disconnect
                     if (roomInfo.inFinalTask) {
                         io.to(roomKey).emit("endGameFinal", newKey);
-                    } else {
+                    }
+                    // Task One Disconnect
+                    else {
                         io.to(roomKey).emit("endGame", newKey);
                     }
-                } else { // Handle lobby disconnects
+                } else {
+                    // Handle lobby disconnects
                     io.to(roomKey).emit("disconnected", {
                         playerId: socket.id,
                         numPlayers: roomInfo.numPlayers,
@@ -171,16 +184,17 @@ module.exports = (io) => {
                     });
                 }
 
-                console.log("Room Info AFTER Removing Player");
-                console.log(roomInfo);
+                // console.log("Room Info AFTER Removing Player");
+                // console.log(roomInfo);
             }
         });
 
         // Check if the key is valid
+        // ** Base code taken from Among Us Replica
         socket.on("isKeyValid", function (code, name) {
             Object.keys(gameRooms).includes(code)
-                    ? socket.emit("keyIsValid", code, name)
-                    : socket.emit("keyNotValid");
+                ? socket.emit("keyIsValid", code, name)
+                : socket.emit("keyNotValid");
         });
 
         // Check if the room is full, notify player if it is
@@ -194,7 +208,7 @@ module.exports = (io) => {
 
         // RECEIVES STARTGAME EMIT FROM ONE PLAYER, EMIT STARTGAME TO ALL PLAYERS IN THE ROOM
         socket.on("startGame", function (roomKey, start) {
-            console.log("start game");
+            console.log("Start Game");
             gameRooms[roomKey].inGame = true;
             socket
                 .to(roomKey)
@@ -204,7 +218,7 @@ module.exports = (io) => {
         // ************************************* END OF LOBBY SCENE SOCKETS **********************************************
 
         // ************************************* TASK ONE SCENE SOCKETS **********************************************
-        
+
         // Starts task one
         socket.on("startTaskOne", function (roomKey, mainPlayer, playerIdx) {
             const roomInfo = gameRooms[roomKey];
@@ -215,10 +229,11 @@ module.exports = (io) => {
                 const key1 = arr[0];
                 const key2 = arr[1];
                 const key3 = arr[2]; // Randomly shuffle an array, in order to pick 3 random keys
-                console.log(roomKey);
-                console.log(key1, key2, key3);
-                console.log(roomInfo);
-                for (playerId in roomInfo.players) { // Assign the keys to the 3 other players
+                // console.log(roomKey);
+                // console.log(key1, key2, key3);
+                // console.log(roomInfo);
+                for (playerId in roomInfo.players) {
+                    // Sends MAIN PLAYER all 3 keys
                     if (roomInfo.players[playerId].playerNum == mainPlayer) {
                         const counter = 30;
                         io.to(roomInfo.players[playerId].playerId).emit(
@@ -235,31 +250,17 @@ module.exports = (io) => {
                                 key3: key3,
                             }
                         );
-                    } else if (roomInfo.players[playerId].playerNum == 2) {
+                    }
+                    // Sends SIDE PLAYERS their respective key
+                    else {
                         io.to(roomInfo.players[playerId].playerId).emit(
                             "displaySideTaskOne",
                             {
                                 playerId: playerId,
                                 playerNum: roomInfo.players[playerId].playerNum,
-                                key: key1,
-                            }
-                        );
-                    } else if (roomInfo.players[playerId].playerNum == 3) {
-                        io.to(roomInfo.players[playerId].playerId).emit(
-                            "displaySideTaskOne",
-                            {
-                                playerId: playerId,
-                                playerNum: roomInfo.players[playerId].playerNum,
-                                key: key2,
-                            }
-                        );
-                    } else {
-                        io.to(roomInfo.players[playerId].playerId).emit(
-                            "displaySideTaskOne",
-                            {
-                                playerId: playerId,
-                                playerNum: roomInfo.players[playerId].playerNum,
-                                key: key3,
+                                key: arr[
+                                    roomInfo.players[playerId].playerNum - 2
+                                ],
                             }
                         );
                     }
@@ -269,8 +270,9 @@ module.exports = (io) => {
 
         // Start back-end timer
         socket.on("startTimer", function (roomKey, counter) {
-            console.log("IN START TIMER");
-            socket.on("decreaseCounter", function () { // Decrease timer on mistakes
+            console.log("START TASK ONE TIMER");
+            socket.on("decreaseCounter", function () {
+                // Decrease timer on mistakes
                 counter = counter - 5;
             });
 
@@ -288,14 +290,14 @@ module.exports = (io) => {
 
             // Stop the counter so it doesnt keep going after game ends
             socket.on("showWinScene", function () {
-                console.log("counter destroyed");
+                console.log("Counter Destroyed");
                 io.to(roomKey).emit("win", roomKey);
                 clearInterval(Countdown);
             });
 
             // Stop the timer and move on to the next task
             socket.on("endedTask", function () {
-                console.log("counter destroyed, moving on to next task");
+                console.log("Counter Destroyed, Moving on to Next Task");
                 io.to(roomKey).emit("nextTask", roomKey);
                 clearInterval(Countdown);
             });
@@ -308,7 +310,7 @@ module.exports = (io) => {
                 });
                 delete gameRooms[roomKey];
 
-                console.log(gameRooms);
+                // console.log(gameRooms);
             });
         });
 
@@ -322,7 +324,7 @@ module.exports = (io) => {
             roomInfo.inFinalTask = true;
             if (!roomInfo.finalTaskIsStarted) {
                 roomInfo.finalTaskIsStarted = true;
-                console.log("entered startFinalTask");
+                // console.log("Start Final Task");
                 const counter = 30;
                 for (playerId in roomInfo.players) {
                     if (roomInfo.players[playerId].playerNum == mainPlayer) {
@@ -342,8 +344,9 @@ module.exports = (io) => {
             }
         });
 
+        // Start server-side timer for the final task
         socket.on("startTimerFinal", function (roomKey, counterFinal) {
-            console.log("IN START TIMER");
+            console.log("START FINAL TIMER");
             const roomInfo = gameRooms[roomKey];
             var CountdownFinal = setInterval(function () {
                 console.log(counterFinal);
@@ -353,7 +356,7 @@ module.exports = (io) => {
                     let allFinishedPlaceholder = true;
                     for (playerId in roomInfo.players) {
                         if (!roomInfo.players[playerId].finished) {
-                            console.log("MAKE IT FALSE");
+                            // console.log("MAKE IT FALSE");
                             allFinishedPlaceholder = false;
                         }
                     }
@@ -393,10 +396,11 @@ module.exports = (io) => {
 
                 delete gameRooms[roomKey];
 
-                console.log(gameRooms);
+                // console.log(gameRooms);
             });
         });
 
+        // Update finished variable for specific player on Win Condition
         socket.on("gotAllFish", function (roomKey, playerI) {
             console.log("GOT ALL FISH");
             const roomInfo = gameRooms[roomKey];
@@ -405,26 +409,24 @@ module.exports = (io) => {
 
         // ************************************ SYNCING SOCKETS *********************************************
 
-        // Server checks if everyone is done with any animations 
+        // Server checks if everyone is done with any animations
         // and if it can send out the tasks
-        socket.on("ready", function(roomKey) {
+        socket.on("ready", function (roomKey) {
             const roomInfo = gameRooms[roomKey];
             var check = 0;
             roomInfo.players[socket.id].ready = true;
             for (var player in roomInfo.players) {
-                if (roomInfo.players[player].ready == true)
-                {
+                if (roomInfo.players[player].ready == true) {
                     check++;
                 }
             }
             if (check < 4) {
                 socket.emit("waiting");
-            } else if (check = 4) {
+            } else if ((check = 4)) {
                 io.to(roomKey).emit("canStart");
                 io.to(roomKey).emit("destroyWaitingScene");
                 for (var player in roomInfo.players) {
-                    if (roomInfo.players[player].ready == true)
-                    {
+                    if (roomInfo.players[player].ready == true) {
                         roomInfo.players[player].ready = false;
                     }
                 }
@@ -436,6 +438,7 @@ module.exports = (io) => {
 // ************************************ HELPER FUNCTIONS *********************************************
 
 // CODE GENERATOR FOR LOBBY
+// ** Base code taken from Among Us Replica
 function codeGenerator() {
     let code = "";
     let chars = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";

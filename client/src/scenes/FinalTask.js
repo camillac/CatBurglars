@@ -8,7 +8,7 @@ export default class FinalTask extends Phaser.Scene {
         super("FinalTask");
         this.state = {};
     }
-    
+
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
@@ -17,7 +17,7 @@ export default class FinalTask extends Phaser.Scene {
         this.players = data.players;
         this.start = data.start;
     }
-    
+
     preload() {
         // Load cats/players
         this.load.image("Player_1", "client/assets/sprites/player1.png");
@@ -37,7 +37,7 @@ export default class FinalTask extends Phaser.Scene {
 
         // Load background
         this.scene.run("FinalTask");
-        
+
         this.load.image(
             "background",
             "client/assets/backgrounds/blob-scene-haikei (6).png"
@@ -48,18 +48,18 @@ export default class FinalTask extends Phaser.Scene {
         const scene = this;
         scene.state.start_game = false; // Flag to tell fish when to start falling
         scene.state.fishCaughtN = 0;
-        
+
         // Client sends out message that it's ready to recieve the task
         this.socket.emit("ready", scene.roomKey);
 
         // Wait if everyone is not ready
-        this.socket.on("waiting", function() {
+        this.socket.on("waiting", function () {
             var waitingscene = scene.add.text(
                 200,
                 30,
                 "Waiting for other players.. ",
                 {
-                    fontFamily:"Black Ops One",
+                    fontFamily: "Black Ops One",
                     fontSize: 40,
                     color: "#FFFFFF",
                     fontStyle: "normal",
@@ -68,16 +68,21 @@ export default class FinalTask extends Phaser.Scene {
                 }
             );
 
-            // Destroy the waiting scene when told 
-            scene.socket.on("destroyWaitingScene", function() {
+            // Destroy the waiting scene when told
+            scene.socket.on("destroyWaitingScene", function () {
                 waitingscene.destroy();
             });
         });
 
         // Client told it can start the task after server checks that everyone is ready
-        this.socket.on("canStart", function() {
+        this.socket.on("canStart", function () {
             if (scene.socket.id == scene.start) {
-                scene.socket.emit("startFinalTask", scene.roomKey, 1, scene.socket.id);
+                scene.socket.emit(
+                    "startFinalTask",
+                    scene.roomKey,
+                    1,
+                    scene.socket.id
+                );
             }
         });
 
@@ -96,7 +101,7 @@ export default class FinalTask extends Phaser.Scene {
 
         // DISCONNECT
         this.socket.on("backToLobbyFinal", function (arg) {
-            console.log("LOBBYSCENE");
+            // console.log("LOBBYSCENE");
             const { roomKey } = arg;
 
             scene.scene.start("LobbyScene", {
@@ -105,12 +110,12 @@ export default class FinalTask extends Phaser.Scene {
                 roomKey: roomKey,
                 playerInfo: scene.playerInfo,
                 playerName: scene.playerName,
-                playerNum: scene.playerNum
+                playerNum: scene.playerNum,
             });
         });
 
         this.socket.on("startTimerEXFinal", function (arg) {
-            console.log("IN TIMRE EX");
+            // console.log("IN TIMER EX");
             const { roomKey, counter } = arg;
             scene.socket.emit("startTimerFinal", roomKey, counter);
         });
@@ -168,7 +173,6 @@ export default class FinalTask extends Phaser.Scene {
         // *** There is no UI difference for this task as of now between them
         // Main Player Final Task Display
         this.socket.on("displayFinal", function (arg) {
-
             // Tell update() to start moving fish
             scene.state.start_game = true;
 
@@ -226,9 +230,9 @@ export default class FinalTask extends Phaser.Scene {
                     fish.x = randomX;
                     scene.state.fishCaughtN += 1;
                     fishCaughtNumber.text = scene.state.fishCaughtN;
-                    console.log(scene.state.fishCaughtN);
+                    // console.log(scene.state.fishCaughtN);
                     if (scene.state.fishCaughtN == 10) {
-                        console.log("GOT ALL 10");
+                        // console.log("GOT ALL 10");
                         scene.socket.emit(
                             "gotAllFish",
                             scene.roomKey,
@@ -263,14 +267,14 @@ export default class FinalTask extends Phaser.Scene {
             timerFinal.text = counterFinal;
         });
 
-        // End the timer 
+        // End the timer
         this.socket.on("endGameFinal", function (newKey) {
             scene.socket.emit("stopTimerFinal", newKey);
         });
 
         // Win condition
         this.socket.on("winFinal", function (roomKey) {
-            console.log("Won!");
+            // console.log("Won!");
             scene.scene.start("WinningScene", {
                 ...scene.state,
                 socket: scene.socket,
@@ -280,7 +284,7 @@ export default class FinalTask extends Phaser.Scene {
 
         // Lost condition
         this.socket.on("lostFinal", function (roomKey) {
-            console.log("Lost!");
+            // console.log("Lost!");
             scene.scene.start("LostScene", {
                 ...scene.state,
                 socket: scene.socket,
@@ -298,7 +302,7 @@ export default class FinalTask extends Phaser.Scene {
         }
     }
 
-// ******************* HELPER FUNCTIONS ******************* //
+    // ******************* HELPER FUNCTIONS ******************* //
 
     // Moves fish down screen and resets them once they leave the screen
     moveFish(fish, speed) {

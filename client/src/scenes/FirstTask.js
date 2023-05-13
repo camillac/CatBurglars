@@ -5,7 +5,7 @@ export default class FirstTask extends Phaser.Scene {
         super("FirstTask");
         this.state = {};
     }
-    
+
     init(data) {
         this.socket = data.socket;
         this.roomKey = data.roomKey;
@@ -14,7 +14,7 @@ export default class FirstTask extends Phaser.Scene {
         this.players = data.players;
         this.start = data.start;
     }
-    
+
     preload() {
         // Load cats/players
         this.load.image("Player_1", "client/assets/sprites/player1.png");
@@ -34,7 +34,7 @@ export default class FirstTask extends Phaser.Scene {
             "client/assets/sprites/incorrect.png"
         );
         this.load.image("Door", "client/assets/sprites/door.png");
-        
+
         this.scene.run("FirstTask");
     }
 
@@ -46,13 +46,13 @@ export default class FirstTask extends Phaser.Scene {
         this.socket.emit("ready", scene.roomKey);
 
         // Wait if not everyone is ready
-        this.socket.on("waiting", function() {
+        this.socket.on("waiting", function () {
             var waitingscene = scene.add.text(
                 200,
                 30,
                 "Waiting for other players.. ",
                 {
-                    fontFamily:"Black Ops One",
+                    fontFamily: "Black Ops One",
                     fontSize: 40,
                     color: "#FFFFFF",
                     fontStyle: "normal",
@@ -61,20 +61,25 @@ export default class FirstTask extends Phaser.Scene {
                 }
             );
 
-            // Destroy the waiting scene when told 
-            scene.socket.on("destroyWaitingScene", function() {
+            // Destroy the waiting scene when told
+            scene.socket.on("destroyWaitingScene", function () {
                 waitingscene.destroy();
             });
         });
 
         // Client told it can start the task after server checks that everyone is ready
-        this.socket.on("canStart", function() {
+        this.socket.on("canStart", function () {
             if (scene.socket.id == scene.start) {
-                scene.socket.emit("startTaskOne", scene.roomKey, 1, scene.socket.id);
+                scene.socket.emit(
+                    "startTaskOne",
+                    scene.roomKey,
+                    1,
+                    scene.socket.id
+                );
             }
         });
 
-         // Setting up background for the game
+        // Setting up background for the game
         const background = this.add.image(400, 300, "Door");
         background.setScale(0.5);
 
@@ -89,7 +94,7 @@ export default class FirstTask extends Phaser.Scene {
 
         // DISCONNECT
         this.socket.on("backToLobby", function (arg) {
-            console.log("LOBBYSCENE");
+            // console.log("LOBBYSCENE");
             const { roomKey } = arg;
 
             scene.scene.start("LobbyScene", {
@@ -98,7 +103,7 @@ export default class FirstTask extends Phaser.Scene {
                 roomKey: roomKey,
                 playerName: scene.playerName,
                 playerInfo: scene.playerInfo,
-                playerNum: scene.playerNum
+                playerNum: scene.playerNum,
             });
         });
 
@@ -143,33 +148,33 @@ export default class FirstTask extends Phaser.Scene {
 
             scene.correct = 0;
             scene.alreadyClickedKeys = [];
-            console.log(key1, key2, key3);
+            // console.log(key1, key2, key3);
 
             // Key actions
             key_1.on("pointerup", () => {
                 scene.isCorrectKey(scene, 1, key1, key2, key3, 330, 250);
-                console.log("pressed key 1 ");
+                // console.log("pressed key 1 ");
             });
             key_2.on("pointerup", () => {
                 scene.isCorrectKey(scene, 2, key1, key2, key3, 480, 250);
-                console.log("pressed key 2 ");
+                // console.log("pressed key 2 ");
             });
             key_3.on("pointerup", () => {
                 scene.isCorrectKey(scene, 3, key1, key2, key3, 630, 250);
-                console.log("pressed key 3 ");
+                // console.log("pressed key 3 ");
             });
             key_4.on("pointerup", () => {
                 scene.isCorrectKey(scene, 4, key1, key2, key3, 330, 450);
 
-                console.log("pressed key 4 ");
+                // console.log("pressed key 4 ");
             });
             key_5.on("pointerup", () => {
                 scene.isCorrectKey(scene, 5, key1, key2, key3, 480, 450);
-                console.log("pressed key 5 ");
+                // console.log("pressed key 5 ");
             });
             key_6.on("pointerup", () => {
                 scene.isCorrectKey(scene, 6, key1, key2, key3, 630, 450);
-                console.log("pressed key 6 ");
+                // console.log("pressed key 6 ");
             });
 
             // Hover effect on keys
@@ -218,7 +223,7 @@ export default class FirstTask extends Phaser.Scene {
 
         // Side Task Display
         this.socket.on("displaySideTaskOne", function (arg) {
-            console.log("displaySideTaskOne");
+            // console.log("displaySideTaskOne");
             const { playerId, playerNum, key } = arg;
             var keyImage = scene.add.sprite(250, 300, `key` + key + `Image`);
             keyImage.setScale(5).setPosition(475, 350);
@@ -240,7 +245,7 @@ export default class FirstTask extends Phaser.Scene {
             color: "black",
             align: "center",
         });
-        
+
         this.socket.on("counter", function (counter) {
             timer.text = counter;
         });
@@ -253,8 +258,8 @@ export default class FirstTask extends Phaser.Scene {
         this.socket.on("nextTask", function (roomKey) {
             if (!scene.state.alreadyCalledNextTask) {
                 scene.state.alreadyCalledNextTask = true;
-                console.log("Finished Task 1, moving to Final Task!");
-                console.log(scene.start);
+                // console.log("Finished Task 1, moving to Final Task!");
+                // console.log(scene.start);
                 scene.scene.start("FinalTask", {
                     ...scene.state,
                     socket: scene.socket,
@@ -269,7 +274,7 @@ export default class FirstTask extends Phaser.Scene {
 
         // Lost condition
         this.socket.on("lost", function (roomKey) {
-            console.log("Lost!");
+            // console.log("Lost!");
             scene.scene.start("LostScene", {
                 ...scene.state,
                 socket: scene.socket,
@@ -323,7 +328,7 @@ export default class FirstTask extends Phaser.Scene {
                 callback: corr,
                 callbackScope: this,
             });
-            console.log(scene.correct);
+            // console.log(scene.correct);
             // All 3 correct keys are pressed
             if (scene.correct === 3) {
                 scene.socket.emit("endedTask");
