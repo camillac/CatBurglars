@@ -30,9 +30,6 @@ module.exports = (io) => {
             };
 
             console.log("ROOM CREATED - ROOM KEY: " + key);
-            if (name == "") {
-                name = "Player 1";
-            }
 
             socket.emit("roomCreated", key, name);
         });
@@ -158,6 +155,13 @@ module.exports = (io) => {
 
                 // Handle in-game disconnects
                 if (roomInfo.inGame) {
+                    // reset defaultNames to "" so they are set to have the proper playerNum on reconnect to new lobby
+                    for (playerId in roomInfo.players) {
+                        if (roomInfo.players[playerId].defaultName) {
+                            roomInfo.players[playerId].playerName = "";
+                        }
+                    }
+
                     // Emit a message to all players to generate a new room
                     let newKey = codeGenerator();
                     while (Object.keys(gameRooms).includes(newKey)) {
@@ -316,7 +320,7 @@ module.exports = (io) => {
                 io.to(roomKey).emit("backToLobby", {
                     roomKey: newKey,
                 });
-                delete gameRooms[roomKey];
+                // delete gameRooms[roomKey];
 
                 // console.log(gameRooms);
             });
@@ -402,7 +406,7 @@ module.exports = (io) => {
                     roomKey: newKey,
                 });
 
-                delete gameRooms[roomKey];
+                // delete gameRooms[roomKey];
 
                 // console.log(gameRooms);
             });
