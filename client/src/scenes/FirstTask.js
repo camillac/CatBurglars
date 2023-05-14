@@ -33,7 +33,7 @@ export default class FirstTask extends Phaser.Scene {
             "incorrectImage",
             "client/assets/sprites/incorrect.png"
         );
-        this.load.image("Door", "client/assets/sprites/door.png");
+        this.load.image("Door", "client/assets/sprites/Door.png");
 
         this.scene.run("FirstTask");
     }
@@ -107,6 +107,7 @@ export default class FirstTask extends Phaser.Scene {
             });
         });
 
+        // start timer
         this.socket.on("startTimerEX", function (arg) {
             const { roomKey, counter } = arg;
             scene.socket.emit("startTimer", roomKey, counter);

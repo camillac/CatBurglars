@@ -87,7 +87,6 @@ export default class LobbyScene extends Phaser.Scene {
                 socket: scene.socket,
                 roomKey: roomKey,
                 playerName: scene.playerName,
-                playerName: scene.playerName,
                 playerInfo: scene.state.players,
                 playerNum: scene.state.players[scene.socket.id].playerNum,
             });
@@ -225,7 +224,7 @@ export default class LobbyScene extends Phaser.Scene {
             if (scene.state.numPlayers == 4) {
                 scene.socket.emit("startGame", this.roomKey, this.socket.id);
                 // console.log("startGame", this.roomKey);
-                scene.scene.start("FirstTask_Instruction", {
+                scene.scene.start("IntroductionScene", {
                     ...scene.state,
                     socket: scene.socket,
                     roomKey: this.roomKey,
@@ -291,7 +290,7 @@ export default class LobbyScene extends Phaser.Scene {
         var playerNameDisplay = scene.add
             .text(
                 125 + 175 * (playerInfo.playerNum - 1),
-                280,
+                290,
                 playerInfo.playerName,
                 {
                     fontFamily: "Black Ops One",
@@ -304,6 +303,9 @@ export default class LobbyScene extends Phaser.Scene {
             )
             .setOrigin(0.5)
             .setPadding(0.0, 0.0, 0);
+            
+        playerNameDisplay.setWordWrapWidth(170, true);
+        playerNameDisplay.setAlign("center");
         scene.playerNames.add(playerNameDisplay);
         scene.currentPlayer.add(mycats);
     }
@@ -322,7 +324,7 @@ export default class LobbyScene extends Phaser.Scene {
         var playerNameDisplay = scene.add
             .text(
                 125 + 175 * (playerInfo.playerNum - 1),
-                285,
+                290,
                 playerInfo.playerName,
                 {
                     fontFamily: "Black Ops One",
@@ -335,6 +337,9 @@ export default class LobbyScene extends Phaser.Scene {
             )
             .setOrigin(0.5)
             .setPadding(0.0, 0.0, 0);
+            
+        playerNameDisplay.setWordWrapWidth(170, true);
+        playerNameDisplay.setAlign("center");
         scene.playerNames.add(playerNameDisplay);
         scene.otherPlayers.add(otherPlayer);
     }
