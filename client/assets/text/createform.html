@@ -5,17 +5,17 @@
  
     .input-box {
         height: 50px;
-        width: 300px;
+        width: 400px;
         border: 2px solid black;
-        font-family: Chela One;
+        font-family:'Black Ops One';
         font-size: 30px;
         text-align: center;
     }
  
      button {
         height: 55px;
-        width: 300px;
-        font-family: Chela One;
+        width: 400px;
+        font-family: 'Black Ops One';
         font-size: 45px;
         color: #FFFBF4;
         font-style: normal;
@@ -30,8 +30,8 @@
  </style>
  
  <asp:panel class = "container">
-    <input type="text" id="name-form-id" name="name-form" placeholder="Enter Username" class="input-box" /><br>
-    <br><button type="button" style="margin:0px auto; display:block;" id="createRoom-id" name="createRoom" onclick= "myFunction()" >Create a Room</button>
+    <input type="text" id="name-form-id" name="name-form" placeholder="Enter Username" class="input-box" maxlength = "12"/><br>
+    <br><button type="button" style="margin:0px auto; display:block;" id="createRoom-id" name="createRoom">Create a Room</button>
         <script>
             var enter = document.getElementById("Code-form-id"); 
             enter.addEventListener('keypress', function(event){ 
@@ -43,3 +43,5 @@
             });
         </script>
  </asp:panel>
+
+  <!-- THIS FILE CONTAINS THE CREATE FORM USED TO CREATE LOBBIES -->

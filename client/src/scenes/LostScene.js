@@ -145,7 +145,7 @@ export default class LostScene extends Phaser.Scene {
                     ease: 'Sine.easeIn',
                     repeat: 0
                 });
-            }
+            },
         });
     }
 
@@ -153,4 +153,3 @@ export default class LostScene extends Phaser.Scene {
 
     }
 }
-

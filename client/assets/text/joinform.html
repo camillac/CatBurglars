@@ -7,27 +7,28 @@
 
     .input-box {
         height: 50px;
-        width: 250px;
+        width: 300px;
         border: 2px solid black;
-        font-family: Chela One;
+        font-family: 'Black Ops One';
         font-size: 30px;
         text-align: center;
     }
 
     .input-box2{
         height: 50px;
-        width: 250px;
+        width: 300px;
         border: 2px solid black;
-        font-family: Chela One;
+        font-family:'Black Ops One';
         font-size: 30px;
         text-align: center;
+        stroke: #f6dfb8;
     }
  
      button {
         height: 55px;
-        width: 250px;
-        font-family: Chela One;
-        font-size: 45px;
+        width: 300px;
+        font-family: 'Black Ops One';
+        font-size: 35px;
         color: #FFFBF4;
         font-style: normal;
         -webkit-text-stroke-width: 2px;
@@ -40,9 +41,9 @@
  </style>
  
  <asp:panel class = "container">
-    <input type="text" id="name-form-id" name="name-form" placeholder="Enter Username" class="input-box" /><br>
-    <br> <input type="text" id="code-form-id" name="code-form" placeholder="Enter Room Key" class="input-box2" /><br>
-    <br><button type="button" style="margin:0px auto; display:block;" id="enterRoom-id" name="enterRoom" onclick= "myFunction()" >Join a Room</button>
+    <input type="text" id="name-form-id" name="name-form" placeholder="Enter Username" class="input-box" maxlength = "12" /><br>
+    <br> <input type="text" id="code-form-id" name="code-form" placeholder="Enter Room Key" class="input-box2" maxlength = "5" /><br>
+    <br><button type="button" style="margin:0px auto; display:block;" id="enterRoom-id" name="enterRoom" >Join a Room</button>
         <script>
             var enter = document.getElementById("Code-form-id"); 
             enter.addEventListener('keypress', function(event){ 
@@ -54,3 +55,5 @@
             });
         </script>
  </asp:panel>
+
+ <!-- THIS FILE CONTAINS THE JOIN FORM USED TO JOIN LOBBIES -->
