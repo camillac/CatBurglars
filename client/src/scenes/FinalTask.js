@@ -24,7 +24,6 @@ export default class FinalTask extends Phaser.Scene {
         this.load.image("Player_2", "client/assets/sprites/player2.png");
         this.load.image("Player_3", "client/assets/sprites/player3.png");
         this.load.image("Player_4", "client/assets/sprites/player4.png");
-        this.load.image("settings", "client/assets/sprites/settings_icon.png");
         this.load.image("basket", "client/assets/sprites/basket.png");
 
         // Load fish images
@@ -39,8 +38,8 @@ export default class FinalTask extends Phaser.Scene {
         this.scene.run("FinalTask");
 
         this.load.image(
-            "background",
-            "client/assets/backgrounds/blob-scene-haikei (6).png"
+            "backgroundFinal",
+            "client/assets/sprites/backgroundEmpty.png"
         );
     }
 
@@ -87,7 +86,7 @@ export default class FinalTask extends Phaser.Scene {
         });
 
         // Setting up background for the game
-        const background = this.add.image(400, 300, "background");
+        const background = this.add.image(400, 300, "backgroundFinal");
         background.setScale(2.0);
 
         // Sidebar Set Up
@@ -96,7 +95,8 @@ export default class FinalTask extends Phaser.Scene {
             this.game.config.width,
             this.game.config.height,
             this.roomKey,
-            scene.socket
+            scene.socket,
+            0xd8ecf5
         );
 
         // DISCONNECT
@@ -114,8 +114,8 @@ export default class FinalTask extends Phaser.Scene {
             });
         });
 
+        // start timer
         this.socket.on("startTimerEXFinal", function (arg) {
-            // console.log("IN TIMER EX");
             const { roomKey, counter } = arg;
             scene.socket.emit("startTimerFinal", roomKey, counter);
         });
@@ -126,37 +126,37 @@ export default class FinalTask extends Phaser.Scene {
                 this.game.config.width / 4,
                 this.game.config.width
             ),
-            -10,
+            this.game.config.height - this.game.config.height - 50,
             "fish1"
         );
-        scene.fish1.setScale(0.1);
+        scene.fish1.setScale(0.12);
         scene.fish2 = this.add.image(
             Phaser.Math.Between(
                 this.game.config.width / 4,
                 this.game.config.width
             ),
-            -10,
+            this.game.config.height - this.game.config.height - 50,
             "fish2"
         );
-        scene.fish2.setScale(0.1);
+        scene.fish2.setScale(0.12);
         scene.fish3 = this.add.image(
             Phaser.Math.Between(
                 this.game.config.width / 4,
                 this.game.config.width
             ),
-            -10,
+            this.game.config.height - this.game.config.height - 50,
             "fish3"
         );
-        scene.fish3.setScale(0.1);
+        scene.fish3.setScale(0.12);
         scene.fish4 = this.add.image(
             Phaser.Math.Between(
                 this.game.config.width / 4,
                 this.game.config.width
             ),
-            -10,
+            this.game.config.height - this.game.config.height - 50,
             "fish4"
         );
-        scene.fish4.setScale(0.1);
+        scene.fish4.setScale(0.12);
 
         scene.fish1.setInteractive();
         scene.fish2.setInteractive();
@@ -169,45 +169,42 @@ export default class FinalTask extends Phaser.Scene {
         this.fishies.add(this.fish3);
         this.fishies.add(this.fish4);
 
-        // *** Host and other players are separated in case we need it for backend, but
-        // *** There is no UI difference for this task as of now between them
-        // Main Player Final Task Display
+        // Final Task game Set Up and UI
         this.socket.on("displayFinal", function (arg) {
             // Tell update() to start moving fish
             scene.state.start_game = true;
 
             const { playerId, playerNum } = arg;
-            var dragBasket = scene.add.text(300, 0, "Drag the basket to ", {
-                fontFamily: "Chela One",
+            var dragBasket = scene.add.text(300, 10, "Drag the basket to ", {
+                fontFamily: "Black Ops One",
                 fontSize: 40,
                 color: "black",
                 align: "center",
             });
-            var fishCatch = scene.add.text(300, 25, "Catch at least 10 fish!", {
-                fontFamily: "Chela One",
+            var fishCatch = scene.add.text(270, 50, "catch at least 10 fish!", {
+                fontFamily: "Black Ops One",
                 fontSize: 40,
                 color: "black",
                 align: "center",
             });
             // Fish Caught text
-            var fishCaught = scene.add.text(250, 550, "Fish Caught: ", {
-                fontFamily: "Chela One",
-                fontSize: 40,
+            var fishCaught = scene.add.text(300, 550, "Fish Caught: ", {
+                fontFamily: "Black Ops One",
+                fontSize: 30,
                 color: "black",
                 align: "center",
             });
-            var fishCaughtNumber = scene.add.text(450, 550, "", {
-                fontFamily: "Chela One",
-                fontSize: 40,
+            var fishCaughtNumber = scene.add.text(505, 550, "", {
+                fontFamily: "Black Ops One",
+                fontSize: 30,
                 color: "black",
                 align: "center",
             });
             // Credit: https://github.com/photonstorm/phaser3-examples/blob/master/public/src/input/dragging/drag%20horizontally.js
             // Create basket and allow it to be dragged
-            // ** Boundaries are not working, need to fix so that it doesnt overlap sidebar
             var basket = scene.physics.add.sprite(
                 scene.game.config.width / 2,
-                scene.game.config.height - 200,
+                scene.game.config.height - 160,
                 "basket"
             );
             basket.setScale(0.5);
@@ -247,18 +244,18 @@ export default class FinalTask extends Phaser.Scene {
         this.input.on("drag", (pointer, gameObject, dragX) => {
             dragX = Phaser.Math.Clamp(
                 dragX,
-                scene.game.config.width / 5,
-                scene.game.config.width
+                250,
+                scene.game.config.width - 70
             );
 
             gameObject.x = dragX;
         });
 
         // Timer text connected with socket
-        var timerFinal = scene.add.text(750, 550, "", {
-            fontFamily: "Chela One",
+        var timerFinal = scene.add.text(730, 550, "", {
+            fontFamily: "Black Ops One",
             fontSize: 40,
-            color: "black",
+            color: 'black',
             align: "center",
         });
 
@@ -317,7 +314,7 @@ export default class FinalTask extends Phaser.Scene {
         fish.y = 0;
         var randomX = Phaser.Math.Between(
             this.game.config.width / 4,
-            this.game.config.width - 10
+            this.game.config.width - 20
         );
         fish.x = randomX;
     }

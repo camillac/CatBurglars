@@ -1,3 +1,7 @@
+// **************************************************************************************
+// This file is not currently in use due to the amount of synchronization issues present.
+// **************************************************************************************
+
 export default class FinalTask_Instruction extends Phaser.Scene {
     constructor() {
         super("FinalTask_Instruction");

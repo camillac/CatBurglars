@@ -26,6 +26,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
     create() {
         const scene = this;
 
+        // Set up background
         const background = this.add.image(400, 300, "Background");
         background.setScale(2);
 
@@ -75,16 +76,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
             )
             .setOrigin(0.5);
 
-        // i commented this out just b/c we need to factor in the second instruction scene before the fade
-        // this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, (cam, effect) =>
-        // {  this.cameras.main.fadeOut(10000,0,0,0);
-        // this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-        //     this.scene.start('FirstTask');
-        // });
-        // });
-
         // destroy instructions when finished
-
         function destroyInstructions() {
             instructions.destroy();
         }
@@ -122,7 +114,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                     .text(
                         400,
                         300,
-                        `You are Player 1.\nCommunicate with your \n team to figure out the \n correct three keys`,
+                        `You are Player 1.\nCommunicate with your \n team to figure out the \n correct three keys.`,
                         {
                             fontFamily: "Black Ops One",
                             fontSize: 60,
@@ -132,6 +124,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                     )
                     .setOrigin(0.5);
             } else {
+                // All other players
                 this.cameras.main.fadeOut(5000, 0, 0, 0);
                 this.cameras.main.once(
                     Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
@@ -152,7 +145,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                 );
             }
 
-            // If you are not player 1
+            // If you are not player 1, show different instruction
             function otherPlayerInstruction(
                 playerNum,
                 playerOneUsername = "Player 1"
@@ -162,7 +155,7 @@ export default class FirstTask_Instruction extends Phaser.Scene {
                     .text(
                         400,
                         300,
-                        `You are Player ${playerNum}.\nDescribe your key to\n${playerOneUsername}`,
+                        `You are Player ${playerNum}.\nDescribe your key to\n${playerOneUsername}.`,
                         {
                             fontFamily: "Black Ops One",
                             fontSize: 60,
