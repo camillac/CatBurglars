@@ -33,35 +33,43 @@ export default class WinningScene extends Phaser.Scene {
 
         WebFont.load({
             google: {
-                families: ["Chela One", "Martian Mono"],
+                families: ["Black Ops One"],
             },
             active: function () {
 
                 // Title
-                add.text(95, 70, "Con", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
+                add.text(35, 70, "Con", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 80,
                     color: "#F8F0C6",
                     fontStyle: "normal",
                     stroke: "#000000",
                     strokeThickness: 12,
                 });
-                add.text(240, 70, "gratula", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
+                add.text(195, 70, "gratula", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 80,
                     color: "#C1A87D",
                     fontStyle: "normal",
                     stroke: "#000000",
                     strokeThickness: 12,
                 });
-                add.text(500, 70, "tions!", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
+                add.text(515, 70, "tions!", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 80,
                     color: "#EEBA6B",
                     fontStyle: "normal",
                     stroke: "#000000",
                     strokeThickness: 12,
                 });
+                add.text(290, 170, "You win!", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 50,
+                    color: "#FFFFFF",
+                    fontStyle: "normal",
+                    stroke: "#000000",
+                    strokeThickness: 12,
+                })
 
             // Back button
             const backButton = scene.add.rectangle(50, 50, 350, 40, 0xffebb9, 1);
@@ -72,7 +80,7 @@ export default class WinningScene extends Phaser.Scene {
 
             // Back button label
             const backButtonLabel = add.text(10, 33, "Return To Home", {
-                fontFamily: "Martian Mono",
+                fontFamily: "Black Ops One",
                 fontSize: 20,
                 color: "#ffffff",
                 fontStyle: "normal",
@@ -97,7 +105,7 @@ export default class WinningScene extends Phaser.Scene {
             gravityY: 200
         });
 
-        const table = this.add.image(300, 540, "table");
+        const table = this.add.image(310, 540, "table");
         table.setScale(1);
 
         const fishPositions = [
