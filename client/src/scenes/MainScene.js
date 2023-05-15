@@ -202,7 +202,7 @@ export default class MainScene extends Phaser.Scene {
                     });
                 });
                 playButton.on("pointerup", () => {
-                    scene.scene.start("PlayScene", {
+                    scene.scene.start("LostScene", {
                         ...scene.state,
                         socket: scene.socket,
                     });

@@ -114,12 +114,12 @@ export default class LostScene extends Phaser.Scene {
 
         WebFont.load({
             google: {
-                families: ["Chela One", "Martian Mono"],
+                families: ["Chela One", "Martian Mono", "Black Ops One"],
             },
             active: function () {
                 // Title
-                const gameText = add.text(125, 110, "GAME", {
-                    fontFamily: "Chela One",
+                const gameText = add.text(40, 110, "GAME", {
+                    fontFamily: "Black Ops One",
                     fontSize: 100,
                     color: "#F8F0C6",
                     fontStyle: "normal",
@@ -127,7 +127,7 @@ export default class LostScene extends Phaser.Scene {
                     strokeThickness: 12,
                 }).setScale(0.8);
                 const overText = add.text(500, 110, "VER!", {
-                    fontFamily: "Chela One",
+                    fontFamily: "Black Ops One",
                     fontSize: 100,
                     color: "#C1A87D",
                     fontStyle: "normal",
