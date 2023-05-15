@@ -14,14 +14,11 @@ export default class LostScene extends Phaser.Scene {
             "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
         );
 
-        this.load.image(
-            "background",
-            "client/assets/backgrounds/blob-scene-haikei (6).png"
-        );
         this.load.image("cat_skull", "client/assets/sprites/cat_skull.png");
         this.load.audio('cat_screaming', 'client/assets/sounds/cat_screaming.wav');
         this.load.audio('typing', 'client/assets/sounds/typing.wav');
         this.load.image('retry', 'client/assets/sprites/retry.png');
+        this.load.image('background', 'client/assets/backgrounds/lose_background.png');
     }
 
     create() {
@@ -29,26 +26,27 @@ export default class LostScene extends Phaser.Scene {
         const scene = this;
 
         const background = this.add.image(400, 300, "background");
-        background.setScale(2.0);
+        background.setScale(1.0);
 
         // Add the cat skull image to the scene
-        const catSkull = this.add.image(450, 175, "cat_skull").setScale(0.7);
+        const catSkull = this.add.image(450, 150, "cat_skull").setScale(0.7);
 
         // Create the 'retry' sprite
-        const retryButton = this.add.sprite(400, 500, 'retry').setScale(1);
+        const retryButton = this.add.sprite(this.game.config.width / 2, 500, 'retry').setScale(0.5);
 
         // Create the text object
-        const lostMessage = scene.add.text(400, 325, "", {
-            fontFamily: "Chela One",
+        const lostMessage = scene.add.text(this.game.config.width / 2, 325, "", {
+            fontFamily: "Black Ops One",
             fontSize: 45,
             color: "#FFFBF4",
             fontStyle: "normal",
             stroke: "#000000",
             strokeThickness: 12,
+            align: 'center'
         }).setOrigin(0.5)
         .setPadding(10, 10, 10, 10);
 
-        const lostMessageContent = "Unfortunately your team has lost the game. \nRetry!";
+        const lostMessageContent = "Unfortunately your team\nhas lost the game. \nRetry!";
 
         // Apply a "shaky" animation to the cat skull
         this.tweens.add({
@@ -73,7 +71,7 @@ export default class LostScene extends Phaser.Scene {
 
                 // Create a timer event to add characters one by one
                 scene.time.addEvent({
-                    delay: 200, // 100 ms between each character
+                    delay: 120, // 100 ms between each character
                     callback: () => {
                         // Add the next character to the text object
                         lostMessage.text += lostMessageContent[currentChar];
@@ -114,22 +112,22 @@ export default class LostScene extends Phaser.Scene {
 
         WebFont.load({
             google: {
-                families: ["Chela One", "Martian Mono"],
+                families: ["Black Ops One"],
             },
             active: function () {
                 // Title
-                const gameText = add.text(125, 110, "GAME", {
-                    fontFamily: "Chela One",
+                const gameText = add.text(60, 90, "GAME", {
+                    fontFamily: "Black Ops One",
                     fontSize: 100,
-                    color: "#F8F0C6",
+                    color: "#787270",
                     fontStyle: "normal",
                     stroke: "#000000",
                     strokeThickness: 12,
                 }).setScale(0.8);
-                const overText = add.text(500, 110, "VER!", {
-                    fontFamily: "Chela One",
+                const overText = add.text(500, 90, "VER!", {
+                    fontFamily: "Black Ops One",
                     fontSize: 100,
-                    color: "#C1A87D",
+                    color: "#787270",
                     fontStyle: "normal",
                     stroke: "#000000",
                     strokeThickness: 12,
