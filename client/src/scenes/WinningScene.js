@@ -5,17 +5,13 @@ export default class WinningScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.script(
-            "webfont",
-            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
-        );
 
-        this.load.image(
-            "background",
-            "client/assets/backgrounds/blob-scene-haikei (6).png"
-        );
         this.load.atlas('confetti', 'client/assets/sprites/confettis/confetti.png', 'client/assets/sprites/confettis/confetti.json');
         this.load.image("table", "client/assets/sprites/confettis/table.png");
+        this.load.image(
+            "Background2",
+            "client/assets/backgrounds/uncolored_hills.png"
+        );
 
         // Load fish images
         for (let i = 1; i <= 4; i++) {
@@ -28,8 +24,8 @@ export default class WinningScene extends Phaser.Scene {
         var add = this.add;
         const scene = this;
 
-        const background = this.add.image(400, 300, "background");
-        background.setScale(2.0);
+        const background = this.add.image(400, 300, "Background2");
+        background.setScale(4.0);
 
         WebFont.load({
             google: {
@@ -38,54 +34,61 @@ export default class WinningScene extends Phaser.Scene {
             active: function () {
 
                 // Title
-                add.text(35, 70, "Con", {
+                add.text(35, 90, "Con", {
                     fontFamily: "Black Ops One",
                     fontSize: 80,
                     color: "#F8F0C6",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
-                add.text(195, 70, "gratula", {
+                add.text(195, 90, "gratula", {
                     fontFamily: "Black Ops One",
                     fontSize: 80,
                     color: "#C1A87D",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
-                add.text(515, 70, "tions!", {
+                add.text(515, 90, "tions!", {
                     fontFamily: "Black Ops One",
                     fontSize: 80,
                     color: "#EEBA6B",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
-                add.text(290, 170, "You win!", {
+                add.text(290, 190, "You win!", {
                     fontFamily: "Black Ops One",
                     fontSize: 50,
                     color: "#FFFFFF",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 })
 
             // Back button
-            const backButton = scene.add.rectangle(50, 50, 350, 40, 0xffebb9, 1);
+            /*
+            const backButton = scene.add.rectangle(60, 50, 350, 50, 0xffebb9, 1);
             backButton.setInteractive();
             backButton.on('pointerdown', () => {
                 scene.scene.start('MainScene');
-            });
+            });*/
 
             // Back button label
-            const backButtonLabel = add.text(10, 33, "Return To Home", {
+            const backButtonLabel = add.text(60, 25, "Home", {
                 fontFamily: "Black Ops One",
-                fontSize: 20,
-                color: "#ffffff",
+                fontSize: 25,
+                color: "#FFFBF4",
                 fontStyle: "normal",
                 stroke: "#000000",
                 strokeThickness: 8,
+            })
+            .setOrigin(0.5)
+            .setPadding(10, 10, 10, 10);
+            backButtonLabel.setInteractive();
+            backButtonLabel.on('pointerdown', () => {
+                scene.scene.start('MainScene');
             });
             },
 
@@ -144,6 +147,7 @@ export default class WinningScene extends Phaser.Scene {
                 ease: "Sine.easeInOut",
                 yoyo: true,
                 repeat: -1,
+
             });
         }
     }
