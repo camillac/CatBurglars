@@ -139,7 +139,7 @@ export default class MainScene extends Phaser.Scene {
                     color: "#f1c582",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 9,
+                    strokeThickness: 8,
                 });
 
                 // Play button
