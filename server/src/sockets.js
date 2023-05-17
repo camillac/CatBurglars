@@ -135,11 +135,7 @@ module.exports = (io) => {
                     if (roomInfo.players[playerId].playerNum > deletedNum) {
                         roomInfo.players[playerId].playerNum =
                             roomInfo.players[playerId].playerNum - 1;
-                        if (
-                            roomInfo.players[playerId].playerName ==
-                            "Player " +
-                                (roomInfo.players[playerId].playerNum + 1)
-                        ) {
+                        if (roomInfo.players[playerId].defaultName) {
                             roomInfo.players[playerId].playerName =
                                 "Player " +
                                 roomInfo.players[playerId].playerNum;
@@ -461,6 +457,8 @@ function codeGenerator() {
 }
 
 // SHUFFLE ARRAYS FOR TASK ONE
+// The shuffle array function was taken from this stack overflow link:
+// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
