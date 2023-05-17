@@ -13,6 +13,10 @@ export default class WinningScene extends Phaser.Scene {
             "client/assets/backgrounds/uncolored_hills.png"
         );
 
+        this.load.image("cloud1", "client/assets/sprites/cloud_1.png");
+        this.load.image("cloud2", "client/assets/sprites/cloud2.png");
+        this.load.image("cloud3", "client/assets/sprites/cloud3.png");
+
         // Load fish images
         for (let i = 1; i <= 4; i++) {
             this.load.image(`fish${i}`, `client/assets/sprites/fish/fish${i}.png`);
@@ -25,7 +29,7 @@ export default class WinningScene extends Phaser.Scene {
         const scene = this;
 
         const background = this.add.image(400, 300, "Background2");
-        background.setScale(4.0);
+        background.setScale(1.0);
 
         WebFont.load({
             google: {
@@ -37,7 +41,7 @@ export default class WinningScene extends Phaser.Scene {
                 add.text(35, 90, "Con", {
                     fontFamily: "Black Ops One",
                     fontSize: 80,
-                    color: "#F8F0C6",
+                    color: "#19aad7",
                     fontStyle: "normal",
                     stroke: "#000000",
                     strokeThickness: 8,
@@ -45,7 +49,7 @@ export default class WinningScene extends Phaser.Scene {
                 add.text(195, 90, "gratula", {
                     fontFamily: "Black Ops One",
                     fontSize: 80,
-                    color: "#C1A87D",
+                    color: "#51c7eb",
                     fontStyle: "normal",
                     stroke: "#000000",
                     strokeThickness: 8,
@@ -53,7 +57,7 @@ export default class WinningScene extends Phaser.Scene {
                 add.text(515, 90, "tions!", {
                     fontFamily: "Black Ops One",
                     fontSize: 80,
-                    color: "#EEBA6B",
+                    color: "#96ddf3",
                     fontStyle: "normal",
                     stroke: "#000000",
                     strokeThickness: 8,
@@ -67,31 +71,34 @@ export default class WinningScene extends Phaser.Scene {
                     strokeThickness: 8,
                 })
 
-            // Back button
-            /*
-            const backButton = scene.add.rectangle(60, 50, 350, 50, 0xffebb9, 1);
-            backButton.setInteractive();
-            backButton.on('pointerdown', () => {
-                scene.scene.start('MainScene');
-            });*/
+                // Back button label
+                const backButtonLabel = add.text(100, 25, "Back To Home", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 22,
+                    color: "#FFFBF4",
+                    fontStyle: "normal",
+                    stroke: "#000000",
+                    strokeThickness: 8,
+                })
+                .setOrigin(0.5)
+                .setPadding(10, 10, 10, 10);
 
-            // Back button label
-            const backButtonLabel = add.text(60, 25, "Home", {
-                fontFamily: "Black Ops One",
-                fontSize: 25,
-                color: "#FFFBF4",
-                fontStyle: "normal",
-                stroke: "#000000",
-                strokeThickness: 8,
-            })
-            .setOrigin(0.5)
-            .setPadding(10, 10, 10, 10);
-            backButtonLabel.setInteractive();
-            backButtonLabel.on('pointerdown', () => {
-                scene.scene.start('MainScene');
-            });
-            },
+                backButtonLabel.setInteractive();
 
+                backButtonLabel.on('pointerdown', () => {
+                    scene.scene.start('MainScene');
+                });
+                backButtonLabel.on('pointerover', () => {
+                    backButtonLabel.setStyle({
+                        color: "#FFEBB9",
+                    });
+                });
+                backButtonLabel.on("pointerout", () => {
+                    backButtonLabel.setStyle({
+                        color: "#FFFBF4",
+                    });
+                });
+            }
         });
         
         // Confetti
@@ -108,8 +115,19 @@ export default class WinningScene extends Phaser.Scene {
             gravityY: 200
         });
 
-        const table = this.add.image(310, 540, "table");
-        table.setScale(1);
+        var cloud1 = this.add.image(300, 450, "cloud1");
+        cloud1.setScale(1.5);
+
+        var cloud2 = this.add.image(480, 450, "cloud1");
+        cloud2.setFlipX(true);
+        cloud2.setScale(1.5);
+
+        var cloud3 = this.add.image(390, 390, "cloud3");
+        cloud3.setScale(1.5);
+
+        var cloud4 = this.add.image(410, 390, "cloud3");
+        cloud4.setFlipX(true);
+        cloud4.setScale(1.5);
 
         const fishPositions = [
             { x: 400, y: 350 },
