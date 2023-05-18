@@ -53,3 +53,4 @@ Disclaimer: We’ve listed as many bugs as we could but because there are so man
 - Task 1 keys show up for some players while other ones still see “Waiting for players…” and are shown their keys after others have already received them
 - Rarely, the introduction scene for a player will be skipped (zoom in on house)
 - Winning/losing scene may show over Lobby Scene if player disconnects in Task 2
+- Winning/Losing and returning to the homepage does NOT delete the old room, will say "Room is Full" if you try to join an old room key
