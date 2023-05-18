@@ -5,17 +5,17 @@ export default class WinningScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.script(
-            "webfont",
-            "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
-        );
 
-        this.load.image(
-            "background",
-            "client/assets/backgrounds/blob-scene-haikei (6).png"
-        );
         this.load.atlas('confetti', 'client/assets/sprites/confettis/confetti.png', 'client/assets/sprites/confettis/confetti.json');
         this.load.image("table", "client/assets/sprites/confettis/table.png");
+        this.load.image(
+            "Background2",
+            "client/assets/backgrounds/uncolored_hills.png"
+        );
+
+        this.load.image("cloud1", "client/assets/sprites/cloud_1.png");
+        this.load.image("cloud2", "client/assets/sprites/cloud2.png");
+        this.load.image("cloud3", "client/assets/sprites/cloud3.png");
 
         // Load fish images
         for (let i = 1; i <= 4; i++) {
@@ -28,59 +28,77 @@ export default class WinningScene extends Phaser.Scene {
         var add = this.add;
         const scene = this;
 
-        const background = this.add.image(400, 300, "background");
-        background.setScale(2.0);
+        const background = this.add.image(400, 300, "Background2");
+        background.setScale(1.0);
 
         WebFont.load({
             google: {
-                families: ["Chela One", "Martian Mono"],
+                families: ["Black Ops One"],
             },
             active: function () {
 
                 // Title
-                add.text(95, 70, "Con", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
-                    color: "#F8F0C6",
+                add.text(35, 90, "Con", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 80,
+                    color: "#19aad7",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
-                add.text(240, 70, "gratula", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
-                    color: "#C1A87D",
+                add.text(195, 90, "gratula", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 80,
+                    color: "#51c7eb",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
-                add.text(500, 70, "tions!", {
-                    fontFamily: "Chela One",
-                    fontSize: 100,
-                    color: "#EEBA6B",
+                add.text(515, 90, "tions!", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 80,
+                    color: "#96ddf3",
                     fontStyle: "normal",
                     stroke: "#000000",
-                    strokeThickness: 12,
+                    strokeThickness: 8,
                 });
+                add.text(290, 190, "You win!", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 50,
+                    color: "#FFFFFF",
+                    fontStyle: "normal",
+                    stroke: "#000000",
+                    strokeThickness: 8,
+                })
 
-            // Back button
-            const backButton = scene.add.rectangle(50, 50, 350, 40, 0xffebb9, 1);
-            backButton.setInteractive();
-            backButton.on('pointerdown', () => {
-                scene.scene.start('MainScene');
-            });
+                // Back button label
+                const backButtonLabel = add.text(100, 25, "Back To Home", {
+                    fontFamily: "Black Ops One",
+                    fontSize: 22,
+                    color: "#FFFBF4",
+                    fontStyle: "normal",
+                    stroke: "#000000",
+                    strokeThickness: 8,
+                })
+                .setOrigin(0.5)
+                .setPadding(10, 10, 10, 10);
 
-            // Back button label
-            const backButtonLabel = add.text(10, 33, "Return To Home", {
-                fontFamily: "Martian Mono",
-                fontSize: 20,
-                color: "#ffffff",
-                fontStyle: "normal",
-                stroke: "#000000",
-                strokeThickness: 8,
-            });
-            },
+                backButtonLabel.setInteractive();
 
+                backButtonLabel.on('pointerdown', () => {
+                    scene.scene.start('MainScene');
+                });
+                backButtonLabel.on('pointerover', () => {
+                    backButtonLabel.setStyle({
+                        color: "#FFEBB9",
+                    });
+                });
+                backButtonLabel.on("pointerout", () => {
+                    backButtonLabel.setStyle({
+                        color: "#FFFBF4",
+                    });
+                });
+            }
         });
         
         // Confetti
@@ -97,8 +115,19 @@ export default class WinningScene extends Phaser.Scene {
             gravityY: 200
         });
 
-        const table = this.add.image(300, 540, "table");
-        table.setScale(1);
+        var cloud1 = this.add.image(300, 450, "cloud1");
+        cloud1.setScale(1.5);
+
+        var cloud2 = this.add.image(480, 450, "cloud1");
+        cloud2.setFlipX(true);
+        cloud2.setScale(1.5);
+
+        var cloud3 = this.add.image(390, 390, "cloud3");
+        cloud3.setScale(1.5);
+
+        var cloud4 = this.add.image(410, 390, "cloud3");
+        cloud4.setFlipX(true);
+        cloud4.setScale(1.5);
 
         const fishPositions = [
             { x: 400, y: 350 },
@@ -136,6 +165,7 @@ export default class WinningScene extends Phaser.Scene {
                 ease: "Sine.easeInOut",
                 yoyo: true,
                 repeat: -1,
+
             });
         }
     }
